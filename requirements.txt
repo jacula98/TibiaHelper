@@ -1,0 +1,3 @@
+# Zależności aplikacji (trafiają do .exe)
+PySide6>=6.7,<7
+pydantic>=2.7,<3
