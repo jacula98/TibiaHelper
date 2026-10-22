@@ -47,8 +47,8 @@ class QuestListPage(QWidget):
 
         self._search.textChanged.connect(self._refresh)
         self._level.valueChanged.connect(self._refresh)
-        self._list.itemActivated.connect(self._on_item_activated)
-        self._list.itemClicked.connect(self._on_item_activated)
+        # Tylko pojedyncze kliknięcie: itemActivated odpaliłby się dodatkowo przy dwukliku.
+        self._list.itemClicked.connect(self._on_item_clicked)
 
     def set_quests(self, quests: list[Quest]) -> None:
         self._quests = quests
@@ -72,7 +72,7 @@ class QuestListPage(QWidget):
         self._list.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 
-    def _on_item_activated(self, item: QListWidgetItem) -> None:
+    def _on_item_clicked(self, item: QListWidgetItem) -> None:
         self.quest_selected.emit(item.data(Qt.ItemDataRole.UserRole))
 
 
