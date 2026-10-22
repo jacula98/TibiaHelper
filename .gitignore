@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# PyInstaller
+build/
+dist/
+
+# Cache generatora (surowy tekst z TibiaWiki, da się pobrać ponownie)
+generator/raw/
+
+# IDE / system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
