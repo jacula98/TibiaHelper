@@ -5,7 +5,7 @@ dane tą samą walidacją. Nie importuje niczego z PySide6.
 """
 
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -70,7 +70,7 @@ class Quest(_Model):
 
 
 class QuestFileHeader(_Model):
-    """Nagłówek pliku. Questy celowo są tu surowe (list[dict]).
+    """Nagłówek pliku. Questy celowo są tu surowe (list[Any]).
 
     Każdy quest walidujemy osobno w repository.py, żeby jeden błędny quest
     nie unieważniał całego pliku.
@@ -79,4 +79,4 @@ class QuestFileHeader(_Model):
     schema_version: int = Field(ge=1)
     # Rośnie przy każdej publikacji danych; updater porównuje ją z GitHubem.
     data_version: int = Field(ge=1)
-    quests: list[dict]
+    quests: list[Any]

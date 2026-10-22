@@ -81,6 +81,12 @@ def test_invalid_quest_is_skipped_but_others_load():
     assert "bad" in result.errors[0]
 
 
+def test_non_object_quest_is_skipped():
+    result = parse_quest_data(make_file(make_quest(), None, "tekst"))
+    assert [q.id for q in result.quests] == ["test-quest"]
+    assert len(result.errors) == 2
+
+
 def test_duplicate_id_keeps_first():
     result = parse_quest_data(make_file(make_quest(name="Pierwszy"), make_quest(name="Drugi")))
     assert [q.name for q in result.quests] == ["Pierwszy"]
@@ -98,7 +104,7 @@ def test_newer_schema_version_is_rejected():
         parse_quest_data(make_file(schema_version=SCHEMA_VERSION + 1))
 
 
-@pytest.mark.parametrize("raw", [[], {"quests": []}, {"schema_version": 1, "data_version": 1, "quests": [1]}])
+@pytest.mark.parametrize("raw", [[], {"quests": []}, {"schema_version": 1, "data_version": 1, "quests": "x"}])
 def test_bad_header_raises_file_error(raw):
     with pytest.raises(QuestFileError):
         parse_quest_data(raw)

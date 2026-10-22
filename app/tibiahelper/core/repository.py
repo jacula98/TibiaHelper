@@ -52,6 +52,9 @@ def parse_quest_data(raw: object) -> LoadResult:
     seen_ids: set[str] = set()
 
     for index, raw_quest in enumerate(header.quests):
+        if not isinstance(raw_quest, dict):
+            errors.append(f"quest #{index}: to nie jest obiekt JSON, pominięto")
+            continue
         label = f"quest #{index} ({raw_quest.get('id', '?')})"
         try:
             quest = Quest.model_validate(raw_quest)
