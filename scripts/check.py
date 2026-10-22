@@ -1,0 +1,70 @@
+"""Lokalne sprawdzenie przed PR: ruff, pytest i walidacja data/quests.json.
+
+Zamiast płatnego CI uruchamiamy to u siebie: python scripts/check.py
+Kod wyjścia 0 = wszystko OK.
+"""
+
+import importlib.util
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def run(name: str, cmd: list[str]) -> bool:
+    print(f"\n== {name} ==")
+    ok = subprocess.run(cmd, check=False, cwd=ROOT).returncode == 0
+    print("OK" if ok else "BŁĄD")
+    return ok
+
+
+def check_quests() -> bool:
+    print("\n== Walidacja data/quests.json ==")
+    sys.path.insert(0, str(ROOT / "app"))
+    try:
+        from tibiahelper.core.repository import QuestFileError, load_quest_file
+    except ImportError as exc:
+        print(f"Pominięto: brak modułu walidacji ({exc})")
+        return True
+
+    try:
+        result = load_quest_file(ROOT / "data" / "quests.json")
+    except QuestFileError as exc:
+        print(exc)
+        print("BŁĄD")
+        return False
+
+    # repository.py pomija złe questy, żeby aplikacja działała dalej.
+    # Tutaj traktujemy je jako błąd, bo nie powinny trafić do repo.
+    for message in result.errors:
+        print(message)
+    print(f"Questy: {len(result.quests)}, błędy: {len(result.errors)}")
+    print("OK" if not result.errors else "BŁĄD")
+    return not result.errors
+
+
+def main() -> int:
+    results = []
+
+    # ruff jest opcjonalny: pip install ruff
+    # Reguły podane wprost (E/F to realne błędy: nieużyte importy, literówki w nazwach),
+    # żeby wynik nie zależał od wersji ruffa ani konfiguracji na danym komputerze.
+    if importlib.util.find_spec("ruff"):
+        ruff = [sys.executable, "-m", "ruff", "check", "--isolated", "--select", "E4,E7,E9,F", "."]
+        results.append(run("ruff", ruff))
+    else:
+        print("\n== ruff ==\nPominięto: zainstaluj przez `pip install ruff`")
+
+    if (ROOT / "tests").is_dir():
+        results.append(run("pytest", [sys.executable, "-m", "pytest", "-q"]))
+
+    if (ROOT / "data" / "quests.json").is_file():
+        results.append(check_quests())
+
+    print("\nWynik:", "wszystko OK" if all(results) else "są błędy")
+    return 0 if all(results) else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
