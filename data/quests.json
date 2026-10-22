@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "data_version": 1,
+  "quests": [
+    {
+      "id": "annihilator-quest",
+      "name": "Annihilator Quest",
+      "min_level": 100,
+      "premium": true,
+      "source_url": "https://tibia.fandom.com/wiki/Annihilator_Quest",
+      "wiki_revision": null,
+      "status": "draft",
+      "reviewed_at": null,
+      "steps": [
+        {"text": "Zbierz drużynę 4 graczy z levelem co najmniej 100.", "location": "Edron"},
+        {"text": "Dojdźcie do sali z czterema dźwigniami i stańcie każdy na jednym polu."},
+        {"text": "Gracz na pierwszym polu przestawia dźwignię, co przenosi całą drużynę do komnaty z demonami."},
+        {"text": "Pokonajcie demony, trzymając się razem i lecząc nawzajem.", "items": ["mana potion", "health potion"]},
+        {"text": "Przejdźcie do pokoju z nagrodami. Każdy gracz może otworzyć tylko jedną skrzynię."}
+      ],
+      "required_items": [],
+      "rewards": ["Demon Armor", "Magic Sword", "Stonecutter Axe", "Present (Annihilation Bear)"]
+    },
+    {
+      "id": "desert-dungeon-quest",
+      "name": "The Desert Dungeon Quest",
+      "min_level": 20,
+      "premium": true,
+      "source_url": "https://tibia.fandom.com/wiki/The_Desert_Dungeon_Quest",
+      "wiki_revision": null,
+      "status": "draft",
+      "reviewed_at": null,
+      "steps": [
+        {"text": "Zbierz drużynę: po jednym graczu z każdej profesji (knight, paladin, sorcerer, druid)."},
+        {"text": "Każdy gracz zabiera przedmiot właściwy dla swojej profesji, potrzebny do otwarcia przejścia."},
+        {"text": "Dojdźcie do pustynnego lochu i stańcie na polach oznaczonych dla profesji."},
+        {"text": "Po otwarciu przejścia odbierzcie nagrody ze skrzyń."}
+      ],
+      "required_items": [],
+      "rewards": []
+    },
+    {
+      "id": "katana-quest",
+      "name": "Katana Quest",
+      "min_level": 1,
+      "premium": false,
+      "source_url": "https://tibia.fandom.com/wiki/Katana_Quest",
+      "wiki_revision": null,
+      "status": "draft",
+      "reviewed_at": null,
+      "steps": [
+        {"text": "Weź ze sobą pochodnię lub inne źródło światła i kilka sztuk jedzenia.", "location": "Rookgaard"},
+        {"text": "Dojdź do jaskini, w której znajduje się skrzynia z kataną."},
+        {"text": "Otwórz skrzynię i zabierz katanę."}
+      ],
+      "required_items": ["torch"],
+      "rewards": ["Katana"]
+    }
+  ]
+}
