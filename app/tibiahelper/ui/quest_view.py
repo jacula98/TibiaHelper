@@ -5,6 +5,7 @@ i po odhaczeniu poprzedniego okno samo przewija się tak, żeby był na górze.
 Zrobione kroki zostają wyżej, wyszarzone.
 """
 
+import threading
 from html import escape
 from pathlib import Path
 
@@ -19,27 +20,48 @@ from PySide6.QtCore import (
     QUrl,
     Signal,
 )
-from PySide6.QtGui import QDesktopServices
+from PySide6.QtGui import QCursor, QDesktopServices
 from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
+    QToolTip,
     QVBoxLayout,
     QWidget,
 )
 
 from ..core.issues import issue_url
-from ..core.models import Quest, Step
+from ..core.models import Monster, Quest, Step
+from ..core.monsters import download_missing, sprite_path
 from ..core.progress import ProgressStore
 from .map_window import MapPanel
-from .rich_text import parse_pin_link, step_html
+from .rich_text import monster_tooltip, parse_monster_link, parse_pin_link, step_html
 from .theme import ASSETS_DIR, icon
 
 SCROLL_MARGIN = 6  # odstęp aktualnego kroku od górnej krawędzi
 SCROLL_MS = 250
+TILE_SPRITE = 48  # obrazek w sekcji „Potwory”
+TOOLTIP_SPRITE = 64  # obrazek w dymku (oryginalny rozmiar z wiki)
+TILE_COLUMNS = 4
+
+
+class _SpriteLoader(QObject):
+    """Pobiera obrazki potworów w tle; sygnał wraca do wątku okna (jak _FloorLoader mapy)."""
+
+    loaded = Signal(str)  # id questa, dla którego pobierano
+
+
+def _img(path: Path | None, size: int) -> str:
+    """Znacznik <img> obrazka potwora albo łapka, gdy obrazek jeszcze się nie pobrał."""
+    if path is None:
+        return "🐾"
+    # middle: obrazek wyższy niż linia stoi na środku tekstu, a nie wystaje nad nim.
+    return f'<img src="{path.as_uri()}" width="{size}" height="{size}" style="vertical-align: middle">'
 
 
 class QuestView(QWidget):
@@ -53,11 +75,17 @@ class QuestView(QWidget):
         self,
         progress: ProgressStore,
         maps_dir: Path,
+        sprites_dir: Path,
         editable: bool = False,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._progress = progress
+        self._sprites_dir = sprites_dir
+        self._monsters: dict[str, Monster] = {}
+        self._tiles: list[_MonsterTile] = []
+        self._sprite_loader = _SpriteLoader(self)
+        self._sprite_loader.loaded.connect(self._on_sprites_loaded)
         self._quest: Quest | None = None
         self._step_rows: list[_StepRow] = []
         self._finished: QLabel | None = None
@@ -86,6 +114,8 @@ class QuestView(QWidget):
 
         self._scroll = QScrollArea(widgetResizable=True)
         self._scroll.setFrameShape(QScrollArea.Shape.NoFrame)
+        # Treść zawsze mieści się w szerokości okna (tekst się zawija), więc bez paska w poziomie.
+        self._scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self._scroll.viewport().installEventFilter(self)
         # Animacja przewijania: płynny ruch zamiast skoku, łatwiej się nie zgubić.
         self._scroll_animation = QPropertyAnimation(self._scroll.verticalScrollBar(), b"value", self)
@@ -122,6 +152,9 @@ class QuestView(QWidget):
         # Wersja danych trafia do zgłoszenia, żeby było wiadomo, którego pliku dotyczy błąd.
         self._data_version = data_version
 
+    def set_monsters(self, monsters: dict[str, Monster]) -> None:
+        self._monsters = monsters
+
     def show_quest(self, quest: Quest) -> None:
         self._quest = quest
         self._hide_map(animated=False)
@@ -149,9 +182,24 @@ class QuestView(QWidget):
             layout.addWidget(_label("POTRZEBNE", "sectionTitle"))
             layout.addWidget(_label(", ".join(quest.required_items)))
 
+        self._tiles = []
+        counts = [(self._monsters[i], n) for i, n in quest.monster_counts() if i in self._monsters]
+        if counts:
+            layout.addWidget(_label("POTWORY", "sectionTitle"))
+            grid = QGridLayout()
+            grid.setSpacing(4)
+            # Równe kolumny: jeden potwór zajmuje 1/4 szerokości, a nie cały wiersz.
+            for column in range(TILE_COLUMNS):
+                grid.setColumnStretch(column, 1)
+            for position, (monster, count) in enumerate(counts):
+                tile = _MonsterTile(monster, count, self._sprites_dir)
+                self._tiles.append(tile)
+                grid.addWidget(tile, position // TILE_COLUMNS, position % TILE_COLUMNS)
+            layout.addLayout(grid)
+
         layout.addWidget(_label("KROKI", "sectionTitle"))
         for index, step in enumerate(quest.steps):
-            row = _StepRow(index, step, checked=index in done)
+            row = _StepRow(index, step, index in done, self._monsters, self._sprites_dir)
             row.toggled.connect(self._on_step_toggled)
             # row=row: lambda zapamiętuje swój krok (inaczej wszystkie wskazywałyby ostatni).
             row.map_requested.connect(lambda points, focus, row=row: self._show_map(points, focus, row))
@@ -166,11 +214,14 @@ class QuestView(QWidget):
             layout.addWidget(_label(", ".join(quest.rewards)))
 
         # Link do źródła jest wymagany przez licencję CC BY-SA.
+        credits = " (CC BY-SA 4.0)"
+        if counts:
+            credits += " · obrazki potworów © CipSoft"
         source = QLabel(
-            f'Źródło: <a href="{escape(quest.source_url, quote=True)}">TibiaWiki</a>'
-            " (CC BY-SA 4.0)"
+            f'Źródło: <a href="{escape(quest.source_url, quote=True)}">TibiaWiki</a>{credits}'
         )
         source.setObjectName("muted")
+        source.setWordWrap(True)
         source.setOpenExternalLinks(True)
         layout.addWidget(source)
 
@@ -185,6 +236,36 @@ class QuestView(QWidget):
         self._update_states()
         # Pozycje kart są znane dopiero po ułożeniu okna, więc przewijamy w następnym obiegu pętli Qt.
         QTimer.singleShot(0, lambda: self._scroll_to_current(animated=False))
+        self._load_sprites(quest)
+
+    # --- obrazki potworów -----------------------------------------------------
+
+    def _load_sprites(self, quest: Quest) -> None:
+        """Brakujące obrazki pobieramy w tle; do tego czasu w tekście jest łapka 🐾."""
+        ids = {m.id for step in quest.steps for m in step.monsters}
+        missing = [
+            self._monsters[i]
+            for i in sorted(ids)
+            if i in self._monsters and sprite_path(self._sprites_dir, i) is None
+        ]
+        if not missing:
+            return
+
+        def run() -> None:
+            if download_missing(self._sprites_dir, missing):
+                self._sprite_loader.loaded.emit(quest.id)
+
+        # daemon=True: zamknięcie okna nie czeka na pobieranie.
+        threading.Thread(target=run, daemon=True, name="sprites").start()
+
+    def _on_sprites_loaded(self, quest_id: str) -> None:
+        # Gracz mógł w międzyczasie otworzyć inny quest: wtedy nic nie odświeżamy.
+        if self._quest is None or self._quest.id != quest_id:
+            return
+        for row in self._step_rows:
+            row.refresh_text()
+        for tile in self._tiles:
+            tile.refresh()
 
     def eventFilter(self, watched: QObject, event: QEvent) -> bool:  # noqa: N802 (nazwa z Qt)
         if event.type() == QEvent.Type.Resize and self._tail is not None:
@@ -323,10 +404,16 @@ class _StepRow(QFrame):
     toggled = Signal(int, bool)
     map_requested = Signal(object, object)
 
-    def __init__(self, index: int, step: Step, checked: bool) -> None:
+    def __init__(
+        self, index: int, step: Step, checked: bool, monsters: dict[str, Monster], sprites_dir: Path
+    ) -> None:
         super().__init__()
         self.setObjectName("step")
         self.index = index
+        self._step = step
+        self._monsters = monsters
+        self._sprites_dir = sprites_dir
+        self._rich: QLabel | None = None
         self._hovered_link = ""
         self._box = QCheckBox()
         self._box.setChecked(checked)
@@ -347,19 +434,44 @@ class _StepRow(QFrame):
         self._box.toggled.connect(lambda value: self.toggled.emit(self.index, value))
 
     def _text_label(self, number: int, step: Step) -> QLabel:
-        if not step.markers:
+        if not step.markers and not step.monsters:
             return _label(f"{number}. {step.text}")
-        self._step = step
         label = QLabel(wordWrap=True, textFormat=Qt.TextFormat.RichText)
-        # Pinezka ma wysokość linii tekstu, żeby nie rozpychała wiersza.
-        size = label.fontMetrics().height() - 2
-        pin = (ASSETS_DIR / "pin.svg").as_uri()
-        label.setText(step_html(number, step, f'<img src="{pin}" height="{size}" width="{size * 3 // 4}">'))
+        self._rich = label
+        self.refresh_text()
         label.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByMouse)
         label.linkActivated.connect(self._on_link)
-        # Zapamiętujemy, czy kursor jest nad pinezką: wtedy klik nie odhacza kroku.
-        label.linkHovered.connect(lambda link: setattr(self, "_hovered_link", link))
+        label.linkHovered.connect(self._on_hover)
         return label
+
+    def refresh_text(self) -> None:
+        """Buduje HTML kroku od nowa (np. gdy obrazki potworów się pobrały)."""
+        if self._rich is None:
+            return
+        # Pinezka ma wysokość linii tekstu, żeby nie rozpychała wiersza.
+        line = self._rich.fontMetrics().height()
+        size = line - 2
+        pin = (ASSETS_DIR / "pin.svg").as_uri()
+        pin_img = f'<img src="{pin}" height="{size}" width="{size * 3 // 4}">'
+        # Potwór jest większy (2 linie): w wysokości linii obrazek 64 px byłby nieczytelny.
+        self._rich.setText(
+            step_html(self.index + 1, self._step, pin_img, lambda i: _img(self._sprite(i), line * 2))
+        )
+
+    def _sprite(self, index: int) -> Path | None:
+        return sprite_path(self._sprites_dir, self._step.monsters[index].id)
+
+    def _on_hover(self, link: str) -> None:
+        # Zapamiętujemy, czy kursor jest nad pinezką/potworem: wtedy klik nie odhacza kroku.
+        self._hovered_link = link
+        index = parse_monster_link(link)
+        if index is None or index >= len(self._step.monsters):
+            QToolTip.hideText()
+            return
+        monster = self._monsters.get(self._step.monsters[index].id)
+        if monster is not None:
+            text = monster_tooltip(monster, _img(self._sprite(index), TOOLTIP_SPRITE))
+            QToolTip.showText(QCursor.pos(), text, self._rich)
 
     def _on_link(self, link: str) -> None:
         index = parse_pin_link(link)
@@ -389,6 +501,28 @@ class _StepRow(QFrame):
         # Tylko lewy przycisk: prawy/środkowy nie powinien zmieniać postępu.
         if event.button() == Qt.MouseButton.LeftButton and not self._hovered_link:
             self._box.toggle()
+
+
+class _MonsterTile(QLabel):
+    """Kafelek w sekcji „Potwory”: obrazek, a pod nim „2x Skeleton”. Dymek jak w tekście kroku."""
+
+    def __init__(self, monster: Monster, count: int | None, sprites_dir: Path) -> None:
+        super().__init__(textFormat=Qt.TextFormat.RichText, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.setObjectName("monsterTile")
+        self.setWordWrap(True)
+        # Ignored: kafelki dzielą się szerokością okna, zamiast ją rozpychać długą nazwą.
+        self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+        self._monster = monster
+        self._count = count
+        self._sprites_dir = sprites_dir
+        self.refresh()
+
+    def refresh(self) -> None:
+        path = sprite_path(self._sprites_dir, self._monster.id)
+        name = escape(self._monster.name)
+        caption = f"{self._count}x {name}" if self._count else name
+        self.setText(f"{_img(path, TILE_SPRITE)}<br>{caption}")
+        self.setToolTip(monster_tooltip(self._monster, _img(path, TOOLTIP_SPRITE)))
 
 
 def _step_details(step: Step) -> str:

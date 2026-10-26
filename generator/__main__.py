@@ -6,6 +6,7 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator review annihilator-quest
     python -m generator check-updates
     python -m generator coords "Tom"            # współrzędne NPC/miejsca do pinezek na mapie
+    python -m generator monster "Skeleton"      # dodaj/odśwież potwora (HP, exp, obrazek)
 """
 
 import argparse
@@ -17,7 +18,8 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import cache, quests, quests_file  # noqa: E402
+from . import cache, monsters, quests, quests_file  # noqa: E402
+from tibiahelper.core import author  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
 from .wikitext import infobox_position, mapper_coords  # noqa: E402
 
@@ -42,6 +44,11 @@ def main(argv: list[str] | None = None) -> int:
     coords = commands.add_parser("coords", help="pokaż współrzędne ze strony (NPC, miejsca, questa)")
     coords.add_argument("title")
     coords.add_argument("--refresh", action="store_true")
+
+    monster = commands.add_parser("monster", help="dodaj albo odśwież potwora w data/quests.json")
+    monster.add_argument("title", help='tytuł strony potwora na TibiaWiki, np. "Skeleton"')
+    monster.add_argument("--id", help="własne id (domyślnie z nazwy, np. poison-spider)")
+    monster.add_argument("--refresh", action="store_true", help="pobierz stronę ponownie mimo cache")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -83,6 +90,13 @@ def main(argv: list[str] | None = None) -> int:
 
         elif args.command == "coords":
             print_coords(client, args.title, args.refresh)
+
+        elif args.command == "monster":
+            data = quests_file.load()
+            entry = monsters.fetch_monster(client, args.title, args.id, args.refresh)
+            author.upsert_monster(data, entry)
+            quests_file.save(data)
+            print(f"{entry['id']}: {entry['name']}, HP {entry['hp']}, exp {entry['exp']}, {entry['elements']}")
 
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)

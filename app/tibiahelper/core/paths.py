@@ -44,3 +44,8 @@ def settings_file() -> Path:
 def maps_dir() -> Path:
     """Pobrane mapy pięter (tibiamaps)."""
     return user_data_dir() / "maps"
+
+
+def sprites_dir() -> Path:
+    """Pobrane obrazki potworów (TibiaWiki, © CipSoft)."""
+    return user_data_dir() / "monsters"

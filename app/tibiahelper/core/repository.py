@@ -13,7 +13,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .models import SCHEMA_VERSION, Quest, QuestFileHeader
+from .models import SCHEMA_VERSION, Monster, Quest, QuestFileHeader
 
 log = logging.getLogger(__name__)
 
@@ -27,6 +27,8 @@ class LoadResult:
     data_version: int
     quests: list[Quest]
     errors: list[str] = field(default_factory=list)
+    # Potwory po id, do obrazków i dymków w krokach.
+    monsters: dict[str, Monster] = field(default_factory=dict)
 
     @property
     def visible_quests(self) -> list[Quest]:
@@ -47,8 +49,10 @@ def parse_quest_data(raw: object) -> LoadResult:
             f"obsługuje najwyżej {SCHEMA_VERSION}. Zaktualizuj aplikację."
         )
 
-    quests: list[Quest] = []
     errors: list[str] = []
+    monsters = _parse_monsters(header.monsters, errors)
+
+    quests: list[Quest] = []
     seen_ids: set[str] = set()
 
     for index, raw_quest in enumerate(header.quests):
@@ -67,11 +71,30 @@ def parse_quest_data(raw: object) -> LoadResult:
             continue
         seen_ids.add(quest.id)
         quests.append(quest)
+        # Nieznany potwór to tylko brak obrazka, więc quest zostaje, ale autor dowie się z logu.
+        unknown = {m.id for step in quest.steps for m in step.monsters} - monsters.keys()
+        if unknown:
+            errors.append(f"{label}: nieznane potwory {sorted(unknown)}, będą bez obrazka")
 
     for message in errors:
         log.warning(message)
 
-    return LoadResult(data_version=header.data_version, quests=quests, errors=errors)
+    return LoadResult(data_version=header.data_version, quests=quests, errors=errors, monsters=monsters)
+
+
+def _parse_monsters(raw_monsters: list, errors: list[str]) -> dict[str, Monster]:
+    monsters: dict[str, Monster] = {}
+    for index, raw in enumerate(raw_monsters):
+        try:
+            monster = Monster.model_validate(raw)
+        except ValidationError as exc:
+            errors.append(f"potwór #{index}: {exc}")
+            continue
+        if monster.id in monsters:
+            errors.append(f"potwór #{index} ({monster.id}): zduplikowane id, pominięto")
+            continue
+        monsters[monster.id] = monster
+    return monsters
 
 
 def load_quest_file(path: Path) -> LoadResult:

@@ -50,6 +50,35 @@ class WikiClient:
         pages = self._query(titles, with_content=False)
         return {title: page.revid if page else None for title, page in pages.items()}
 
+    def image_urls(self, files: Iterable[str]) -> dict[str, str | None]:
+        """Adresy plików z wiki, np. "Skeleton.gif" -> https://static.wikia.nocookie.net/...
+
+        None = pliku nie ma na wiki.
+        """
+        files = list(dict.fromkeys(files))
+        result: dict[str, str | None] = {}
+        for start in range(0, len(files), BATCH_SIZE):
+            batch = files[start : start + BATCH_SIZE]
+            data = self._request(
+                {
+                    "action": "query",
+                    "prop": "imageinfo",
+                    "iiprop": "url",
+                    "titles": "|".join(f"File:{name}" for name in batch),
+                    "format": "json",
+                    "formatversion": "2",
+                    "maxlag": "5",
+                }
+            )
+            found = {}
+            for page in data.get("query", {}).get("pages", []):
+                info = page.get("imageinfo") or [{}]
+                found[page["title"].removeprefix("File:")] = info[0].get("url")
+            # API zamienia "_" na spacje w tytułach, więc porównujemy po tej samej normalizacji.
+            for name in batch:
+                result[name] = found.get(name.replace("_", " "))
+        return result
+
     def _query(self, titles: Iterable[str], with_content: bool) -> dict[str, WikiPage | None]:
         titles = list(dict.fromkeys(titles))  # bez duplikatów, z zachowaniem kolejności
         result: dict[str, WikiPage | None] = {}

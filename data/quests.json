@@ -1,6 +1,6 @@
 {
-  "schema_version": 2,
-  "data_version": 5,
+  "schema_version": 3,
+  "data_version": 11,
   "quests": [
     {
       "id": "annihilator-quest",
@@ -34,7 +34,14 @@
           "text": "Na dole idź w prawo, potem korytarzem na południe naprzeciw pokoju z Fire Elementalami, aż do bramki lvl-owej (level 100) i drzwi questowych."
         },
         {
-          "text": "Ustawcie się na 4 polach przy dźwigni. Najmocniejszy gracz (blocker) staje najbardziej po prawej. Pierwszy gracz pociąga dźwignię i cała drużyna przenosi się do sali z 6 Angry Demonami."
+          "text": "Ustawcie się na 4 polach przy dźwigni. Najmocniejszy gracz (blocker) staje najbardziej po prawej. Pierwszy gracz pociąga dźwignię i cała drużyna przenosi się do sali z 6 Angry Demonami.",
+          "monsters": [
+            {
+              "id": "angry-demon",
+              "count": 6,
+              "anchor": "6 Angry Demonami"
+            }
+          ]
         },
         {
           "text": "Atakujcie wspólnie tylko 2 demony, które blokują drzwi na wschód. Pierwszego zabijcie jak najszybciej."
@@ -146,15 +153,37 @@
           ]
         },
         {
-          "text": "Zejdź do dziury (pająki i poison spidery), idź ścieżką na zachód do kolejnej dziury i wskocz do niej."
+          "text": "Zejdź do dziury (pająki i poison spidery), idź ścieżką na zachód do kolejnej dziury i wskocz do niej.",
+          "monsters": [
+            {
+              "id": "spider",
+              "anchor": "pająki"
+            },
+            {
+              "id": "poison-spider",
+              "anchor": "poison spidery"
+            }
+          ]
         },
         {
-          "text": "Tu są szkielety: najlepiej zabij je po kolei, stojąc w wąskim przejściu na południu sali, bo inaczej pójdą za Tobą."
+          "text": "Tu są szkielety: najlepiej zabij je po kolei, stojąc w wąskim przejściu na południu sali, bo inaczej pójdą za Tobą.",
+          "monsters": [
+            {
+              "id": "skeleton",
+              "anchor": "szkielety"
+            }
+          ]
         },
         {
           "text": "Idź na wschód do miejsca na linę i wejdź liną do sali z Rotwormami. Przebiegnij jak najszybciej do drugiej dziury i zejdź (tryb defensywny).",
           "items": [
             "Rope"
+          ],
+          "monsters": [
+            {
+              "id": "rotworm",
+              "anchor": "Rotwormami"
+            }
           ]
         },
         {
@@ -164,10 +193,29 @@
           "text": "Jeśli nie masz Key 4603: idź na północ i przeszukaj ciała, klucz jest w jednym z nich. Potem wróć na południe."
         },
         {
-          "text": "Od trujących pól idź na wschód do dziury. Na dole jest szkielet. Otwórz drzwi kluczem 4603 i zejdź schodami."
+          "text": "Od trujących pól idź na wschód do dziury. Na dole jest szkielet. Otwórz drzwi kluczem 4603 i zejdź schodami.",
+          "monsters": [
+            {
+              "id": "skeleton",
+              "count": 1,
+              "anchor": "szkielet"
+            }
+          ]
         },
         {
-          "text": "Uwaga, w pokoju mogą być 2 szkielety i rotworm. Ukryta dźwignia za północnym białym filarem otwiera drzwi. Jeśli ktoś zamknie drzwi od zewnątrz, wyjdź teleportem."
+          "text": "Uwaga, w pokoju mogą być 2 szkielety i rotworm. Ukryta dźwignia za północnym białym filarem otwiera drzwi. Jeśli ktoś zamknie drzwi od zewnątrz, wyjdź teleportem.",
+          "monsters": [
+            {
+              "id": "skeleton",
+              "count": 2,
+              "anchor": "2 szkielety"
+            },
+            {
+              "id": "rotworm",
+              "count": 1,
+              "anchor": "rotworm"
+            }
+          ]
         },
         {
           "text": "Katana i Viking Helmet są w świeżych ludzkich zwłokach. Zabierz je i wróć tą samą drogą."
@@ -184,6 +232,66 @@
         "Viking Helmet",
         "Key 4603"
       ]
+    }
+  ],
+  "monsters": [
+    {
+      "id": "angry-demon",
+      "name": "Angry Demon",
+      "hp": 8200,
+      "exp": 6000,
+      "elements": {},
+      "image_url": "https://static.wikia.nocookie.net/tibia/images/7/75/Demon.gif/revision/latest?cb=20150414134039&path-prefix=en",
+      "source_url": "https://tibia.fandom.com/wiki/Angry_Demon",
+      "wiki_revision": 1181537
+    },
+    {
+      "id": "poison-spider",
+      "name": "Poison Spider",
+      "hp": 26,
+      "exp": 22,
+      "elements": {
+        "earth": 0,
+        "fire": 110
+      },
+      "image_url": "https://static.wikia.nocookie.net/tibia/images/d/de/Poison_Spider.gif/revision/latest?cb=20221125103356&path-prefix=en",
+      "source_url": "https://tibia.fandom.com/wiki/Poison_Spider",
+      "wiki_revision": 1192271
+    },
+    {
+      "id": "rotworm",
+      "name": "Rotworm",
+      "hp": 65,
+      "exp": 40,
+      "elements": {},
+      "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b9/Rotworm.gif/revision/latest?cb=20141110210311&path-prefix=en",
+      "source_url": "https://tibia.fandom.com/wiki/Rotworm",
+      "wiki_revision": 1192269
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "hp": 50,
+      "exp": 35,
+      "elements": {
+        "holy": 125,
+        "death": 0
+      },
+      "image_url": "https://static.wikia.nocookie.net/tibia/images/7/72/Skeleton.gif/revision/latest?cb=20260726061904&path-prefix=en",
+      "source_url": "https://tibia.fandom.com/wiki/Skeleton",
+      "wiki_revision": 1192177
+    },
+    {
+      "id": "spider",
+      "name": "Spider",
+      "hp": 20,
+      "exp": 12,
+      "elements": {
+        "fire": 120
+      },
+      "image_url": "https://static.wikia.nocookie.net/tibia/images/9/9f/Spider.gif/revision/latest?cb=20140827160121&path-prefix=en",
+      "source_url": "https://tibia.fandom.com/wiki/Spider",
+      "wiki_revision": 1192270
     }
   ]
 }

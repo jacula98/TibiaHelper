@@ -5,13 +5,14 @@ dane tą samą walidacją. Nie importuje niczego z PySide6.
 """
 
 from datetime import datetime
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 # Najnowsza wersja formatu pliku, którą ta wersja aplikacji rozumie.
 # Podbijamy ją tylko przy zmianach niekompatybilnych wstecz.
-SCHEMA_VERSION = 2  # 2: punkty na mapie w krokach (Step.markers)
+# 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters)
+SCHEMA_VERSION = 3
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -23,6 +24,13 @@ MAP_Y_MIN, MAP_Y_MAX = 30976, 30976 + 2048 - 1
 GROUND_FLOOR = 7  # w Tibii z=7 to parter, mniejsze z są wyżej, większe pod ziemią
 
 MarkerKind = Literal["npc", "place", "passage", "use"]
+
+# Żywioły obrażeń w Tibii, w kolejności jak na TibiaWiki.
+Element = Literal["physical", "earth", "fire", "energy", "ice", "holy", "death"]
+ELEMENTS: tuple[str, ...] = get_args(Element)
+# Obrazki potworów to pliki z TibiaWiki (grafiki © CipSoft). Aplikacja pobiera je
+# tylko z tego serwera, żeby adres w danych nie mógł prowadzić gdziekolwiek.
+SPRITE_URL_PREFIX = "https://static.wikia.nocookie.net/tibia/images/"
 
 
 class _Model(BaseModel):
@@ -44,19 +52,50 @@ class MapPoint(_Model):
     anchor: str | None = None
 
 
+class Monster(_Model):
+    """Potwór z TibiaWiki: obrazek i dymek z HP, expem i słabościami."""
+
+    id: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+    name: str = Field(min_length=1)
+    hp: int = Field(ge=0)
+    exp: int = Field(ge=0)
+    # Obrażenia w % względem normalnych, tylko te różne od 100% (np. holy 125 = słaby na holy).
+    elements: dict[Element, int] = Field(default_factory=dict)
+    image_url: str
+    source_url: str
+    wiki_revision: int | None = Field(default=None, ge=1)
+
+    @model_validator(mode="after")
+    def _check_urls(self) -> "Monster":
+        if not self.image_url.startswith(SPRITE_URL_PREFIX):
+            raise ValueError(f"image_url musi zaczynać się od {SPRITE_URL_PREFIX}")
+        if not self.source_url.startswith(WIKI_URL_PREFIX):
+            raise ValueError(f"source_url musi zaczynać się od {WIKI_URL_PREFIX}")
+        return self
+
+
+class StepMonster(_Model):
+    """Potwór wspomniany w kroku: obrazek stoi za fragmentem `anchor` (jak pinezka)."""
+
+    id: str  # id z listy "monsters" w pliku
+    count: int | None = Field(default=None, ge=1)  # None = nie wiadomo ile
+    anchor: str | None = None
+
+
 class Step(_Model):
     text: str = Field(min_length=1)
     location: str | None = None
     npc: str | None = None
     items: list[str] = Field(default_factory=list)
     markers: list[MapPoint] = Field(default_factory=list)
+    monsters: list[StepMonster] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _check_anchors(self) -> "Step":
-        # Literówka w anchor schowałaby pinezkę, więc łapiemy ją już przy walidacji.
-        for marker in self.markers:
-            if marker.anchor is not None and marker.anchor not in self.text:
-                raise ValueError(f"anchor {marker.anchor!r} nie występuje w tekście kroku")
+        # Literówka w anchor schowałaby pinezkę/obrazek, więc łapiemy ją już przy walidacji.
+        for item in (*self.markers, *self.monsters):
+            if item.anchor is not None and item.anchor not in self.text:
+                raise ValueError(f"anchor {item.anchor!r} nie występuje w tekście kroku")
         return self
 
 
@@ -97,6 +136,23 @@ class Quest(_Model):
         """Czy quest ma być pokazany graczom."""
         return self.status == "reviewed"
 
+    def monster_counts(self) -> list[tuple[str, int | None]]:
+        """Potwory z całego questa do sekcji „Potwory”: (id, łączna liczba).
+
+        Liczba jest sumą z kroków; gdy choć w jednym kroku jej nie podano,
+        zwracamy None, bo suma byłaby myląca.
+        """
+        totals: dict[str, int | None] = {}
+        for step in self.steps:
+            for monster in step.monsters:
+                if monster.id not in totals:
+                    totals[monster.id] = monster.count
+                elif totals[monster.id] is None or monster.count is None:
+                    totals[monster.id] = None
+                else:
+                    totals[monster.id] += monster.count
+        return list(totals.items())
+
 
 class QuestFileHeader(_Model):
     """Nagłówek pliku. Questy celowo są tu surowe (list[Any]).
@@ -108,4 +164,6 @@ class QuestFileHeader(_Model):
     schema_version: int = Field(ge=1)
     # Rośnie przy każdej publikacji danych; updater porównuje ją z GitHubem.
     data_version: int = Field(ge=1)
+    # Też surowe: błędny potwór nie może zablokować wszystkich questów.
+    monsters: list[Any] = Field(default_factory=list)
     quests: list[Any]

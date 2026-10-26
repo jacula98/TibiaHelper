@@ -11,7 +11,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .models import Quest
+from .models import SCHEMA_VERSION, Monster, Quest
 from .storage import write_bytes_atomic
 from .terminology import find_forbidden
 
@@ -30,16 +30,28 @@ def find_quest(data: dict, quest_id: str) -> dict | None:
     return next((q for q in data["quests"] if q.get("id") == quest_id), None)
 
 
-def check_quest(quest: dict) -> Quest:
-    """Walidacja jednego questa z czytelnym komunikatem zamiast śladu pydantic."""
+def _problems(exc: ValidationError) -> str:
+    return "; ".join(
+        f"{'.'.join(str(p) for p in error['loc']) or 'całość'}: {error['msg']}" for error in exc.errors()
+    )
+
+
+def check_quest(quest: dict, monster_ids: set[str] | None = None) -> Quest:
+    """Walidacja jednego questa z czytelnym komunikatem zamiast śladu pydantic.
+
+    monster_ids: znane potwory z pliku; None = nie sprawdzamy odwołań.
+    """
     try:
         model = Quest.model_validate(quest)
     except ValidationError as exc:
-        problems = "; ".join(
-            f"{'.'.join(str(p) for p in error['loc']) or 'quest'}: {error['msg']}"
-            for error in exc.errors()
-        )
-        raise AuthorError(f"Quest {quest.get('id', '?')!r} ma błędy: {problems}") from exc
+        raise AuthorError(f"Quest {quest.get('id', '?')!r} ma błędy: {_problems(exc)}") from exc
+    if monster_ids is not None:
+        unknown = sorted({m.id for step in model.steps for m in step.monsters} - monster_ids)
+        if unknown:
+            raise AuthorError(
+                f"Quest {model.id!r}: nieznane potwory {unknown}. "
+                "Dodaj je generatorem: python -m generator monster \"Nazwa\""
+            )
     forbidden = find_forbidden(json.dumps(quest, ensure_ascii=False))
     if forbidden:
         raise AuthorError(
@@ -54,11 +66,34 @@ def save_data(data: dict, path: Path) -> None:
     Najpierw walidacja, potem zapis: na dysk nigdy nie trafi plik,
     który aplikacja by odrzuciła.
     """
+    monster_ids: set[str] = set()
+    for index, raw in enumerate(data.get("monsters", [])):
+        try:
+            monster = Monster.model_validate(raw)
+        except ValidationError as exc:
+            raise AuthorError(f"Potwór #{index} ma błędy: {_problems(exc)}") from exc
+        # Aplikacja wzięłaby tylko pierwszego z duplikatów, więc nie zapisujemy takiego pliku.
+        if monster.id in monster_ids:
+            raise AuthorError(f"Potwór {monster.id!r} jest w pliku dwa razy.")
+        monster_ids.add(monster.id)
     for quest in data["quests"]:
-        check_quest(quest)
+        check_quest(quest, monster_ids)
+    # Plik z potworami wymaga nowszej aplikacji: starsza dostanie jasny komunikat.
+    data["schema_version"] = max(data["schema_version"], SCHEMA_VERSION)
     data["data_version"] += 1
     text = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
     write_bytes_atomic(path, text.encode("utf-8"))
+
+
+def upsert_monster(data: dict, monster: dict) -> None:
+    """Dodaje potwora albo podmienia tego o tym samym id (np. po zmianie na wiki)."""
+    monsters = data.setdefault("monsters", [])
+    for index, old in enumerate(monsters):
+        if old.get("id") == monster["id"]:
+            monsters[index] = monster
+            return
+    monsters.append(monster)
+    monsters.sort(key=lambda m: m["id"])
 
 
 def replace_quest(data: dict, quest: dict) -> None:
