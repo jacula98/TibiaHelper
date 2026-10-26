@@ -34,7 +34,7 @@ class HomePage(QWidget):
             button.setEnabled(False)
             layout.addWidget(button)
 
-        qol = _menu_button("✨  Quality of life", "Mapa Tibii, loot filter i ceny z Marketu")
+        qol = _menu_button("✨  Quality of life", "Minimapa z TibiaMaps, loot filter i ceny z Marketu")
         qol.clicked.connect(self.qol_requested)
         layout.addWidget(qol)
 
