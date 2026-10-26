@@ -15,7 +15,16 @@ python -m tibiahelper
 Domyślnie aplikacja pokazuje tylko questy ze statusem `reviewed`.
 Autor może podejrzeć szkice: `python -m tibiahelper --show-drafts`.
 
-Postęp (odhaczone kroki) zapisuje się w `%APPDATA%\TibiaHelper\progress.json`.
+Postęp (odhaczone kroki) zapisuje się w `%APPDATA%\TibiaHelper\progress.json`,
+a przezroczystość, pozycja i rozmiar okna w `settings.json` w tym samym katalogu.
+
+Przy starcie aplikacja w tle sprawdza `data/quests.json` na GitHubie. Nowszą wersję
+(wyższe `data_version`) zapisuje w `%APPDATA%\TibiaHelper\quests.json`. Bez internetu
+działa na kopii lokalnej. Autor może to wyłączyć: `python -m tibiahelper --no-update`
+(wtedy używany jest tylko `data/quests.json` z repo).
+
+Przycisk „Zgłoś błąd” otwiera w przeglądarce nowe zgłoszenie (Issue) na GitHubie
+z wypełnioną nazwą questa i wersją danych. Do wysłania potrzebne jest konto GitHub.
 
 ## Generator danych (dla autora)
 

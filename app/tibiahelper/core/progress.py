@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 
 from .models import Quest
+from .storage import write_json_atomic
 
 log = logging.getLogger(__name__)
 
@@ -76,12 +77,7 @@ class ProgressStore:
             "quests": {qid: sorted(steps) for qid, steps in sorted(self._done.items())},
         }
         try:
-            self._path.parent.mkdir(parents=True, exist_ok=True)
-            # Zapis atomowy: najpierw plik tymczasowy, potem podmiana. Gdy komputer
-            # wyłączy się w trakcie zapisu, zostaje stary plik, a nie urwany JSON.
-            tmp = self._path.with_suffix(".json.tmp")
-            tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
-            os.replace(tmp, self._path)
+            write_json_atomic(self._path, data)
         except OSError as exc:
             # Brak zapisu to nie powód do zamknięcia okna; postęp zostaje w pamięci.
             log.error("Nie można zapisać postępu do %s: %s", self._path, exc)
