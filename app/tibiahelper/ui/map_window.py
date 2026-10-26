@@ -1,7 +1,8 @@
-"""Okno mapy: mapa piętra Tibii z kropkami w miejscach z kroku questa.
+"""Mapa piętra Tibii z kropkami w miejscach z kroku questa.
 
-Osobne okno (a nie strona w głównym), żeby można je było przesunąć obok
-i powiększyć, nie zasłaniając kroków. Też jest zawsze na wierzchu.
+MapPanel to sam widżet mapy: graczom wysuwa się na dole widoku questa,
+pod krokami. MapWindow to ten sam panel w osobnym oknie, używany
+w edytorze autora do wskazania miejsca kliknięciem.
 """
 
 import logging
@@ -15,6 +16,7 @@ from PySide6.QtWidgets import (
     QGraphicsView,
     QHBoxLayout,
     QLabel,
+    QSizePolicy,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -91,16 +93,14 @@ class MapView(QGraphicsView):
             self.scale(factor, factor)
 
 
-class MapWindow(QWidget):
+class MapPanel(QWidget):
     # Tryb wybierania (edytor autora): kliknięte miejsce jako x, y, z w grze.
     point_picked = Signal(int, int, int)
+    # Kliknięty „×” (tylko gdy panel ma przycisk zamknięcia).
+    close_requested = Signal()
 
-    def __init__(self, maps_dir: Path, parent: QWidget | None = None) -> None:
-        super().__init__(parent, Qt.WindowType.Window)
-        self.setWindowTitle("Mapa – TibiaHelper")
-        self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
-        self.resize(460, 420)
-
+    def __init__(self, maps_dir: Path, closable: bool = False, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
         self._maps_dir = maps_dir
         self._points: list[MapPoint] = []
         self._focus: MapPoint | None = None
@@ -112,8 +112,9 @@ class MapWindow(QWidget):
         self._loader.failed.connect(self._on_floor_failed)
 
         self._title = QLabel()
-        self._title.setObjectName("title")
-        self._title.setWordWrap(True)
+        self._title.setStyleSheet("font-weight: 600;")
+        # Jedna linia: za długi podpis jest ucinany (pełny jest w dymku i w opisie niżej).
+        self._title.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
         self._legend = QLabel()
         self._legend.setObjectName("muted")
         self._legend.setWordWrap(True)
@@ -129,26 +130,30 @@ class MapWindow(QWidget):
         self._view = MapView()
         self._view.clicked.connect(self._on_map_clicked)
         self._picking = False
-        hint = QLabel("Kółko myszy: przybliżenie · przeciągnij: przesuwanie")
-        hint.setObjectName("muted")
+        self._view.setToolTip("Kółko myszy: przybliżenie · przeciągnij: przesuwanie")
         self._status = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
         self._status.setObjectName("muted")
         self._status.setWordWrap(True)
 
-        floors = QHBoxLayout()
-        floors.addWidget(QLabel("Piętro:"))
-        floors.addWidget(self._floor_label)
-        floors.addStretch(1)
-        floors.addWidget(up)
-        floors.addWidget(down)
+        # Jeden wiersz nagłówka: nazwa miejsca, piętro, strzałki i ewentualnie „×”.
+        header = QHBoxLayout()
+        header.addWidget(self._title, 1)
+        header.addWidget(self._floor_label)
+        header.addWidget(up)
+        header.addWidget(down)
+        if closable:
+            close = QToolButton(text="✕")
+            close.setToolTip("Schowaj mapę")
+            close.clicked.connect(self.close_requested)
+            header.addWidget(close)
 
         layout = QVBoxLayout(self)
-        layout.addWidget(self._title)
+        layout.setContentsMargins(0, 6, 0, 0)
+        layout.setSpacing(4)
+        layout.addLayout(header)
         layout.addWidget(self._legend)
-        layout.addLayout(floors)
         layout.addWidget(self._view, 1)
         layout.addWidget(self._status)
-        layout.addWidget(hint)
 
     def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
         """Tryb autora: autor klika miejsce na mapie, okno wysyła point_picked."""
@@ -158,7 +163,6 @@ class MapWindow(QWidget):
         self._title.setText("Kliknij miejsce na mapie")
         self._legend.setText("Zmień piętro strzałkami, jeśli miejsce jest wyżej albo pod ziemią.")
         self._set_floor(start.z)
-        self._show_window()
 
     def _on_map_clicked(self, scene_x: float, scene_y: float) -> None:
         if not self._picking or self._view.scene().sceneRect().isEmpty():
@@ -180,21 +184,21 @@ class MapWindow(QWidget):
         self._points = points
         self._focus = focus
         self._title.setText(focus.label)
-        self._legend.setText(f"{KIND_NAMES[focus.kind]} · x {focus.x}, y {focus.y}")
+        self._title.setToolTip(focus.label)
+        self._legend.setText(f"{focus.label} · {KIND_NAMES[focus.kind]} · x {focus.x}, y {focus.y}")
         self._set_floor(focus.z)
-        self._show_window()
 
-    def _show_window(self) -> None:
-        self.show()
-        self.raise_()
-        self.activateWindow()
+    def recenter(self) -> None:
+        """Centruje mapę na wybranym punkcie (np. po wysunięciu panelu, gdy zmienił się rozmiar)."""
+        if self._focus is not None and self._focus.z == self._floor:
+            self._view.centerOn(*to_pixel(self._focus.x, self._focus.y))
 
     def _change_floor(self, delta: int) -> None:
         self._set_floor(max(0, min(15, self._floor + delta)))
 
     def _set_floor(self, z: int) -> None:
         self._floor = z
-        self._floor_label.setText(f"{floor_label(z)}  (z={z})")
+        self._floor_label.setText(f"piętro: {floor_label(z)}")
         self._view.scene().clear()
         path = floor_path(self._maps_dir, z)
         if path.exists():
@@ -270,3 +274,23 @@ class MapWindow(QWidget):
         if self._focus is not None and self._focus.z == z:
             px, py = to_pixel(self._focus.x, self._focus.y)
             self._view.centerOn(px, py)
+
+
+class MapWindow(QWidget):
+    """MapPanel w osobnym oknie: edytor autora wskazuje w nim miejsce pinezki."""
+
+    def __init__(self, maps_dir: Path, parent: QWidget | None = None) -> None:
+        super().__init__(parent, Qt.WindowType.Window)
+        self.setWindowTitle("Mapa – TibiaHelper")
+        self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
+        self.resize(460, 420)
+        self.panel = MapPanel(maps_dir)
+        self.point_picked = self.panel.point_picked
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.panel)
+
+    def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
+        self.panel.pick_point(points, start)
+        self.show()
+        self.raise_()
+        self.activateWindow()

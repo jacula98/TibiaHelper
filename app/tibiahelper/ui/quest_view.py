@@ -6,6 +6,7 @@ Zrobione kroki zostają wyżej, wyszarzone.
 """
 
 from html import escape
+from pathlib import Path
 
 from PySide6.QtCore import (
     QEasingCurve,
@@ -33,6 +34,7 @@ from PySide6.QtWidgets import (
 from ..core.issues import issue_url
 from ..core.models import Quest, Step
 from ..core.progress import ProgressStore
+from .map_window import MapPanel
 from .rich_text import parse_pin_link, step_html
 from .theme import ASSETS_DIR, icon
 
@@ -44,13 +46,15 @@ class QuestView(QWidget):
     back_requested = Signal()
     # Wysyłany po każdej zmianie checkboxa, żeby lista odświeżyła licznik kroków.
     progress_changed = Signal()
-    # Kliknięta pinezka: (wszystkie punkty kroku, kliknięty punkt).
-    map_requested = Signal(object, object)
     # Tryb autora: przycisk „Edytuj” przy queście.
     edit_requested = Signal(object)
 
     def __init__(
-        self, progress: ProgressStore, editable: bool = False, parent: QWidget | None = None
+        self,
+        progress: ProgressStore,
+        maps_dir: Path,
+        editable: bool = False,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._progress = progress
@@ -95,10 +99,23 @@ class QuestView(QWidget):
         report.setCursor(Qt.CursorShape.PointingHandCursor)
         report.clicked.connect(self._report_issue)
 
+        # Mapa wysuwa się na dole, pod krokami: widać naraz tekst kroku i miejsce.
+        self._map = MapPanel(maps_dir, closable=True)
+        self._map.close_requested.connect(self._hide_map)
+        self._map.setMaximumHeight(0)
+        self._map.hide()
+        self._map_open = False
+        self._map_row: _StepRow | None = None
+        self._map_animation = QPropertyAnimation(self._map, b"maximumHeight", self)
+        self._map_animation.setDuration(SCROLL_MS)
+        self._map_animation.setEasingCurve(QEasingCurve.Type.OutCubic)
+        self._map_animation.finished.connect(self._on_map_animation_done)
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(top)
         layout.addWidget(self._scroll, 1)
+        layout.addWidget(self._map)
         layout.addWidget(report, 0, Qt.AlignmentFlag.AlignRight)
 
     def set_data_version(self, data_version: int) -> None:
@@ -107,6 +124,7 @@ class QuestView(QWidget):
 
     def show_quest(self, quest: Quest) -> None:
         self._quest = quest
+        self._hide_map(animated=False)
         done = self._progress.done_steps(quest.id)
         self._step_rows = []
 
@@ -135,7 +153,8 @@ class QuestView(QWidget):
         for index, step in enumerate(quest.steps):
             row = _StepRow(index, step, checked=index in done)
             row.toggled.connect(self._on_step_toggled)
-            row.map_requested.connect(self.map_requested)
+            # row=row: lambda zapamiętuje swój krok (inaczej wszystkie wskazywałyby ostatni).
+            row.map_requested.connect(lambda points, focus, row=row: self._show_map(points, focus, row))
             self._step_rows.append(row)
             layout.addWidget(row)
 
@@ -171,6 +190,54 @@ class QuestView(QWidget):
         if event.type() == QEvent.Type.Resize and self._tail is not None:
             self._tail.setFixedHeight(self._scroll.viewport().height())
         return super().eventFilter(watched, event)
+
+    # --- mapa na dole ----------------------------------------------------------
+
+    def _map_height(self) -> int:
+        # Mniej więcej 45% wysokości: kroki dalej są widoczne nad mapą.
+        return max(200, int(self.height() * 0.45))
+
+    def _show_map(self, points: list, focus, row: "_StepRow") -> None:
+        """Klik w pinezkę: wysuwa mapę albo tylko przełącza ją na inne miejsce."""
+        self._map.show_points(points, focus)
+        self._map_row = row
+        if self._map_open:
+            return
+        self._map_open = True
+        self._map.show()
+        self._animate_map(self._map_height())
+
+    def _hide_map(self, animated: bool = True) -> None:
+        if not self._map_open:
+            return
+        self._map_open = False
+        if animated:
+            self._animate_map(0)
+        else:
+            self._map_animation.stop()
+            self._map.setMaximumHeight(0)
+            self._map.hide()
+
+    def _animate_map(self, height: int) -> None:
+        self._map_animation.stop()
+        self._map_animation.setStartValue(self._map.maximumHeight())
+        self._map_animation.setEndValue(height)
+        self._map_animation.start()
+
+    def _on_map_animation_done(self) -> None:
+        # Po schowaniu ukrywamy widżet całkiem, żeby nie zajmował miejsca w układzie.
+        if not self._map_open:
+            self._map.hide()
+            return
+        # Po wysunięciu: mapa na punkcie, a krok z klikniętą pinezką na górze nad mapą.
+        self._map.recenter()
+        if self._map_row is not None:
+            self._scroll_to(self._map_row.y() - SCROLL_MARGIN, animated=True)
+
+    def resizeEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        super().resizeEvent(event)
+        if self._map_open and self._map_animation.state() != QPropertyAnimation.State.Running:
+            self._map.setMaximumHeight(self._map_height())
 
     def current_step(self) -> int | None:
         """Indeks pierwszego nieodhaczonego kroku albo None, gdy wszystko zrobione."""
@@ -215,6 +282,9 @@ class QuestView(QWidget):
             target = 0
         else:
             target = self._step_rows[current].y() - SCROLL_MARGIN
+        self._scroll_to(target, animated)
+
+    def _scroll_to(self, target: int, animated: bool) -> None:
         bar = self._scroll.verticalScrollBar()
         target = max(bar.minimum(), min(bar.maximum(), target))
         self._scroll_animation.stop()

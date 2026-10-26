@@ -19,13 +19,12 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import author
-from ..core.models import MapPoint, Quest
+from ..core.models import Quest
 from ..core.paths import maps_dir
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
 from .home_page import HomePage
-from .map_window import MapWindow
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
@@ -53,8 +52,7 @@ class MainWindow(QMainWindow):
         # author_file: plik quests.json edytowany w trybie autora (None = zwykły tryb).
         self._author_file = author_file
         self._editor: QuestEditor | None = None
-        self._quest_view = QuestView(progress, editable=author_file is not None)
-        self._map: MapWindow | None = None
+        self._quest_view = QuestView(progress, maps_dir(), editable=author_file is not None)
         self._stack = QStackedWidget()
         self._stack.addWidget(self._home)
         self._stack.addWidget(self._list_page)
@@ -74,7 +72,6 @@ class MainWindow(QMainWindow):
         self._home.quests_requested.connect(self._show_list)
         self._list_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._list_page.quest_selected.connect(self._open_quest)
-        self._quest_view.map_requested.connect(self._show_map)
         self._quest_view.edit_requested.connect(self._edit_quest)
         if author_file is not None:
             self.setWindowTitle("TibiaHelper – tryb autora")
@@ -129,8 +126,6 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802 (nazwa z Qt)
         self._save_settings()
-        if self._map is not None:
-            self._map.close()
         super().closeEvent(event)
 
     def _edit_quest(self, quest: Quest) -> None:
@@ -169,12 +164,6 @@ class MainWindow(QMainWindow):
 
     def _show_list(self) -> None:
         self._stack.setCurrentWidget(self._list_page)
-
-    def _show_map(self, points: list[MapPoint], focus: MapPoint) -> None:
-        # Okno mapy tworzymy przy pierwszym użyciu i potem tylko pokazujemy ponownie.
-        if self._map is None:
-            self._map = MapWindow(maps_dir(), self)
-        self._map.show_points(points, focus)
 
 
 class UpdateBanner(QFrame):
