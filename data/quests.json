@@ -1,60 +1,159 @@
 {
   "schema_version": 1,
-  "data_version": 1,
+  "data_version": 4,
   "quests": [
     {
       "id": "annihilator-quest",
-      "name": "Annihilator Quest",
+      "name": "The Annihilator Quest",
       "min_level": 100,
       "premium": true,
-      "source_url": "https://tibia.fandom.com/wiki/Annihilator_Quest",
-      "wiki_revision": null,
+      "source_url": "https://tibia.fandom.com/wiki/The_Annihilator_Quest",
+      "wiki_revision": 1090718,
       "status": "draft",
       "reviewed_at": null,
       "steps": [
-        {"text": "Zbierz drużynę 4 graczy z levelem co najmniej 100.", "location": "Edron"},
-        {"text": "Dojdźcie do sali z czterema dźwigniami i stańcie każdy na jednym polu."},
-        {"text": "Gracz na pierwszym polu przestawia dźwignię, co przenosi całą drużynę do komnaty z demonami."},
-        {"text": "Pokonajcie demony, trzymając się razem i lecząc nawzajem.", "items": ["mana potion", "health potion"]},
-        {"text": "Przejdźcie do pokoju z nagrodami. Każdy gracz może otworzyć tylko jedną skrzynię."}
+        {
+          "text": "Zbierz drużynę 4 graczy, którzy jeszcze nie robili tego questa. Wymagany level 100, zalecany 130+.",
+          "location": "Edron"
+        },
+        {
+          "text": "Wejdź do Hero Cave na północy Edronu i zejdź na 6. poziom. Po drodze: Hunters, Wild Warriors, Demon Skeletons, Priestesses, Dragons, Monks, Heroes i Minotaur Guards.",
+          "location": "Edron, Hero Cave"
+        },
+        {
+          "text": "Na dole idź w prawo, potem korytarzem na południe naprzeciw pokoju z Fire Elementalami, aż do Gate of Expertise (level 100) i drzwi questowych."
+        },
+        {
+          "text": "Ustawcie się na 4 polach przy dźwigni. Najmocniejszy gracz (blocker) staje najbardziej po prawej. Pierwszy gracz pociąga dźwignię i cała drużyna przenosi się do sali z 6 Angry Demonami."
+        },
+        {
+          "text": "Atakujcie wspólnie tylko 2 demony, które blokują drzwi na wschód. Pierwszego zabijcie jak najszybciej."
+        },
+        {
+          "text": "Po zabiciu obu demonów od razu przejdźcie przez drzwi na wschód i zamknijcie je za sobą. Po 10 minutach gracze w sali i tak zostaną przeniesieni do pokoju z nagrodami."
+        },
+        {
+          "text": "Każdy gracz wybiera jedną skrzynię z nagrodą, potem wraca przez teleport na wschód od skrzyń."
+        }
       ],
-      "required_items": [],
-      "rewards": ["Demon Armor", "Magic Sword", "Stonecutter Axe", "Present (Annihilation Bear)"]
+      "required_items": [
+        "dużo potionów (health/mana)",
+        "Might Ring (zalecane)"
+      ],
+      "rewards": [
+        "Demon Outfits",
+        "jeden przedmiot do wyboru: Magic Sword, Demon Armor, Stonecutter Axe albo Present Box (Annihilation Bear)",
+        "osiągnięcie Annihilator"
+      ]
     },
     {
       "id": "desert-dungeon-quest",
       "name": "The Desert Dungeon Quest",
       "min_level": 20,
-      "premium": true,
+      "premium": false,
       "source_url": "https://tibia.fandom.com/wiki/The_Desert_Dungeon_Quest",
-      "wiki_revision": null,
+      "wiki_revision": 1103387,
       "status": "draft",
       "reviewed_at": null,
       "steps": [
-        {"text": "Zbierz drużynę: po jednym graczu z każdej profesji (knight, paladin, sorcerer, druid)."},
-        {"text": "Każdy gracz zabiera przedmiot właściwy dla swojej profesji, potrzebny do otwarcia przejścia."},
-        {"text": "Dojdźcie do pustynnego lochu i stańcie na polach oznaczonych dla profesji."},
-        {"text": "Po otwarciu przejścia odbierzcie nagrody ze skrzyń."}
+        {
+          "text": "Zbierz drużynę 4-5 graczy, po jednym z każdej profesji, każdy z levelem 20+ i swoim przedmiotem (zniszczy się na końcu)."
+        },
+        {
+          "text": "Idź na środek pustyni Jakundaf między Venore a Thais. Odkop łopatą stos kamieni (Loose Stone Pile) i zejdź w dół.",
+          "location": "Jakundaf Desert",
+          "items": [
+            "Shovel"
+          ]
+        },
+        {
+          "text": "Zejdź jeszcze 4 razy w dół, na piętro z pająkami. Idź na północ, przy pierwszej okazji skręć na wschód i jaskinią na południe do drabiny w górę."
+        },
+        {
+          "text": "Wejdź po drabinie i idź na zachód do kolejnej drabiny. NIE schodź do dziury na południu z tabliczką ostrzegawczą."
+        },
+        {
+          "text": "Idź na południe i w górę po drabinie. Potem na wschód i północ: miniesz dziurę, do której NIE schodzisz. Dalej na wschód i północ do ostatniej drabiny."
+        },
+        {
+          "text": "Przejdź przez Gate of Expertise (level 20) do pokoju profesji."
+        },
+        {
+          "text": "Połóż swój przedmiot na właściwym basenie i stań na polu: sorcerer wschód, knight południe, druid zachód, paladin północ, monk środek (monk najpierw klika środkowe pole, żeby pojawił się basen)."
+        },
+        {
+          "text": "Gdy wszystkie pola są wciśnięte, paladin pociąga dźwignię przed sobą. Cała drużyna trafia do pokoju z nagrodami."
+        },
+        {
+          "text": "Otwórz obie skrzynie (zachód i wschód). Potrzebujesz 43.5 oz wolnego capa. Schodami na północ wychodzisz na pustynię, ale nie da się już wrócić."
+        }
       ],
-      "required_items": [],
-      "rewards": []
+      "required_items": [
+        "Shovel",
+        "Rope (zalecana)",
+        "przedmiot dla profesji: Spellbook (sorcerer), Crossbow (paladin), Red Apple (druid), Sword (knight), Pair of Monk Fists (monk)"
+      ],
+      "rewards": [
+        "Golden Bag z 25 Platinum Coins za każdą profesję w drużynie",
+        "Green Bag: Protection Amulet, Magic Light Wand, Ring of Healing, Ankh"
+      ]
     },
     {
       "id": "katana-quest",
       "name": "Katana Quest",
-      "min_level": 1,
+      "min_level": 0,
       "premium": false,
       "source_url": "https://tibia.fandom.com/wiki/Katana_Quest",
-      "wiki_revision": null,
+      "wiki_revision": 1044887,
       "status": "draft",
       "reviewed_at": null,
       "steps": [
-        {"text": "Weź ze sobą pochodnię lub inne źródło światła i kilka sztuk jedzenia.", "location": "Rookgaard"},
-        {"text": "Dojdź do jaskini, w której znajduje się skrzynia z kataną."},
-        {"text": "Otwórz skrzynię i zabierz katanę."}
+        {
+          "text": "Idź do grobów na północnym wschodzie Rookgaardu i odkop łopatą środkowy dolny grób.",
+          "location": "Rookgaard",
+          "items": [
+            "Shovel"
+          ]
+        },
+        {
+          "text": "Zejdź do dziury (pająki i poison spidery), idź ścieżką na zachód do kolejnej dziury i wskocz do niej."
+        },
+        {
+          "text": "Tu są szkielety: najlepiej zabij je po kolei, stojąc w wąskim przejściu na południu sali, bo inaczej pójdą za Tobą."
+        },
+        {
+          "text": "Idź na wschód do miejsca na linę i wejdź liną do sali z Rotwormami. Przebiegnij jak najszybciej do drugiej dziury i zejdź (tryb defensywny).",
+          "items": [
+            "Rope"
+          ]
+        },
+        {
+          "text": "Przejdź przez trujące pola (Poison Gas)."
+        },
+        {
+          "text": "Jeśli nie masz Key 4603: idź na północ i przeszukaj ciała, klucz jest w jednym z nich. Potem wróć na południe."
+        },
+        {
+          "text": "Od trujących pól idź na wschód do dziury. Na dole jest szkielet. Otwórz drzwi kluczem 4603 i zejdź schodami."
+        },
+        {
+          "text": "Uwaga, w pokoju mogą być 2 szkielety i rotworm. Ukryta dźwignia za północnym białym filarem otwiera drzwi. Jeśli ktoś zamknie drzwi od zewnątrz, wyjdź teleportem."
+        },
+        {
+          "text": "Katana i Viking Helmet są w świeżych ludzkich zwłokach. Zabierz je i wróć tą samą drogą."
+        }
       ],
-      "required_items": ["torch"],
-      "rewards": ["Katana"]
+      "required_items": [
+        "Rope",
+        "Shovel",
+        "Small Health Potions",
+        "2 Antidote Potions (albo ok. 3 Small Health Potions na trujący gaz)"
+      ],
+      "rewards": [
+        "Katana",
+        "Viking Helmet",
+        "Key 4603"
+      ]
     }
   ]
 }
