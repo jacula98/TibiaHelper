@@ -16,7 +16,7 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
 ## Nazewnictwo w danych i UI
 
 - „Gate of Expertise” zawsze nazywamy „bramka lvl-owa” (odmieniamy: „przez bramkę lvl-ową”, „do bramki lvl-owej”).
-  Słownik zamian jest w `generator/terminology.py`, a test pilnuje, żeby angielska nazwa nie trafiła do `data/quests.json`.
+  Słownik zamian jest w `app/tibiahelper/core/terminology.py`, a test i edytor (tryb autora) pilnują, żeby angielska nazwa nie trafiła do `data/quests.json`.
 
 ## Czego nie robimy
 

@@ -34,7 +34,12 @@ def main() -> int:
     parser.add_argument(
         "--no-update", action="store_true", help="używaj tylko wbudowanego quests.json"
     )
+    # Dla autora: edytor questów, zapis do data/quests.json w repo (tylko uruchamianie ze źródeł).
+    parser.add_argument("--author", action="store_true", help="tryb autora: edycja questów")
     args = parser.parse_args()
+    if args.author:
+        # Autor pracuje na pliku z repo i widzi szkice, a kopia z GitHuba by mu go podmieniła.
+        args.show_drafts = args.no_update = True
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     app = QApplication(sys.argv)
@@ -43,7 +48,14 @@ def main() -> int:
     def visible(result: LoadResult) -> list:
         return result.quests if args.show_drafts else result.visible_quests
 
-    window = MainWindow(ProgressStore(progress_file()), settings_file())
+    author_file = None
+    if args.author:
+        if getattr(sys, "frozen", False):
+            # W .exe plik danych jest w katalogu tymczasowym i ginie po zamknięciu.
+            QMessageBox.warning(None, "TibiaHelper", "Tryb autora działa tylko przy uruchomieniu ze źródeł.")
+            return 1
+        author_file = bundled_data_file()
+    window = MainWindow(ProgressStore(progress_file()), settings_file(), author_file)
     result = None
     error = None
     try:

@@ -33,6 +33,20 @@ pinezka: kliknięcie otwiera okno z mapą Tibii i kropką w tym miejscu. Mapy pi
 z projektu [tibiamaps](https://github.com/tibiamaps/tibia-map-data) i pobierają się przy pierwszym
 użyciu do `%APPDATA%\TibiaHelper\maps`.
 
+## Tryb autora (edycja questów)
+
+```
+cd app
+python -m tibiahelper --author
+```
+
+W widoku questa pojawia się przycisk „✎ Edytuj”. W edytorze można zmieniać nazwę, level,
+przedmioty, nagrody i kroki (dodawać, usuwać, przesuwać). Pinezkę dodaje się tak: zaznacz w tekście
+kroku fragment, za którym ma stać, kliknij „📍 Dodaj pinezkę” i wskaż miejsce na mapie.
+„Oznacz jako przejrzany” zmienia szkic w quest widoczny dla graczy. „Zapisz” sprawdza dane
+(także nazewnictwo, np. „bramka lvl-owa”) i zapisuje `data/quests.json`.
+Publikacja: wyślij ten plik Claude w czacie projektu.
+
 ## Generator danych (dla autora)
 
 Generator pobiera strony questów z [TibiaWiki](https://tibia.fandom.com/) przez MediaWiki API

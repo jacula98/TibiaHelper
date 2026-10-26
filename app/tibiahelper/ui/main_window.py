@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMainWindow,
+    QMessageBox,
     QPushButton,
     QStackedWidget,
     QToolButton,
@@ -17,12 +18,15 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ..core import author
 from ..core.models import MapPoint, Quest
 from ..core.paths import maps_dir
+from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
 from .home_page import HomePage
 from .map_window import MapWindow
+from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
 from .settings_dialog import SettingsDialog
@@ -30,7 +34,11 @@ from .settings_dialog import SettingsDialog
 
 class MainWindow(QMainWindow):
     def __init__(
-        self, progress: ProgressStore, settings_path: Path, parent: QWidget | None = None
+        self,
+        progress: ProgressStore,
+        settings_path: Path,
+        author_file: Path | None = None,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self.setWindowTitle("TibiaHelper")
@@ -42,7 +50,10 @@ class MainWindow(QMainWindow):
         # Kilka "stron" w jednym oknie zamiast wielu okien: mniej miejsca obok gry.
         self._home = HomePage()
         self._list_page = QuestListPage(progress)
-        self._quest_view = QuestView(progress)
+        # author_file: plik quests.json edytowany w trybie autora (None = zwykły tryb).
+        self._author_file = author_file
+        self._editor: QuestEditor | None = None
+        self._quest_view = QuestView(progress, editable=author_file is not None)
         self._map: MapWindow | None = None
         self._stack = QStackedWidget()
         self._stack.addWidget(self._home)
@@ -64,6 +75,9 @@ class MainWindow(QMainWindow):
         self._list_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._list_page.quest_selected.connect(self._open_quest)
         self._quest_view.map_requested.connect(self._show_map)
+        self._quest_view.edit_requested.connect(self._edit_quest)
+        if author_file is not None:
+            self.setWindowTitle("TibiaHelper – tryb autora")
         self._quest_view.back_requested.connect(self._show_list)
         self._quest_view.progress_changed.connect(self._list_page.refresh_progress)
 
@@ -118,6 +132,36 @@ class MainWindow(QMainWindow):
         if self._map is not None:
             self._map.close()
         super().closeEvent(event)
+
+    def _edit_quest(self, quest: Quest) -> None:
+        if self._author_file is None:
+            return
+        try:
+            raw = author.find_quest(author.load_data(self._author_file), quest.id)
+        except (OSError, ValueError) as exc:
+            QMessageBox.warning(self, "Edytor", f"Nie można wczytać {self._author_file}:\n{exc}")
+            return
+        if raw is None:
+            QMessageBox.warning(self, "Edytor", f"Nie ma questa {quest.id!r} w pliku.")
+            return
+        if self._editor is not None:
+            self._editor.close()
+        self._editor = QuestEditor(raw, self._author_file, maps_dir(), self)
+        self._editor.saved.connect(self._reload_after_edit)
+        self._editor.show()
+
+    def _reload_after_edit(self, quest_id: str) -> None:
+        """Po zapisie w edytorze wczytuje plik od nowa i pokazuje poprawiony quest."""
+        try:
+            result = load_quest_file(self._author_file)
+        except QuestFileError as exc:
+            QMessageBox.warning(self, "Edytor", str(exc))
+            return
+        # W trybie autora widać też szkice.
+        self.set_quests(result.quests, result.data_version)
+        quest = next((q for q in result.quests if q.id == quest_id), None)
+        if quest is not None:
+            self._open_quest(quest)
 
     def _open_quest(self, quest: Quest) -> None:
         self._quest_view.show_quest(quest)
