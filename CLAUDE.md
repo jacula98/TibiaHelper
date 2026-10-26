@@ -13,6 +13,11 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
 - Małe zmiany: łatwiej je przejrzeć i cofnąć.
 - Bez płatnych usług i narzędzi (także bez GitHub Actions). Wszystkie sprawdzenia działają lokalnie.
 
+## Nazewnictwo w danych i UI
+
+- „Gate of Expertise” zawsze nazywamy „bramka lvl-owa” (odmieniamy: „przez bramkę lvl-ową”, „do bramki lvl-owej”).
+  Słownik zamian jest w `generator/terminology.py`, a test pilnuje, żeby angielska nazwa nie trafiła do `data/quests.json`.
+
 ## Czego nie robimy
 
 - Aplikacja nie łączy się z TibiaWiki. Robi to tylko generator, uruchamiany przez autora.
