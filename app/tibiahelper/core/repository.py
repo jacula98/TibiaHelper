@@ -13,7 +13,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .models import SCHEMA_VERSION, Monster, Quest, QuestFileHeader
+from .models import SCHEMA_VERSION, SPRITE_URL_PREFIX, Monster, Quest, QuestFileHeader
 
 log = logging.getLogger(__name__)
 
@@ -29,6 +29,8 @@ class LoadResult:
     errors: list[str] = field(default_factory=list)
     # Potwory po id, do obrazków i dymków w krokach.
     monsters: dict[str, Monster] = field(default_factory=dict)
+    # Obrazki przedmiotów: nazwa z lootu -> adres pliku na wiki.
+    item_images: dict[str, str] = field(default_factory=dict)
 
     @property
     def visible_quests(self) -> list[Quest]:
@@ -76,10 +78,29 @@ def parse_quest_data(raw: object) -> LoadResult:
         if unknown:
             errors.append(f"{label}: nieznane potwory {sorted(unknown)}, będą bez obrazka")
 
+    item_images = _parse_item_images(header.items, errors)
+
     for message in errors:
         log.warning(message)
 
-    return LoadResult(data_version=header.data_version, quests=quests, errors=errors, monsters=monsters)
+    return LoadResult(
+        data_version=header.data_version,
+        quests=quests,
+        errors=errors,
+        monsters=monsters,
+        item_images=item_images,
+    )
+
+
+def _parse_item_images(raw: dict, errors: list[str]) -> dict[str, str]:
+    # Tylko adresy z serwera plików TibiaWiki: od tego zależy, z kim łączy się aplikacja.
+    images = {}
+    for name, url in raw.items():
+        if isinstance(url, str) and url.startswith(SPRITE_URL_PREFIX):
+            images[name] = url
+        else:
+            errors.append(f"obrazek przedmiotu {name!r}: niedozwolony adres, pominięto")
+    return images
 
 
 def _parse_monsters(raw_monsters: list, errors: list[str]) -> dict[str, Monster]:

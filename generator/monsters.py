@@ -17,7 +17,7 @@ from .wikitext import strip_markup
 
 _NUMBER = re.compile(r"\d+")
 RARITIES = ("always", "common", "uncommon", "semi-rare", "rare", "very rare")
-_AMOUNT = re.compile(r"^\d+(?:-\d+)?$")
+_AMOUNT = re.compile(r"^\d+(?:-\d+)?[+?]?$")  # „0-10+” albo „0-24?” (wiki nie zna górnej granicy)
 MAX_LOCATION = 600  # znaków: opis miejsc bywa bardzo długi, a to ma być ściąga
 # Szablony w tekście, z których zostawiamy treść zamiast je usuwać, np. {{KW|permission}}.
 _KEEP_TEXT = re.compile(r"\{\{(?:KW|Link|Hover)\|([^{}|]*)[^{}]*\}\}")

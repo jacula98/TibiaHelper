@@ -13,7 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 # Podbijamy ją tylko przy zmianach niekompatybilnych wstecz.
 # 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters),
 # 4: szczegóły potworów (loot, umiejętności, miejsca) do zakładki „Potwory”
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -186,4 +186,6 @@ class QuestFileHeader(_Model):
     data_version: int = Field(ge=1)
     # Też surowe: błędny potwór nie może zablokować wszystkich questów.
     monsters: list[Any] = Field(default_factory=list)
+    # Obrazki przedmiotów z lootu: nazwa -> adres pliku na wiki. Też surowe (sprawdzane w repository.py).
+    items: dict[str, Any] = Field(default_factory=dict)
     quests: list[Any]

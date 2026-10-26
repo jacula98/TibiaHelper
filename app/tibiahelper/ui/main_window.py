@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
 
 from ..core import author
 from ..core.models import Monster, Quest
-from ..core.paths import maps_dir, sprites_dir
+from ..core.paths import items_dir, maps_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         self._stack.addWidget(self._list_page)
         self._stack.addWidget(self._quest_view)
         self._monster_list = MonsterListPage(sprites_dir())
-        self._monster_page = MonsterPage(sprites_dir(), maps_dir())
+        self._monster_page = MonsterPage(sprites_dir(), maps_dir(), items_dir())
         self._stack.addWidget(self._monster_list)
         self._stack.addWidget(self._monster_page)
         # Strona, do której wraca „← Wstecz” na stronie potwora (lista potworów albo quest).
@@ -99,9 +99,14 @@ class MainWindow(QMainWindow):
             self.restoreGeometry(QByteArray.fromBase64(self._settings.geometry.encode("ascii")))
 
     def set_quests(
-        self, quests: list[Quest], data_version: int, monsters: dict[str, Monster] | None = None
+        self,
+        quests: list[Quest],
+        data_version: int,
+        monsters: dict[str, Monster] | None = None,
+        item_images: dict[str, str] | None = None,
     ) -> None:
         self._data_version = data_version
+        self._monster_page.set_item_images(item_images or {})
         self._list_page.set_quests(quests)
         self._quest_view.set_data_version(data_version)
         self._quest_view.set_monsters(monsters or {})
@@ -173,7 +178,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Edytor", str(exc))
             return
         # W trybie autora widać też szkice.
-        self.set_quests(result.quests, result.data_version, result.monsters)
+        self.set_quests(result.quests, result.data_version, result.monsters, result.item_images)
         quest = next((q for q in result.quests if q.id == quest_id), None)
         if quest is not None:
             self._open_quest(quest)

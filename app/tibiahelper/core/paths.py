@@ -51,6 +51,11 @@ def sprites_dir() -> Path:
     return user_data_dir() / "monsters"
 
 
+def items_dir() -> Path:
+    """Pobrane obrazki przedmiotów z lootu (TibiaWiki, © CipSoft)."""
+    return user_data_dir() / "items"
+
+
 def bundled_spawns_file() -> Path:
     """spawns.json dołączony do aplikacji (obok quests.json)."""
     return bundled_data_file().with_name("spawns.json")

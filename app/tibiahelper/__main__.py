@@ -71,7 +71,7 @@ def main() -> int:
             result = load_quest_file(bundled_data_file())
         else:
             result = load_best_local(bundled_data_file(), cached_data_file())
-        window.set_quests(visible(result), result.data_version, result.monsters)
+        window.set_quests(visible(result), result.data_version, result.monsters, result.item_images)
     except QuestFileError as exc:
         # Bez danych okno i tak się otwiera; użytkownik widzi komunikat zamiast awarii.
         logging.error("%s", exc)
@@ -95,7 +95,9 @@ def main() -> int:
             if not apply_update(update, cached_data_file(), cached_spawns_file()):
                 QMessageBox.warning(window, "TibiaHelper", "Nie udało się zapisać nowych poradników.")
             # Nawet gdy zapis się nie udał, pokazujemy nowe dane do końca tej sesji.
-            window.set_quests(visible(update.result), update.data_version, update.result.monsters)
+            window.set_quests(
+                visible(update.result), update.data_version, update.result.monsters, update.result.item_images
+            )
             if update.spawns_raw is not None:
                 window.set_spawns(load_spawns(bundled_spawns_file(), cached_spawns_file()))
 

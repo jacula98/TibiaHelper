@@ -40,7 +40,7 @@ class SettingsDialog(QDialog):
             '(<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>)<br>'
             '• mapy z <a href="https://tibiamaps.io/">tibiamaps</a> '
             '(<a href="https://github.com/tibiamaps/tibia-map-data">tibia-map-data</a>)<br>'
-            "• obrazki potworów z TibiaWiki, © CipSoft GmbH (pobierane przy pierwszym użyciu)<br>"
+            "• obrazki potworów i przedmiotów z TibiaWiki, © CipSoft GmbH (pobierane przy pierwszym użyciu)<br>"
             '• miejsca występowania potworów: Źródło danych: <a href="https://tibiaroute.com/">tibiaroute.com</a>'
             " (za zgodą TibiaRoute)"
         )

@@ -6,6 +6,7 @@ serwera plików TibiaWiki) i trzyma w %APPDATA%/TibiaHelper/monsters.
 """
 
 import logging
+import re
 import time
 import urllib.error
 import urllib.request
@@ -39,11 +40,21 @@ Fetch = Callable[[str], bytes]
 
 def sprite_path(sprites_dir: Path, monster_id: str) -> Path | None:
     """Pobrany obrazek potwora albo None, gdy jeszcze go nie ma."""
+    return image_path(sprites_dir, monster_id)
+
+
+def image_path(folder: Path, key: str) -> Path | None:
+    """Pobrany obrazek (potwora albo przedmiotu) o tej nazwie pliku albo None."""
     for ext in dict.fromkeys(SIGNATURES.values()):
-        path = sprites_dir / f"{monster_id}{ext}"
+        path = folder / f"{key}{ext}"
         if path.exists():
             return path
     return None
+
+
+def item_key(name: str) -> str:
+    """Nazwa pliku obrazka przedmiotu, np. "Dragon's Tail" -> "dragon-s-tail"."""
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") or "item"
 
 
 def _download(url: str) -> bytes:
@@ -72,23 +83,42 @@ def original_url(url: str) -> str:
 
 
 def ensure_sprite(sprites_dir: Path, monster: Monster, fetch: Fetch = _download) -> Path:
-    """Ścieżka do obrazka; pobiera go, jeśli jeszcze go nie ma.
+    """Ścieżka do obrazka potwora; pobiera go, jeśli jeszcze go nie ma.
 
     Rzuca OSError albo ValueError przy błędzie. Wywołuj w wątku w tle.
     """
-    existing = sprite_path(sprites_dir, monster.id)
+    return ensure_image(sprites_dir, monster.id, monster.image_url, fetch)
+
+
+def ensure_image(folder: Path, key: str, url: str | None, fetch: Fetch = _download) -> Path:
+    """Obrazek z serwera plików TibiaWiki zapisany jako folder/key.gif (albo .png)."""
+    existing = image_path(folder, key)
     if existing is not None:
         return existing
     # Model już to sprawdza; tu drugi raz, bo od tego zależy, z kim łączy się aplikacja.
-    if monster.image_url is None or not monster.image_url.startswith(SPRITE_URL_PREFIX):
-        raise ValueError(f"Niedozwolony adres obrazka: {monster.image_url}")
-    data = fetch(original_url(monster.image_url))
+    if url is None or not url.startswith(SPRITE_URL_PREFIX):
+        raise ValueError(f"Niedozwolony adres obrazka: {url}")
+    data = fetch(original_url(url))
     ext = next((ext for sig, ext in SIGNATURES.items() if data.startswith(sig)), None)
     if ext is None:
-        raise ValueError(f"{monster.image_url} nie zwrócił obrazka GIF/PNG")
-    path = sprites_dir / f"{monster.id}{ext}"
+        raise ValueError(f"{url} nie zwrócił obrazka GIF/PNG")
+    path = folder / f"{key}{ext}"
     write_bytes_atomic(path, data)
     return path
+
+
+def download_items(items_dir: Path, images: dict[str, str], fetch: Fetch = _download) -> list[str]:
+    """Pobiera brakujące obrazki przedmiotów (nazwa -> adres); zwraca nazwy pobranych."""
+    done = []
+    for name, url in images.items():
+        if image_path(items_dir, item_key(name)) is not None:
+            continue
+        try:
+            ensure_image(items_dir, item_key(name), url, fetch)
+            done.append(name)
+        except (OSError, ValueError) as exc:
+            log.info("Nie udało się pobrać obrazka %s: %s", name, exc)
+    return done
 
 
 def download_missing(sprites_dir: Path, monsters: list[Monster], fetch: Fetch = _download) -> list[str]:
