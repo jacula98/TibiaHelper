@@ -29,7 +29,7 @@ from ..core.settings import load_settings, save_settings
 from .home_page import HomePage
 from .item_pages import ItemListPage, ItemPage
 from .monster_pages import MonsterListPage, MonsterPage
-from .qol_pages import LootSettingsPage, MinimapPage, QolPage
+from .qol_pages import LootSettingsPage, MinimapPage, QolPage, UiHotkeysPage
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
@@ -69,6 +69,7 @@ class MainWindow(QMainWindow):
         self._qol = QolPage()
         self._loot_settings = LootSettingsPage(bundled_qol_dir())
         self._minimap = MinimapPage()
+        self._ui_hotkeys = UiHotkeysPage(bundled_qol_dir() / "clientoptions.json")
         pages = (
             self._monster_list,
             self._monster_page,
@@ -77,6 +78,7 @@ class MainWindow(QMainWindow):
             self._qol,
             self._loot_settings,
             self._minimap,
+            self._ui_hotkeys,
         )
         for page in pages:
             self._stack.addWidget(page)
@@ -107,6 +109,8 @@ class MainWindow(QMainWindow):
         self._loot_settings.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._qol.maps_requested.connect(lambda: self._stack.setCurrentWidget(self._minimap))
         self._minimap.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
+        self._qol.ui_requested.connect(lambda: self._stack.setCurrentWidget(self._ui_hotkeys))
+        self._ui_hotkeys.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._monster_list.monster_selected.connect(lambda m: self._open_detail("monster", m))
         self._quest_view.monster_requested.connect(lambda m: self._open_detail("monster", m))
         self._item_list.item_selected.connect(lambda i: self._open_detail("item", i))
