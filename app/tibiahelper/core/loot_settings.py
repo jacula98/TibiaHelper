@@ -78,7 +78,8 @@ def install(base: Path, source_dir: Path) -> InstallResult:
             for name, merge in MERGERS.items():
                 _install_file(folder / name, ours[name], merge)
             result.characters += 1
-        except (OSError, ValueError) as exc:
+        # TypeError: poprawny JSON, ale o innym kształcie (np. lista zamiast słownika).
+        except (OSError, ValueError, TypeError) as exc:
             result.errors.append(f"{folder.name}: {exc}")
     return result
 

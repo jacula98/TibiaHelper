@@ -57,7 +57,8 @@ def test_broken_file_is_reported_not_fatal(tmp_path):
     (base / "1").mkdir(parents=True)
     (base / "1" / loot_settings.LOOT_FILE).write_text("{zepsuty", encoding="utf-8")
     (base / "2").mkdir()
+    _write(base / "3" / loot_settings.PRICES_FILE, {"primaryLootValueSources": [1]})
 
     result = loot_settings.install(base, source)
     assert result.characters == 1
-    assert len(result.errors) == 1 and result.errors[0].startswith("1:")
+    assert [error.split(":")[0] for error in result.errors] == ["1", "3"]
