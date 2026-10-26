@@ -180,7 +180,12 @@ def test_check_updates_flags_only_changed_reviewed_quests():
         ("annihilator-quest", 7, 20)
     ]
     assert reviewed["needs_review"] is True
+    assert changes[0].newly_flagged
     assert "needs_review" not in unchanged
+
+    # Drugie uruchomienie: zmiana dalej widoczna, ale już nie "nowa", więc bez zapisu.
+    again = quests.check_updates(data, client(fake))
+    assert [c.newly_flagged for c in again] == [False]
 
 
 def test_title_and_url_round_trip():

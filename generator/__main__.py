@@ -69,7 +69,7 @@ def main(argv: list[str] | None = None) -> int:
                     f"{change.quest_id} [{change.status}]: "
                     f"{change.known_revision} -> {change.latest_revision}"
                 )
-            if any(c.status == "reviewed" for c in changes):
+            if any(c.newly_flagged for c in changes):
                 quests_file.save(data)
                 print("Przejrzane questy ze zmianami oznaczono jako needs_review.")
             print(f"Zmienionych questów: {len(changes)}")

@@ -109,6 +109,7 @@ class Change:
     status: str
     known_revision: int | None
     latest_revision: int
+    newly_flagged: bool = False
 
 
 def check_updates(data: dict, client: WikiClient) -> list[Change]:
@@ -123,7 +124,10 @@ def check_updates(data: dict, client: WikiClient) -> list[Change]:
         revision = max(latest.get(title) or 0, latest.get(title + SPOILER_SUFFIX) or 0)
         known = quest.get("wiki_revision")
         if revision and (known is None or revision > known):
-            changes.append(Change(quest["id"], quest["status"], known, revision))
-            if quest["status"] == "reviewed":
+            # Nowe oznaczenie tylko raz: kolejne uruchomienia dalej raportują zmianę,
+            # ale nie zapisują pliku i nie podbijają data_version bez potrzeby.
+            newly = quest["status"] == "reviewed" and not quest.get("needs_review")
+            if newly:
                 quest["needs_review"] = True
+            changes.append(Change(quest["id"], quest["status"], known, revision, newly))
     return changes
