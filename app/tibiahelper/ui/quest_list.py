@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 
 from ..core.filters import filter_quests
 from ..core.models import Quest
+from ..core.progress import ProgressStore
 
 MAX_LEVEL = 5000
 
@@ -22,8 +23,9 @@ class QuestListPage(QWidget):
     # object, a nie Quest: Qt nie zna typów pydantic, a object przekazuje referencję bez kopiowania.
     quest_selected = Signal(object)
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(self, progress: ProgressStore, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self._progress = progress
         self._quests: list[Quest] = []
 
         self._search = QLineEdit(placeholderText="Szukaj questa…", clearButtonEnabled=True)
@@ -54,13 +56,17 @@ class QuestListPage(QWidget):
         self._quests = quests
         self._refresh()
 
+    def refresh_progress(self) -> None:
+        """Odświeża liczniki kroków po zmianie postępu w widoku questa."""
+        self._refresh()
+
     def _refresh(self) -> None:
         level = self._level.value() or None
         shown = filter_quests(self._quests, self._search.text(), level)
 
         self._list.clear()
         for quest in shown:
-            item = QListWidgetItem(_item_text(quest))
+            item = QListWidgetItem(_item_text(quest, self._progress.count_done(quest)))
             # Trzymamy cały obiekt questa w elemencie listy, żeby nie szukać go po nazwie.
             item.setData(Qt.ItemDataRole.UserRole, quest)
             self._list.addItem(item)
@@ -76,10 +82,17 @@ class QuestListPage(QWidget):
         self.quest_selected.emit(item.data(Qt.ItemDataRole.UserRole))
 
 
-def _item_text(quest: Quest) -> str:
+def _item_text(quest: Quest, done: int) -> str:
+    total = len(quest.steps)
     details = [f"lvl {quest.min_level}+"]
     if quest.premium:
         details.append("premium")
     if quest.status == "draft":
         details.append("DRAFT")
-    return f"{quest.name}  ({', '.join(details)})"
+    if done == total:
+        prefix = "✓ "
+    elif done:
+        prefix = f"{done}/{total} "
+    else:
+        prefix = ""
+    return f"{prefix}{quest.name}  ({', '.join(details)})"
