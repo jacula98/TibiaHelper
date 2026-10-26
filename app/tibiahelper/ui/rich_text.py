@@ -83,5 +83,6 @@ def monster_tooltip(monster: Monster, img_tag: str = "") -> str:
     lines = "<br>".join(escape(line) for line in describe(monster))
     return (
         f'<table cellspacing="4"><tr><td>{img_tag}</td>'
-        f"<td><b>{escape(monster.name)}</b><br>{lines}</td></tr></table>"
+        f"<td><b>{escape(monster.name)}</b><br>{lines}<br>"
+        '<span style="color: #9aa0a6;">kliknij: loot, umiejętności, miejsca</span></td></tr></table>'
     )

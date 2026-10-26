@@ -12,6 +12,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
+    QCompleter,
     QDialog,
     QDialogButtonBox,
     QFormLayout,
@@ -493,6 +494,13 @@ class _MonsterDialog(QDialog):
         self._monster = QComboBox()
         for monster_id, name in sorted(names.items(), key=lambda item: item[1]):
             self._monster.addItem(name, monster_id)
+        # Potworów jest ok. 2000, więc lista ma wyszukiwanie: wpisz fragment nazwy.
+        self._monster.setEditable(True)
+        self._monster.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+        completer = self._monster.completer()
+        completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        self._monster.lineEdit().setPlaceholderText("wpisz nazwę, np. skeleton")
         # Podpowiedź: liczba z początku zaznaczenia, np. „2 szkielety” -> 2.
         first = anchor.split()[0] if anchor.split() else ""
         self._count = QSpinBox(minimum=0, maximum=999, value=int(first) if first.isdigit() else 0)
@@ -500,7 +508,7 @@ class _MonsterDialog(QDialog):
         where = f"za „{anchor}”" if anchor else "na końcu tekstu (nic nie zaznaczono)"
 
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
-        buttons.accepted.connect(self.accept)
+        buttons.accepted.connect(self._accept)
         buttons.rejected.connect(self.reject)
 
         form = QFormLayout(self)
@@ -508,6 +516,15 @@ class _MonsterDialog(QDialog):
         form.addRow("Ile", self._count)
         form.addRow("Obrazek", QLabel(where))
         form.addRow(buttons)
+
+    def _accept(self) -> None:
+        # Wpisany tekst musi być nazwą z listy, inaczej currentData() wskazywałby innego potwora.
+        index = self._monster.findText(self._monster.currentText(), Qt.MatchFlag.MatchFixedString)
+        if index < 0:
+            QMessageBox.information(self, "Oznacz potwora", "Wybierz potwora z listy podpowiedzi.")
+            return
+        self._monster.setCurrentIndex(index)
+        self.accept()
 
     def monster_id(self) -> str:
         return self._monster.currentData()

@@ -37,11 +37,22 @@ def check_quests() -> bool:
 
     # repository.py pomija złe questy, żeby aplikacja działała dalej.
     # Tutaj traktujemy je jako błąd, bo nie powinny trafić do repo.
-    for message in result.errors:
+    errors = list(result.errors)
+    spawns_file = ROOT / "data" / "spawns.json"
+    if spawns_file.is_file():
+        from tibiahelper.core.spawns import load_spawns
+
+        spawns = load_spawns(spawns_file)
+        unknown = sorted(set(spawns.monsters) - set(result.monsters))
+        if unknown:
+            errors.append(f"spawns.json: potwory spoza quests.json: {unknown[:10]}")
+        print(f"Spawny: {len(spawns.monsters)} potworów")
+
+    for message in errors:
         print(message)
-    print(f"Questy: {len(result.quests)}, błędy: {len(result.errors)}")
-    print("OK" if not result.errors else "BŁĄD")
-    return not result.errors
+    print(f"Questy: {len(result.quests)}, potwory: {len(result.monsters)}, błędy: {len(errors)}")
+    print("OK" if not errors else "BŁĄD")
+    return not errors
 
 
 def main() -> int:

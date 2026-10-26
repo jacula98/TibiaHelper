@@ -41,6 +41,7 @@ from ..core.monsters import download_missing, sprite_path
 from ..core.progress import ProgressStore
 from .map_window import MapPanel
 from .rich_text import monster_tooltip, parse_monster_link, parse_pin_link, step_html
+from .sprites import display_sprite
 from .theme import ASSETS_DIR, icon
 
 SCROLL_MARGIN = 6  # odstęp aktualnego kroku od górnej krawędzi
@@ -70,6 +71,8 @@ class QuestView(QWidget):
     progress_changed = Signal()
     # Tryb autora: przycisk „Edytuj” przy queście.
     edit_requested = Signal(object)
+    # Kliknięty potwór (w tekście kroku albo w sekcji „Potwory”): otwiera jego stronę.
+    monster_requested = Signal(object)
 
     def __init__(
         self,
@@ -193,6 +196,7 @@ class QuestView(QWidget):
                 grid.setColumnStretch(column, 1)
             for position, (monster, count) in enumerate(counts):
                 tile = _MonsterTile(monster, count, self._sprites_dir)
+                tile.clicked.connect(self.monster_requested)
                 self._tiles.append(tile)
                 grid.addWidget(tile, position // TILE_COLUMNS, position % TILE_COLUMNS)
             layout.addLayout(grid)
@@ -203,6 +207,7 @@ class QuestView(QWidget):
             row.toggled.connect(self._on_step_toggled)
             # row=row: lambda zapamiętuje swój krok (inaczej wszystkie wskazywałyby ostatni).
             row.map_requested.connect(lambda points, focus, row=row: self._show_map(points, focus, row))
+            row.monster_requested.connect(self.monster_requested)
             self._step_rows.append(row)
             layout.addWidget(row)
 
@@ -403,6 +408,7 @@ class _StepRow(QFrame):
 
     toggled = Signal(int, bool)
     map_requested = Signal(object, object)
+    monster_requested = Signal(object)
 
     def __init__(
         self, index: int, step: Step, checked: bool, monsters: dict[str, Monster], sprites_dir: Path
@@ -459,7 +465,7 @@ class _StepRow(QFrame):
         )
 
     def _sprite(self, index: int) -> Path | None:
-        return sprite_path(self._sprites_dir, self._step.monsters[index].id)
+        return display_sprite(self._sprites_dir, self._step.monsters[index].id)
 
     def _on_hover(self, link: str) -> None:
         # Zapamiętujemy, czy kursor jest nad pinezką/potworem: wtedy klik nie odhacza kroku.
@@ -477,6 +483,12 @@ class _StepRow(QFrame):
         index = parse_pin_link(link)
         if index is not None and index < len(self._step.markers):
             self.map_requested.emit(list(self._step.markers), self._step.markers[index])
+        index = parse_monster_link(link)
+        if index is not None and index < len(self._step.monsters):
+            monster = self._monsters.get(self._step.monsters[index].id)
+            if monster is not None:
+                QToolTip.hideText()
+                self.monster_requested.emit(monster)
 
     def is_checked(self) -> bool:
         return self._box.isChecked()
@@ -504,7 +516,12 @@ class _StepRow(QFrame):
 
 
 class _MonsterTile(QLabel):
-    """Kafelek w sekcji „Potwory”: obrazek, a pod nim „2x Skeleton”. Dymek jak w tekście kroku."""
+    """Kafelek w sekcji „Potwory”: obrazek, a pod nim „2x Skeleton”. Dymek jak w tekście kroku.
+
+    Kliknięcie otwiera stronę potwora w zakładce „Potwory”.
+    """
+
+    clicked = Signal(object)
 
     def __init__(self, monster: Monster, count: int | None, sprites_dir: Path) -> None:
         super().__init__(textFormat=Qt.TextFormat.RichText, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -515,10 +532,15 @@ class _MonsterTile(QLabel):
         self._monster = monster
         self._count = count
         self._sprites_dir = sprites_dir
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.refresh()
 
+    def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.clicked.emit(self._monster)
+
     def refresh(self) -> None:
-        path = sprite_path(self._sprites_dir, self._monster.id)
+        path = display_sprite(self._sprites_dir, self._monster.id)
         name = escape(self._monster.name)
         caption = f"{self._count}x {name}" if self._count else name
         self.setText(f"{_img(path, TILE_SPRITE)}<br>{caption}")

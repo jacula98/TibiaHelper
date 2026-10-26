@@ -10,7 +10,7 @@ import threading
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QPointF, QRectF, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPen, QPixmap, QWheelEvent
+from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPainterPath, QPen, QPixmap, QWheelEvent
 from PySide6.QtWidgets import (
     QGraphicsScene,
     QGraphicsView,
@@ -24,6 +24,7 @@ from PySide6.QtWidgets import (
 
 from ..core.mapdata import ensure_floor, floor_label, floor_path, to_pixel
 from ..core.models import MAP_X_MIN, MAP_Y_MIN, MapPoint
+from ..core.spawns import Point, busiest_spot, floors
 from . import theme
 
 log = logging.getLogger(__name__)
@@ -37,9 +38,13 @@ KIND_COLORS = {
 }
 KIND_NAMES = {"npc": "NPC", "place": "miejsce", "passage": "przejście", "use": "użyj"}
 START_ZOOM = 4.0  # 1 kratka = 4 piksele na ekranie: widać okolicę, ale nie całą mapę
+SPAWN_ZOOM = 2.0  # mapa miejsc potwora: oddalona, żeby od razu widać było całe skupisko
 MIN_ZOOM, MAX_ZOOM = 0.5, 16.0
 DOT_RADIUS = 1.6  # w kratkach mapy, więc kropka rośnie razem z przybliżeniem
 RING_RADIUS = 3.5  # obwódka wokół kropki, żeby od razu rzucała się w oczy
+# Fiolet prawie nie występuje na mapie Tibii, więc punkty nie giną na lawie czy trawie.
+SPAWN_COLOR = "#e040fb"
+SPAWN_HALO = 2.5  # półprzezroczysta poświata: pojedyncza kratka byłaby niewidoczna przy oddaleniu
 
 
 def _circle(center: QPointF, radius: float) -> QRectF:
@@ -104,6 +109,9 @@ class MapPanel(QWidget):
         self._maps_dir = maps_dir
         self._points: list[MapPoint] = []
         self._focus: MapPoint | None = None
+        # Tryb „gdzie występuje potwór”: setki punktów bez podpisów.
+        self._spawns: list[Point] = []
+        self._spawn_note = ""
         self._floor = 7
         self._loading: set[int] = set()
 
@@ -115,7 +123,8 @@ class MapPanel(QWidget):
         self._title.setStyleSheet("font-weight: 600;")
         # Jedna linia: za długi podpis jest ucinany (pełny jest w dymku i w opisie niżej).
         self._title.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-        self._legend = QLabel()
+        # PlainText: podpisy pochodzą z pliku danych, więc nie mogą być czytane jako HTML.
+        self._legend = QLabel(textFormat=Qt.TextFormat.PlainText)
         self._legend.setObjectName("muted")
         self._legend.setWordWrap(True)
 
@@ -155,8 +164,22 @@ class MapPanel(QWidget):
         layout.addWidget(self._view, 1)
         layout.addWidget(self._status)
 
+    def show_spawns(self, title: str, spawns: list[Point], note: str) -> None:
+        """Wszystkie miejsca występowania potwora; start na piętrze i w miejscu, gdzie jest ich najwięcej."""
+        self._picking = False
+        self._points = []
+        self._spawns = spawns
+        self._spawn_note = note
+        self._title.setText(title)
+        self._title.setToolTip(title)
+        z = floors(spawns)[0][0] if spawns else 7
+        spot = busiest_spot(spawns, z)
+        self._focus = MapPoint(x=spot[0], y=spot[1], z=z, label=title) if spot else None
+        self._set_floor(z)
+
     def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
         """Tryb autora: autor klika miejsce na mapie, okno wysyła point_picked."""
+        self._spawns = []
         self._picking = True
         self._points = list(points)
         self._focus = start
@@ -181,6 +204,7 @@ class MapPanel(QWidget):
     def show_points(self, points: list[MapPoint], focus: MapPoint) -> None:
         """Pokazuje punkty jednego kroku i centruje mapę na klikniętym."""
         self._picking = False
+        self._spawns = []
         self._points = points
         self._focus = focus
         self._title.setText(focus.label)
@@ -199,6 +223,8 @@ class MapPanel(QWidget):
     def _set_floor(self, z: int) -> None:
         self._floor = z
         self._floor_label.setText(f"piętro: {floor_label(z)}")
+        if self._spawns:
+            self._legend.setText(self._spawn_legend(z))
         self._view.scene().clear()
         path = floor_path(self._maps_dir, z)
         if path.exists():
@@ -210,6 +236,14 @@ class MapPanel(QWidget):
             self._loading.add(z)
             # daemon=True: zamknięcie programu nie czeka na pobieranie.
             threading.Thread(target=self._load_floor, args=(z,), daemon=True).start()
+
+    def _spawn_legend(self, z: int) -> str:
+        counts = dict(floors(self._spawns))
+        others = ", ".join(f"{floor_label(f)}: {n}" for f, n in sorted(counts.items()) if f != z)
+        text = f"Na tym piętrze: {counts.get(z, 0)} miejsc"
+        if others:
+            text += f" · inne piętra ({others})"
+        return f"{text}\n{self._spawn_note}"
 
     def _load_floor(self, z: int) -> None:
         try:
@@ -267,13 +301,37 @@ class MapPanel(QWidget):
             background.setZValue(1)
             label.setZValue(2)
 
+        self._draw_spawns(scene, z)
+
         if keep_view:
             return  # po kliknięciu w trybie wybierania mapa zostaje tam, gdzie była
         self._view.resetTransform()
-        self._view.scale(START_ZOOM, START_ZOOM)
+        zoom = SPAWN_ZOOM if self._spawns else START_ZOOM
+        self._view.scale(zoom, zoom)
         if self._focus is not None and self._focus.z == z:
             px, py = to_pixel(self._focus.x, self._focus.y)
             self._view.centerOn(px, py)
+
+
+    def _draw_spawns(self, scene: QGraphicsScene, z: int) -> None:
+        # Jedna ścieżka zamiast setek osobnych elementów: scena rysuje i przewija się szybciej.
+        halo, dots = QPainterPath(), QPainterPath()
+        for x, y, pz in self._spawns:
+            if pz != z:
+                continue
+            px, py = to_pixel(x, y)
+            center = QPointF(px + 0.5, py + 0.5)
+            halo.addEllipse(_circle(center, SPAWN_HALO))
+            dots.addEllipse(_circle(center, 0.9))
+        if dots.isEmpty():
+            return
+        color = QColor(SPAWN_COLOR)
+        halo_color = QColor(color)
+        halo_color.setAlpha(90)
+        halo.setFillRule(Qt.FillRule.WindingFill)  # nakładające się koła nie robią „dziur”
+        scene.addPath(halo, QPen(Qt.PenStyle.NoPen), QBrush(halo_color)).setZValue(1)
+        dots.setFillRule(Qt.FillRule.WindingFill)
+        scene.addPath(dots, QPen(QColor("#000000"), 0.25), QBrush(color)).setZValue(2)
 
 
 class MapWindow(QWidget):

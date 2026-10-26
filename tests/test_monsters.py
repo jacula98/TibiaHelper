@@ -153,7 +153,7 @@ def test_ensure_sprite_downloads_once(tmp_path):
     path = monsters.ensure_sprite(tmp_path, monster, fetch)
     assert path == tmp_path / "skeleton.gif" and path.read_bytes() == GIF
     assert monsters.ensure_sprite(tmp_path, monster, fetch) == path
-    assert calls == [IMAGE]
+    assert calls == [IMAGE + "?format=original"]
 
 
 def test_download_missing_skips_non_images(tmp_path):
@@ -162,7 +162,7 @@ def test_download_missing_skips_non_images(tmp_path):
 
     def fetch(url):
         # Serwer zwrócił stronę błędu zamiast obrazka: nie zapisujemy jej.
-        return b"<html>error</html>" if url.endswith("rotworm") else GIF
+        return b"<html>error</html>" if "rotworm" in url else GIF
 
     assert monsters.download_missing(tmp_path, [good, bad], fetch) == ["skeleton"]
     assert monsters.sprite_path(tmp_path, "rotworm") is None

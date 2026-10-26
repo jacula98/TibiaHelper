@@ -21,10 +21,12 @@ from PySide6.QtWidgets import (
 from ..core import author
 from ..core.models import Monster, Quest
 from ..core.paths import maps_dir, sprites_dir
+from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
 from .home_page import HomePage
+from .monster_pages import MonsterListPage, MonsterPage
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
@@ -57,6 +59,12 @@ class MainWindow(QMainWindow):
         self._stack.addWidget(self._home)
         self._stack.addWidget(self._list_page)
         self._stack.addWidget(self._quest_view)
+        self._monster_list = MonsterListPage()
+        self._monster_page = MonsterPage(sprites_dir(), maps_dir())
+        self._stack.addWidget(self._monster_list)
+        self._stack.addWidget(self._monster_page)
+        # Strona, do której wraca „← Wstecz” na stronie potwora (lista potworów albo quest).
+        self._monster_return: QWidget = self._monster_list
 
         self._banner = UpdateBanner()
         self._banner.hide()
@@ -71,6 +79,11 @@ class MainWindow(QMainWindow):
 
         self._home.quests_requested.connect(self._show_list)
         self._list_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._home.monsters_requested.connect(lambda: self._stack.setCurrentWidget(self._monster_list))
+        self._monster_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._monster_list.monster_selected.connect(lambda m: self._open_monster(m, self._monster_list))
+        self._quest_view.monster_requested.connect(lambda m: self._open_monster(m, self._quest_view))
+        self._monster_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._monster_return))
         self._list_page.quest_selected.connect(self._open_quest)
         self._quest_view.edit_requested.connect(self._edit_quest)
         if author_file is not None:
@@ -92,6 +105,10 @@ class MainWindow(QMainWindow):
         self._list_page.set_quests(quests)
         self._quest_view.set_data_version(data_version)
         self._quest_view.set_monsters(monsters or {})
+        self._monster_list.set_monsters(monsters or {})
+
+    def set_spawns(self, spawns: Spawns) -> None:
+        self._monster_page.set_spawns(spawns)
 
     def offer_update(self, data_version: int, on_accept: Callable[[], None]) -> None:
         """Pokazuje pasek „są nowsze poradniki”. Dane zmieniają się dopiero po kliknięciu."""
@@ -164,6 +181,12 @@ class MainWindow(QMainWindow):
     def _open_quest(self, quest: Quest) -> None:
         self._quest_view.show_quest(quest)
         self._stack.setCurrentWidget(self._quest_view)
+
+    def _open_monster(self, monster: Monster, came_from: QWidget) -> None:
+        self._monster_return = came_from
+        self._monster_page.set_back_text("← Quest" if came_from is self._quest_view else "← Lista")
+        self._monster_page.show_monster(monster)
+        self._stack.setCurrentWidget(self._monster_page)
 
     def _show_list(self) -> None:
         self._stack.setCurrentWidget(self._list_page)

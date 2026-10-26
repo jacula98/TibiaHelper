@@ -73,6 +73,8 @@ class QuestListPage(QWidget):
     def _refresh(self) -> None:
         level = self._level.value() or None
         shown = filter_quests(self._quests, self._search.text(), level)
+        # Gotowe poradniki na górze; szkiców (w trybie autora) są setki, więc idą niżej.
+        shown.sort(key=lambda quest: quest.status != "reviewed")
 
         self._list.clear()
         for quest in shown:
