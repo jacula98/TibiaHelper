@@ -60,6 +60,14 @@ QPushButton#primary {{
     border: none;
     font-weight: 600;
 }}
+QPushButton#menu {{
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 15px;
+    border-radius: 12px;
+}}
+QPushButton#menu:hover {{ border-color: {ACCENT}; }}
+QPushButton#menu:disabled {{ color: {MUTED}; background: transparent; }}
 QToolButton#icon {{ border: none; background: transparent; font-size: 18px; padding: 2px 6px; }}
 QToolButton#icon:hover {{ background: {SURFACE_HOVER}; }}
 

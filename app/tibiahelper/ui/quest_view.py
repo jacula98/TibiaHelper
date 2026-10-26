@@ -33,7 +33,8 @@ from PySide6.QtWidgets import (
 from ..core.issues import issue_url
 from ..core.models import Quest, Step
 from ..core.progress import ProgressStore
-from .theme import icon
+from .rich_text import parse_pin_link, step_html
+from .theme import ASSETS_DIR, icon
 
 SCROLL_MARGIN = 6  # odstęp aktualnego kroku od górnej krawędzi
 SCROLL_MS = 250
@@ -43,6 +44,8 @@ class QuestView(QWidget):
     back_requested = Signal()
     # Wysyłany po każdej zmianie checkboxa, żeby lista odświeżyła licznik kroków.
     progress_changed = Signal()
+    # Kliknięta pinezka: (wszystkie punkty kroku, kliknięty punkt).
+    map_requested = Signal(object, object)
 
     def __init__(self, progress: ProgressStore, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -123,6 +126,7 @@ class QuestView(QWidget):
         for index, step in enumerate(quest.steps):
             row = _StepRow(index, step, checked=index in done)
             row.toggled.connect(self._on_step_toggled)
+            row.map_requested.connect(self.map_requested)
             self._step_rows.append(row)
             layout.addWidget(row)
 
@@ -230,21 +234,24 @@ class _StepRow(QFrame):
 
     Sam QCheckBox nie zawija długiego tekstu, dlatego tekst jest w osobnym
     QLabel, a kliknięcie w dowolne miejsce karty też przełącza checkbox.
+    Wyjątek: kliknięcie pinezki otwiera mapę i nie zmienia postępu.
     """
 
     toggled = Signal(int, bool)
+    map_requested = Signal(object, object)
 
     def __init__(self, index: int, step: Step, checked: bool) -> None:
         super().__init__()
         self.setObjectName("step")
         self.index = index
+        self._hovered_link = ""
         self._box = QCheckBox()
         self._box.setChecked(checked)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
         text = QVBoxLayout()
         text.setSpacing(2)
-        text.addWidget(_label(f"{index + 1}. {step.text}"))
+        text.addWidget(self._text_label(index + 1, step))
         details = _step_details(step)
         if details:
             text.addWidget(_label(details, "muted"))
@@ -255,6 +262,26 @@ class _StepRow(QFrame):
         layout.addLayout(text, 1)
 
         self._box.toggled.connect(lambda value: self.toggled.emit(self.index, value))
+
+    def _text_label(self, number: int, step: Step) -> QLabel:
+        if not step.markers:
+            return _label(f"{number}. {step.text}")
+        self._step = step
+        label = QLabel(wordWrap=True, textFormat=Qt.TextFormat.RichText)
+        # Pinezka ma wysokość linii tekstu, żeby nie rozpychała wiersza.
+        size = label.fontMetrics().height() - 2
+        pin = (ASSETS_DIR / "pin.svg").as_uri()
+        label.setText(step_html(number, step, f'<img src="{pin}" height="{size}" width="{size * 3 // 4}">'))
+        label.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByMouse)
+        label.linkActivated.connect(self._on_link)
+        # Zapamiętujemy, czy kursor jest nad pinezką: wtedy klik nie odhacza kroku.
+        label.linkHovered.connect(lambda link: setattr(self, "_hovered_link", link))
+        return label
+
+    def _on_link(self, link: str) -> None:
+        index = parse_pin_link(link)
+        if index is not None and index < len(self._step.markers):
+            self.map_requested.emit(list(self._step.markers), self._step.markers[index])
 
     def is_checked(self) -> bool:
         return self._box.isChecked()
@@ -277,14 +304,15 @@ class _StepRow(QFrame):
 
     def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
         # Tylko lewy przycisk: prawy/środkowy nie powinien zmieniać postępu.
-        if event.button() == Qt.MouseButton.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton and not self._hovered_link:
             self._box.toggle()
 
 
 def _step_details(step: Step) -> str:
     details = []
     if step.location:
-        details.append(f"📍 {step.location}")
+        # Bez ikony pinezki: ta jest tylko w tekście i oznacza klikalną mapę.
+        details.append(f"miejsce: {step.location}")
     if step.npc:
         details.append(f"NPC: {step.npc}")
     if step.items:
