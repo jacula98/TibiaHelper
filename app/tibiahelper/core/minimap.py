@@ -13,6 +13,7 @@ import re
 import shutil
 import urllib.request
 import zipfile
+import zlib
 from pathlib import Path
 
 from .storage import write_bytes_atomic
@@ -76,7 +77,10 @@ def read_package(data: bytes) -> dict[str, bytes]:
             # file_size pochodzi z nagłówka zip; read() i tak nie zwróci więcej niż tyle.
             if info.file_size > MAX_FILE_BYTES:
                 raise ValueError(f"Za duży plik w paczce: {info.filename}")
-            files[match.group(1)] = archive.read(info)
+            try:
+                files[match.group(1)] = archive.read(info)
+            except (zipfile.BadZipFile, zlib.error) as exc:  # np. zły CRC po urwanym pobieraniu
+                raise ValueError(f"Uszkodzony plik w paczce: {info.filename}") from exc
     if not any(name.startswith("Minimap_Color_") for name in files):
         raise ValueError("W paczce nie ma minimapy")
     return files

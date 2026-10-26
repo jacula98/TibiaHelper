@@ -134,7 +134,8 @@ class MinimapPage(QWidget):
         try:
             files = minimap.read_package(minimap.download(url))
             made_backup = minimap.install(target, files)
-        except (OSError, ValueError) as exc:
+        # Szeroko: nieobsłużony błąd w wątku zostawiłby wyłączony przycisk i wiszący napis.
+        except Exception as exc:  # noqa: BLE001
             self._worker.failed.emit(str(exc))
             return
         self._worker.finished.emit(made_backup)

@@ -38,6 +38,9 @@ def test_read_package_accepts_only_minimap_files():
         minimap.read_package(b"to nie zip")
     with pytest.raises(ValueError):
         minimap.read_package(_zip({"minimap/minimapmarkers.bin": b"m"}))
+    broken = data.replace(b"c", b"X", 1)  # zmieniona zawartość = zły CRC
+    with pytest.raises(ValueError):
+        minimap.read_package(broken)
 
 
 def test_install_backs_up_once_and_keeps_markers_without_new_ones(tmp_path):
