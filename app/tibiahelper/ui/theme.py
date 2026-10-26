@@ -103,13 +103,12 @@ QFrame#step[state="done"] {{ background: transparent; }}
 QFrame#step[state="done"] QLabel {{ color: {MUTED}; }}
 
 /* Kafelki w sekcji „Potwory”: obrazek i podpis, jak lista potworów w poradnikach. */
-QLabel#monsterTile {{
+QFrame#monsterTile {{
     background: {SURFACE};
     border: 1px solid {BORDER};
     border-radius: 8px;
-    padding: 4px;
-    font-size: 11px;
 }}
+QFrame#monsterTile QLabel {{ font-size: 11px; background: transparent; }}
 
 QCheckBox::indicator {{
     width: 18px;
@@ -144,6 +143,8 @@ def apply_theme(app: QApplication) -> None:
     # Kolor linków (np. „TibiaWiki”) bierze się z palety, nie ze style sheet.
     palette = app.palette()
     palette.setColor(QPalette.ColorRole.Link, QColor(ACCENT))
+    # Szara podpowiedź w pustych polach (np. „min lvl.”), wyraźnie inna niż wpisany tekst.
+    palette.setColor(QPalette.ColorRole.PlaceholderText, QColor(MUTED))
     app.setPalette(palette)
 
 

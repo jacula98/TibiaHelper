@@ -1,6 +1,7 @@
 """Strona z listą questów: wyszukiwarka, filtr levelu i lista."""
 
 from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
@@ -8,7 +9,6 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QPushButton,
-    QSpinBox,
     QVBoxLayout,
     QWidget,
 )
@@ -31,11 +31,12 @@ class QuestListPage(QWidget):
         self._quests: list[Quest] = []
 
         self._search = QLineEdit(placeholderText="Szukaj questa…", clearButtonEnabled=True)
-        self._level = QSpinBox(minimum=0, maximum=MAX_LEVEL)
-        # Wartość 0 oznacza "bez filtra", więc pokazujemy ją jako tekst.
-        self._level.setSpecialValueText("każdy level")
-        self._level.setPrefix("mój level: ")
-        self._level.setToolTip("Pokaż tylko questy dostępne dla Twojego levelu")
+        # Pole tekstowe zamiast QSpinBox: puste pokazuje szarą podpowiedź „min lvl.”,
+        # a walidator pozwala wpisać tylko liczbę.
+        self._level = QLineEdit(placeholderText="min lvl.", clearButtonEnabled=True)
+        self._level.setValidator(QIntValidator(0, MAX_LEVEL, self._level))
+        self._level.setFixedWidth(90)
+        self._level.setToolTip("Twój level: pokażę tylko questy, które możesz już zrobić")
 
         self._list = QListWidget()
         self._empty = QLabel(alignment=Qt.AlignmentFlag.AlignCenter, wordWrap=True)
@@ -58,7 +59,7 @@ class QuestListPage(QWidget):
         layout.addWidget(self._empty, 1)
 
         self._search.textChanged.connect(self._refresh)
-        self._level.valueChanged.connect(self._refresh)
+        self._level.textChanged.connect(self._refresh)
         # Tylko pojedyncze kliknięcie: itemActivated odpaliłby się dodatkowo przy dwukliku.
         self._list.itemClicked.connect(self._on_item_clicked)
 
@@ -71,7 +72,7 @@ class QuestListPage(QWidget):
         self._refresh()
 
     def _refresh(self) -> None:
-        level = self._level.value() or None
+        level = int(self._level.text()) if self._level.text().isdigit() else None
         shown = filter_quests(self._quests, self._search.text(), level)
         # Gotowe poradniki na górze; szkiców (w trybie autora) są setki, więc idą niżej.
         shown.sort(key=lambda quest: quest.status != "reviewed")

@@ -11,7 +11,8 @@ from generator.wiki_api import WikiClient, WikiPage
 from tibiahelper.core import updater
 from tibiahelper.core.models import Monster
 from tibiahelper.core.spawns import busiest_spot, floors, load_spawns, parse_spawns
-from tibiahelper.ui.monster_pages import loot_html, monster_html
+from tibiahelper.ui.monster_pages import header_html, loot_html, monster_html
+from tibiahelper.ui.monster_widgets import element_verdict
 
 DEMON = """{{Infobox Creature|List={{{1|}}}
 | name           = Demon
@@ -168,7 +169,15 @@ def test_monster_page_escapes_wiki_text():
             "loot": [{"name": "<b>Horn</b>", "rarity": "rare"}],
         }
     )
-    top, bottom = monster_html(monster, None), loot_html(monster)
+    top, bottom = monster_html(monster), loot_html(monster)
     assert "<script>" not in top and "&lt;script&gt;" in top
     assert "&lt;b&gt;Horn&lt;/b&gt;" in bottom and "rzadki" in bottom
-    assert "ogień <span" in top  # tabela żywiołów pokazuje wszystkie 7, także 100%
+    assert "HP <b>8 200</b>" in header_html(monster)
+
+
+@pytest.mark.parametrize(
+    ("percent", "text"),
+    [(125, "+25% · słaby"), (100, "normalnie"), (80, "−20% · mocny"), (0, "odporny (0%)")],
+)
+def test_element_verdict(percent, text):
+    assert element_verdict(percent)[0] == text

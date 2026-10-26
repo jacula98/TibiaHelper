@@ -108,11 +108,11 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "import-all":
             data = quests_file.load()
             count, skipped = bulk.import_monsters(data, client, args.refresh)
-            added = bulk.import_quests(data, client, args.refresh)
+            added, refreshed = bulk.import_quests(data, client, args.refresh)
             quests_file.save(data)
             for line in skipped:
                 print(f"Pominięto {line}")
-            print(f"Potwory: {count}, nowe questy (szkice): {added}")
+            print(f"Potwory: {count}, nowe questy (szkice): {added}, odświeżone szkice: {refreshed}")
 
         elif args.command == "spawns":
             quest_data = quests_file.load()
