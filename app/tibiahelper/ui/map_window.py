@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..core.mapdata import ensure_floor, floor_label, to_pixel
+from ..core.mapdata import ensure_floor, floor_label, floor_path, to_pixel
 from ..core.models import MapPoint
 from . import theme
 
@@ -147,7 +147,7 @@ class MapWindow(QWidget):
         self._floor = z
         self._floor_label.setText(f"{floor_label(z)}  (z={z})")
         self._view.scene().clear()
-        path = self._maps_dir / f"floor-{z:02d}-map.png"
+        path = floor_path(self._maps_dir, z)
         if path.exists():
             self._draw(z, path)
             return
@@ -183,6 +183,7 @@ class MapWindow(QWidget):
             # Uszkodzony plik: kasujemy, żeby przy następnym otwarciu pobrać go od nowa.
             path.unlink(missing_ok=True)
             self._status.setText("Plik mapy był uszkodzony. Otwórz mapę ponownie, żeby go pobrać.")
+            self._status.show()
             return
         self._status.hide()
         scene = self._view.scene()
