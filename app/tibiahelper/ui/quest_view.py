@@ -2,7 +2,8 @@
 
 from html import escape
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, QUrl, Signal
+from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import (
     QCheckBox,
     QHBoxLayout,
@@ -13,6 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ..core.issues import issue_url
 from ..core.models import Quest, Step
 from ..core.progress import ProgressStore
 
@@ -27,6 +29,7 @@ class QuestView(QWidget):
         self._progress = progress
         self._quest: Quest | None = None
         self._step_rows: list[_StepRow] = []
+        self._data_version = 0
 
         back = QPushButton("← Lista questów")
         back.clicked.connect(self.back_requested)
@@ -41,12 +44,21 @@ class QuestView(QWidget):
         top.addWidget(self._counter)
         top.addWidget(reset)
 
+        report = QPushButton("Zgłoś błąd")
+        report.setToolTip("Otwiera w przeglądarce zgłoszenie na GitHubie (potrzebne konto GitHub)")
+        report.clicked.connect(self._report_issue)
+
         self._scroll = QScrollArea(widgetResizable=True)
         self._scroll.setFrameShape(QScrollArea.Shape.NoFrame)
 
         layout = QVBoxLayout(self)
         layout.addLayout(top)
         layout.addWidget(self._scroll, 1)
+        layout.addWidget(report, 0, Qt.AlignmentFlag.AlignRight)
+
+    def set_data_version(self, data_version: int) -> None:
+        # Wersja danych trafia do zgłoszenia, żeby było wiadomo, którego pliku dotyczy błąd.
+        self._data_version = data_version
 
     def show_quest(self, quest: Quest) -> None:
         self._quest = quest
@@ -108,6 +120,10 @@ class QuestView(QWidget):
             row.set_checked(False)
         self._update_counter()
         self.progress_changed.emit()
+
+    def _report_issue(self) -> None:
+        if self._quest is not None:
+            QDesktopServices.openUrl(QUrl(issue_url(self._quest, self._data_version)))
 
     def _update_counter(self) -> None:
         done = sum(row.is_checked() for row in self._step_rows)

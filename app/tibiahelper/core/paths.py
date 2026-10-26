@@ -30,3 +30,12 @@ def user_data_dir() -> Path:
 
 def progress_file() -> Path:
     return user_data_dir() / "progress.json"
+
+
+def cached_data_file() -> Path:
+    """quests.json pobrany z GitHuba (nowszy niż wbudowany)."""
+    return user_data_dir() / "quests.json"
+
+
+def settings_file() -> Path:
+    return user_data_dir() / "settings.json"
