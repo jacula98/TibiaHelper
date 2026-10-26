@@ -1,6 +1,6 @@
 {
   "schema_version": 4,
-  "data_version": 12,
+  "data_version": 13,
   "quests": [
     {
       "id": "20-years-a-cook-quest",
@@ -15234,6 +15234,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e8/Alchemistical_Container.gif/revision/latest?cb=20240421094655&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Alchemistical_Container",
       "wiki_revision": 1058598,
+      "speed": 0,
       "location": "Doctor Marrow's and The Monster's boss room."
     },
     {
@@ -15665,6 +15666,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/26/An_Observer_Eye.gif/revision/latest?cb=20161108202021&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/An_Observer_Eye",
       "wiki_revision": 925269,
+      "speed": 0,
       "boss": true,
       "abilities": [
         "Great Energy Beam: 0-5000+ (energy)"
@@ -17511,6 +17513,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/8/8e/Antenna.gif/revision/latest?cb=20240420144005&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Antenna",
       "wiki_revision": 1058579,
+      "speed": 0,
       "location": "Doctor Marrow's and The Monster's boss room."
     },
     {
@@ -20894,6 +20897,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b0/Berrypest.gif/revision/latest?cb=20171219235945&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Berrypest",
       "wiki_revision": 1192313,
+      "armor": 0,
       "speed": 105,
       "bestiary_class": "Vermin",
       "bestiary_level": "Harmless",
@@ -22161,6 +22165,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f1/Blight_Spitter.gif/revision/latest?cb=20251007151306&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Blight_Spitter",
       "wiki_revision": 1117243,
+      "speed": 0,
       "location": "Venore, in Blight Mariner's room."
     },
     {
@@ -22655,7 +22660,8 @@
       "exp": 0,
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/24/Blood_Guardian.gif/revision/latest?cb=20251001181539&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Blood_Guardian",
-      "wiki_revision": 1112317
+      "wiki_revision": 1112317,
+      "speed": 0
     },
     {
       "id": "blood-hand",
@@ -22903,6 +22909,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/d6/Blood_Totem.gif/revision/latest?cb=20250702205522&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Blood_Totem",
       "wiki_revision": 1140994,
+      "speed": 0,
       "location": "Norcferatu Fortress."
     },
     {
@@ -27334,6 +27341,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/46/Butterfly_%28Blue%29.gif/revision/latest?cb=20171218204722&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Butterfly_(Blue)",
       "wiki_revision": 1192357,
+      "armor": 0,
       "speed": 160,
       "bestiary_class": "Vermin",
       "bestiary_level": "Harmless",
@@ -27347,6 +27355,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/8/80/Butterfly_%28Purple%29.gif/revision/latest?cb=20171218204723&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Butterfly_(Purple)",
       "wiki_revision": 1192358,
+      "armor": 0,
       "speed": 160,
       "bestiary_class": "Vermin",
       "bestiary_level": "Harmless",
@@ -27360,6 +27369,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e6/Butterfly_%28Red%29.gif/revision/latest?cb=20171218204724&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Butterfly_(Red)",
       "wiki_revision": 1192359,
+      "armor": 0,
       "speed": 160,
       "bestiary_class": "Vermin",
       "bestiary_level": "Harmless",
@@ -28794,6 +28804,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/53/Channeling_Earl_Osam.gif/revision/latest?cb=20220730174857&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Channeling_Earl_Osam",
       "wiki_revision": 1135958,
+      "speed": 0,
       "boss": true,
       "abilities": [
         "Melee: 0-1000",
@@ -30830,6 +30841,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/4c/Corrupted_Ghost.gif/revision/latest?cb=20251025092725&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Corrupted_Ghost",
       "wiki_revision": 1200694,
+      "armor": 0,
       "speed": 58,
       "bestiary_class": "Undead",
       "bestiary_level": "Trivial",
@@ -30903,6 +30915,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/d1/Corrupted_Skeleton.gif/revision/latest?cb=20251025092928&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Corrupted_Skeleton",
       "wiki_revision": 1200695,
+      "armor": 0,
       "speed": 65,
       "bestiary_class": "Undead",
       "bestiary_level": "Trivial",
@@ -34989,6 +35002,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/24/Dangerous_Apparatus.gif/revision/latest?cb=20221111031011&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Dangerous_Apparatus",
       "wiki_revision": 988391,
+      "speed": 0,
       "abilities": [
         "?"
       ],
@@ -39876,7 +39890,8 @@
       "exp": 0,
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/de/Digestive_Ooze.gif/revision/latest?cb=20250720231010&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Digestive_Ooze",
-      "wiki_revision": 1112311
+      "wiki_revision": 1112311,
+      "speed": 0
     },
     {
       "id": "dipthrah",
@@ -46134,6 +46149,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Enpa_Yolo",
       "wiki_revision": 1143173,
       "armor": 8,
+      "speed": 0,
       "location": "Blue Valley -"
     },
     {
@@ -51023,6 +51039,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Flamethrower",
       "wiki_revision": 985961,
       "armor": 1,
+      "speed": 0,
       "abilities": [
         "Fire Missile: 50-100 (fire)"
       ],
@@ -51808,6 +51825,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/aa/Force_Field.gif/revision/latest?cb=20180611144930&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Force_Field",
       "wiki_revision": 1116510,
+      "speed": 0,
       "abilities": [
         "Damage Reflection: 10-20% (?)"
       ],
@@ -65555,6 +65573,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/09/Human_%28Creature%29.gif/revision/latest?cb=20210310165519&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Human_(Creature)",
       "wiki_revision": 986700,
+      "armor": 0,
       "speed": 110,
       "abilities": [
         "Melee: 0-7"
@@ -77635,6 +77654,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Magicthrower",
       "wiki_revision": 985960,
       "armor": 1,
+      "speed": 0,
       "abilities": [
         "Odd Earth Missile: 50-100 (earth)"
       ],
@@ -78262,6 +78282,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ad/Makeshift_Home.gif/revision/latest?cb=20171113125422&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Makeshift_Home",
       "wiki_revision": 1116472,
+      "speed": 0,
       "abilities": [
         "Shoots arrows: 0-200+",
         "Physical Strike: 0-200 (physical)"
@@ -87121,6 +87142,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f8/Mountain_Troll.gif/revision/latest?cb=20140823210135&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Mountain_Troll",
       "wiki_revision": 1074709,
+      "armor": 0,
       "speed": 55,
       "abilities": [
         "Melee: 0-9"
@@ -87374,6 +87396,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/20/Muglex_Clan_Assassin.gif/revision/latest?cb=20171219235250&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Muglex_Clan_Assassin",
       "wiki_revision": 1203217,
+      "armor": 0,
       "speed": 70,
       "bestiary_class": "Humanoid",
       "bestiary_level": "Trivial",
@@ -87521,6 +87544,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/43/Muglex_Clan_Footman.gif/revision/latest?cb=20140827155824&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Muglex_Clan_Footman",
       "wiki_revision": 1203216,
+      "armor": 0,
       "speed": 60,
       "bestiary_class": "Humanoid",
       "bestiary_level": "Trivial",
@@ -95439,6 +95463,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/71/The_Percht_Queen.gif/revision/latest?cb=20221126184827&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/The_Percht_Queen",
       "wiki_revision": 1116552,
+      "speed": 0,
       "boss": true,
       "loot": [
         {
@@ -95881,6 +95906,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cd/Pi%C3%B1ata_Dragon.gif/revision/latest?cb=20161108200042&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pi%C3%B1ata_Dragon",
       "wiki_revision": 1084454,
+      "speed": 0,
       "abilities": [
         "Throwing Cakes: 6-40? (physical)",
         "Healing: 130-170"
@@ -96034,6 +96060,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/09/Plaguethrower.gif/revision/latest?cb=20080116190527&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pillar",
       "wiki_revision": 1179242,
+      "speed": 0,
       "abilities": [
         "Debuff"
       ],
@@ -96131,6 +96158,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/09/Plaguethrower.gif/revision/latest?cb=20080116190527&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pillar_(Zugurosh)",
       "wiki_revision": 1179357,
+      "speed": 0,
       "abilities": [
         "Debuff"
       ],
@@ -96592,6 +96620,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ae/Pirate_Cook.gif/revision/latest?cb=20260317210145&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pirate_Cook",
       "wiki_revision": 1191850,
+      "armor": 0,
       "speed": 70,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
@@ -97981,6 +98010,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Plaguethrower",
       "wiki_revision": 988696,
       "armor": 1,
+      "speed": 0,
       "abilities": [
         "Earth Missile: 50-100 (earth)"
       ],
@@ -98056,6 +98086,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a5/Planestrider.gif/revision/latest?cb=20200720014630&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Planestrider",
       "wiki_revision": 1116576,
+      "speed": 0,
       "boss": true,
       "abilities": [
         "Summon Lost Ghost Of A Planegazer: 3"
@@ -100645,6 +100676,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/71/Raccoon_Supplies.gif/revision/latest?cb=20210825125920&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Raccoon_Supplies",
       "wiki_revision": 1116625,
+      "speed": 0,
       "location": "The Journey"
     },
     {
@@ -106149,6 +106181,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e8/Sacred_Snake.gif/revision/latest?cb=20140917032005&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Sacred_Snake",
       "wiki_revision": 928075,
+      "armor": 0,
       "speed": 60,
       "abilities": [
         "Same as a Snake? (?)"
@@ -109225,6 +109258,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Shredderthrower",
       "wiki_revision": 985959,
       "armor": 1,
+      "speed": 0,
       "abilities": [
         "Shoots throwing Star: 80-140 (physical)"
       ],
@@ -111064,6 +111098,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/32/Snake.gif/revision/latest?cb=20150416141150&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Snake",
       "wiki_revision": 1202242,
+      "armor": 0,
       "speed": 60,
       "bestiary_class": "Reptile",
       "bestiary_level": "Trivial",
@@ -113699,6 +113734,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/69/Spyrat_%28Facing_East%29.gif/revision/latest?cb=20220602220136&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spyrat_(Facing_East)",
       "wiki_revision": 1164149,
+      "speed": 0,
       "abilities": [
         "Melee: 20-500",
         "area attack: 90-150 (Energy)",
@@ -113717,6 +113753,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/4f/Spyrat_%28Facing_North%29.gif/revision/latest?cb=20220602220133&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spyrat_(Facing_North)",
       "wiki_revision": 1164151,
+      "speed": 0,
       "abilities": [
         "Melee: 20-500",
         "area attack: 90-150 (Energy)",
@@ -113735,6 +113772,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/9b/Spyrat_%28Facing_South%29.gif/revision/latest?cb=20220602220131&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spyrat_(Facing_South)",
       "wiki_revision": 1164152,
+      "speed": 0,
       "abilities": [
         "Melee: 20-500",
         "area attack: 90-150 (Energy)",
@@ -113753,6 +113791,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5d/Spyrat_%28Facing_West%29.gif/revision/latest?cb=20220602220128&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spyrat_(Facing_West)",
       "wiki_revision": 1164150,
+      "speed": 0,
       "abilities": [
         "Melee: 20-500",
         "area attack: 90-150 (Energy)",
@@ -116785,6 +116824,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/0d/Tentugly%27s_Head.gif/revision/latest?cb=20201119154649&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Tentugly's_Head",
       "wiki_revision": 1140930,
+      "speed": 0,
       "boss": true,
       "abilities": [
         "Melee: 0-400",
@@ -123748,7 +123788,8 @@
       "exp": 0,
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/ee/Vampiric_Flesh.gif/revision/latest?cb=20250720225218&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Vampiric_Flesh",
-      "wiki_revision": 1112310
+      "wiki_revision": 1112310,
+      "speed": 0
     },
     {
       "id": "vampiric-heart",
@@ -123757,7 +123798,8 @@
       "exp": 0,
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/01/Vampiric_Heart.gif/revision/latest?cb=20250720230254&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Vampiric_Heart",
-      "wiki_revision": 1112312
+      "wiki_revision": 1112312,
+      "speed": 0
     },
     {
       "id": "varg",
@@ -125399,6 +125441,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/30/Wafer_Paper_Butterfly.gif/revision/latest?cb=20240608215811&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Wafer_Paper_Butterfly",
       "wiki_revision": 1192350,
+      "armor": 0,
       "speed": 160,
       "bestiary_class": "Vermin",
       "bestiary_level": "Harmless",
@@ -129195,6 +129238,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/73/Beer_Cask.gif/revision/latest?cb=20070319014306&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Wine_Cask_(Creature)",
       "wiki_revision": 907363,
+      "speed": 0,
       "location": "The Barkless hideout under Ab'Dendriel."
     },
     {
