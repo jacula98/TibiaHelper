@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.mapdata import ensure_floor, floor_label, floor_path, to_pixel
-from ..core.models import MapPoint
+from ..core.models import MAP_X_MIN, MAP_Y_MIN, MapPoint
 from . import theme
 
 log = logging.getLogger(__name__)
@@ -54,8 +54,12 @@ class _FloorLoader(QObject):
 class MapView(QGraphicsView):
     """Widok mapy: kółko myszy przybliża, przeciąganie przesuwa."""
 
+    # Kliknięcie bez przeciągania (współrzędne sceny = piksele mapy).
+    clicked = Signal(float, float)
+
     def __init__(self) -> None:
         super().__init__()
+        self._press_pos = None
         self.setScene(QGraphicsScene(self))
         self.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
@@ -68,6 +72,18 @@ class MapView(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
+    def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        self._press_pos = event.position()
+        super().mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        super().mouseReleaseEvent(event)
+        # Ruch o kilka pikseli to jeszcze kliknięcie; dalej to przesuwanie mapy.
+        if self._press_pos is not None and (event.position() - self._press_pos).manhattanLength() < 5:
+            scene_pos = self.mapToScene(event.position().toPoint())
+            self.clicked.emit(scene_pos.x(), scene_pos.y())
+        self._press_pos = None
+
     def wheelEvent(self, event: QWheelEvent) -> None:  # noqa: N802 (nazwa z Qt)
         factor = 1.25 if event.angleDelta().y() > 0 else 0.8
         zoom = self.transform().m11() * factor
@@ -76,6 +92,9 @@ class MapView(QGraphicsView):
 
 
 class MapWindow(QWidget):
+    # Tryb wybierania (edytor autora): kliknięte miejsce jako x, y, z w grze.
+    point_picked = Signal(int, int, int)
+
     def __init__(self, maps_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent, Qt.WindowType.Window)
         self.setWindowTitle("Mapa – TibiaHelper")
@@ -108,6 +127,8 @@ class MapWindow(QWidget):
         self._floor_label = QLabel()
 
         self._view = MapView()
+        self._view.clicked.connect(self._on_map_clicked)
+        self._picking = False
         hint = QLabel("Kółko myszy: przybliżenie · przeciągnij: przesuwanie")
         hint.setObjectName("muted")
         self._status = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
@@ -129,13 +150,41 @@ class MapWindow(QWidget):
         layout.addWidget(self._status)
         layout.addWidget(hint)
 
+    def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
+        """Tryb autora: autor klika miejsce na mapie, okno wysyła point_picked."""
+        self._picking = True
+        self._points = list(points)
+        self._focus = start
+        self._title.setText("Kliknij miejsce na mapie")
+        self._legend.setText("Zmień piętro strzałkami, jeśli miejsce jest wyżej albo pod ziemią.")
+        self._set_floor(start.z)
+        self._show_window()
+
+    def _on_map_clicked(self, scene_x: float, scene_y: float) -> None:
+        if not self._picking or self._view.scene().sceneRect().isEmpty():
+            return
+        x, y = MAP_X_MIN + int(scene_x), MAP_Y_MIN + int(scene_y)
+        try:
+            picked = MapPoint(x=x, y=y, z=self._floor, label="wybrane miejsce")
+        except ValueError:
+            return  # klik poza mapą Tibii
+        self._focus = picked
+        self._points = [p for p in self._points if p.label != "wybrane miejsce"] + [picked]
+        self._legend.setText(f"Wybrano: x {x}, y {y}, piętro {floor_label(self._floor)}")
+        self._draw(self._floor, floor_path(self._maps_dir, self._floor), keep_view=True)
+        self.point_picked.emit(x, y, self._floor)
+
     def show_points(self, points: list[MapPoint], focus: MapPoint) -> None:
         """Pokazuje punkty jednego kroku i centruje mapę na klikniętym."""
+        self._picking = False
         self._points = points
         self._focus = focus
         self._title.setText(focus.label)
         self._legend.setText(f"{KIND_NAMES[focus.kind]} · x {focus.x}, y {focus.y}")
         self._set_floor(focus.z)
+        self._show_window()
+
+    def _show_window(self) -> None:
         self.show()
         self.raise_()
         self.activateWindow()
@@ -177,7 +226,7 @@ class MapWindow(QWidget):
         if z == self._floor:
             self._status.setText("Nie udało się pobrać mapy. Sprawdź internet i otwórz mapę ponownie.")
 
-    def _draw(self, z: int, path: Path) -> None:
+    def _draw(self, z: int, path: Path, keep_view: bool = False) -> None:
         pixmap = QPixmap(str(path))
         if pixmap.isNull():
             # Uszkodzony plik: kasujemy, żeby przy następnym otwarciu pobrać go od nowa.
@@ -214,6 +263,8 @@ class MapWindow(QWidget):
             background.setZValue(1)
             label.setZValue(2)
 
+        if keep_view:
+            return  # po kliknięciu w trybie wybierania mapa zostaje tam, gdzie była
         self._view.resetTransform()
         self._view.scale(START_ZOOM, START_ZOOM)
         if self._focus is not None and self._focus.z == z:

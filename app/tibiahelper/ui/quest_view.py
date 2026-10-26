@@ -46,8 +46,12 @@ class QuestView(QWidget):
     progress_changed = Signal()
     # Kliknięta pinezka: (wszystkie punkty kroku, kliknięty punkt).
     map_requested = Signal(object, object)
+    # Tryb autora: przycisk „Edytuj” przy queście.
+    edit_requested = Signal(object)
 
-    def __init__(self, progress: ProgressStore, parent: QWidget | None = None) -> None:
+    def __init__(
+        self, progress: ProgressStore, editable: bool = False, parent: QWidget | None = None
+    ) -> None:
         super().__init__(parent)
         self._progress = progress
         self._quest: Quest | None = None
@@ -70,6 +74,11 @@ class QuestView(QWidget):
         top.addStretch(1)
         top.addWidget(self._counter)
         top.addWidget(reset)
+        if editable:
+            edit = QPushButton("✎ Edytuj")
+            edit.setObjectName("primary")
+            edit.clicked.connect(self._request_edit)
+            top.addWidget(edit)
 
         self._scroll = QScrollArea(widgetResizable=True)
         self._scroll.setFrameShape(QScrollArea.Shape.NoFrame)
@@ -215,6 +224,10 @@ class QuestView(QWidget):
             self._scroll_animation.start()
         else:
             bar.setValue(target)
+
+    def _request_edit(self) -> None:
+        if self._quest is not None:
+            self.edit_requested.emit(self._quest)
 
     def _report_issue(self) -> None:
         if self._quest is not None:
