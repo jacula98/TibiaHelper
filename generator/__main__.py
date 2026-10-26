@@ -134,9 +134,12 @@ def main(argv: list[str] | None = None) -> int:
 
         elif args.command == "npcs":
             pages = bulk.load_pages(client, client.embedded_in("Infobox NPC"), args.refresh)
-            data = npcs.build(pages)
+            data = npcs.build(pages, client.image_urls(monsters.sprite_file(title) for title in pages))
             npcs.save(data)
-            print(f"NPC z pozycją: {len(data['npcs'])} (stron: {len(pages)})")
+            quest_data = quests_file.load()
+            quest_data["npc_images"] = npcs.images_by_name(data)
+            quests_file.save(quest_data)
+            print(f"NPC z pozycją: {len(data['npcs'])} (stron: {len(pages)}), z obrazkiem: {len(quest_data['npc_images'])}")
 
         elif args.command == "items":
             data = quests_file.load()

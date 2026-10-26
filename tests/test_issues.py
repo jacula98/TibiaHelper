@@ -30,3 +30,13 @@ def test_issue_url_prefills_title_and_body():
     assert "Wersja danych: 4" in body
     assert "Rewizja TibiaWiki: 123" in body
     assert set(params) == {"title", "body"}
+
+
+def test_monster_issue_url():
+    from tibiahelper.core.issues import monster_issue_url
+    from tibiahelper.core.models import Monster
+
+    monster = Monster(id="demon", name="Demon", hp=8200, exp=6000, source_url="https://tibia.fandom.com/wiki/Demon")
+    params = urllib.parse.parse_qs(monster_issue_url(monster, data_version=7).split("?", 1)[1])
+    assert params["title"] == ["[potwór: demon] Błąd w danych potwora"]
+    assert "Potwór: Demon (`demon`)" in params["body"][0]

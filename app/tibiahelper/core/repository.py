@@ -31,6 +31,8 @@ class LoadResult:
     monsters: dict[str, Monster] = field(default_factory=dict)
     # Obrazki przedmiotów: nazwa z lootu -> adres pliku na wiki.
     item_images: dict[str, str] = field(default_factory=dict)
+    # Obrazki NPC: imię -> adres pliku na wiki.
+    npc_images: dict[str, str] = field(default_factory=dict)
 
     @property
     def visible_quests(self) -> list[Quest]:
@@ -78,7 +80,8 @@ def parse_quest_data(raw: object) -> LoadResult:
         if unknown:
             errors.append(f"{label}: nieznane potwory {sorted(unknown)}, będą bez obrazka")
 
-    item_images = _parse_item_images(header.items, errors)
+    item_images = _parse_images(header.items, "przedmiotu", errors)
+    npc_images = _parse_images(header.npc_images, "NPC", errors)
 
     for message in errors:
         log.warning(message)
@@ -89,17 +92,18 @@ def parse_quest_data(raw: object) -> LoadResult:
         errors=errors,
         monsters=monsters,
         item_images=item_images,
+        npc_images=npc_images,
     )
 
 
-def _parse_item_images(raw: dict, errors: list[str]) -> dict[str, str]:
+def _parse_images(raw: dict, what: str, errors: list[str]) -> dict[str, str]:
     # Tylko adresy z serwera plików TibiaWiki: od tego zależy, z kim łączy się aplikacja.
     images = {}
     for name, url in raw.items():
         if isinstance(url, str) and url.startswith(SPRITE_URL_PREFIX):
             images[name] = url
         else:
-            errors.append(f"obrazek przedmiotu {name!r}: niedozwolony adres, pominięto")
+            errors.append(f"obrazek {what} {name!r}: niedozwolony adres, pominięto")
     return images
 
 

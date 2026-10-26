@@ -17,6 +17,7 @@ TODO_STEP = "TODO: przetłumacz i uprość kroki poniżej (tekst z TibiaWiki, po
 MAX_STEPS = 40
 MAX_STEP_CHARS = 600
 MAX_ITEM_CHARS = 120
+MARKER_LABEL = "Miejsce"  # podpis pinezki z wiki; autor zmienia go na konkretny (np. „Wejście do jaskini”)
 
 # Szablony, z których zostawiamy tekst (np. {{KW|mead}} -> mead, {{Sound|...}} -> "...").
 _KEEP = re.compile(r"\{\{(?:KW|Ilink|ilink|Sound|sound|Server Message|Message|Item Obtained)\|([^{}|]*)[^{}]*\}\}")
@@ -25,6 +26,20 @@ _LINK = re.compile(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]")
 _HEADING = re.compile(r"^(=+)\s*(.*?)\s*\1\s*$")
 _REF = re.compile(r"<ref[^>]*>.*?</ref>|<[^>]+>", re.DOTALL)
 REQUIRED_HEADINGS = ("required equipment", "requirements", "required items")
+# Sekcje, które nie są krokami: rozmowy z NPC, galerie, ciekawostki itp.
+SKIP_HEADINGS = (
+    "dialog", "transcript", "conversation", "meeting", "gallery", "trivia",
+    "see also", "references", "external links", "achievement", "video",
+)
+# Galeria obrazków (<gallery>…</gallery>) i tabele wiki ({| … |}) to nie tekst kroków.
+_GALLERY = re.compile(r"<gallery.*?</gallery>", re.DOTALL | re.IGNORECASE)
+_TABLE = re.compile(r"^\{\|.*?^\|\}", re.DOTALL | re.MULTILINE)
+# Linia z samą nazwą pliku obrazka (np. „Combat_Knife_Chest.png | podpis”) zostaje po galerii.
+_IMAGE_LINE = re.compile(r"^[^ ]+\.(?:png|gif|jpe?g)\b", re.IGNORECASE)
+_ACHIEVEMENT = re.compile(r"^Congratulations! You earned the achievement", re.IGNORECASE)
+# Link do mapy wiki: [https://tibia.fandom.com/wiki/Mapper?coords=129.174-122.118-7-2-1-1 here]
+_MAPPER_LINK = re.compile(r"\[https?://[^\s\]]*Mapper\?coords=(\d+)\.(\d+)-(\d+)\.(\d+)-(\d+)[^\s\]]*\s*([^\]]*)\]")
+_EXTERNAL = re.compile(r"\[https?://[^\s\]]+\s*([^\]]*)\]")
 
 
 def _strip_templates(text: str) -> str:
@@ -39,6 +54,7 @@ def _strip_templates(text: str) -> str:
 def clean(text: str) -> str:
     """Wikitekst -> zwykły tekst w jednej linii."""
     text = _FILE.sub("", text)
+    text = _EXTERNAL.sub(r"\1", text)
     text = _KEEP.sub(lambda m: m.group(1), text)
     text = _strip_templates(text)
     text = _LINK.sub(r"\1", text)
@@ -70,6 +86,15 @@ def _mapper_token(match: re.Match) -> str:
     return text
 
 
+def _mapper_link_token(match: re.Match) -> str:
+    bx, ox, by, oy, z, text = match.groups()
+    return f"@@{int(bx) * BLOCK + int(ox)},{int(by) * BLOCK + int(oy)},{int(z)}@@{text}"
+
+
+def _skip_line(text: str) -> bool:
+    return len(text) < 3 or bool(_IMAGE_LINE.match(text) or _ACHIEVEMENT.match(text))
+
+
 def _markers(line: str, label: str) -> tuple[str, list[dict]]:
     """Wyjmuje znaczniki współrzędnych z linii -> pinezki (bez anchor: stoją na końcu kroku)."""
     found = []
@@ -85,17 +110,21 @@ def draft_content(wikitext: str, quest_name: str) -> tuple[list[dict], list[str]
     required: list[str] = []
     heading = ""
     pending_heading = ""
+    wikitext = _TABLE.sub("", _GALLERY.sub("", wikitext))
     text_only = _MAPPER.sub(_mapper_token, wikitext)
+    text_only = _MAPPER_LINK.sub(_mapper_link_token, text_only)
     text_only = _strip_templates(_KEEP.sub(lambda m: m.group(1), text_only))
     for line in text_only.splitlines():
-        line, markers = _markers(line.strip(), quest_name)
+        line, markers = _markers(line.strip(), MARKER_LABEL)
         match = _HEADING.match(line)
         if match:
             heading = clean(match.group(2))
             pending_heading = heading
             continue
+        if any(word in heading.lower() for word in SKIP_HEADINGS):
+            continue
         text = clean(line)
-        if len(text) < 3:
+        if _skip_line(text):
             continue
         if heading.lower() in REQUIRED_HEADINGS:
             required.append(_shorten(text, MAX_ITEM_CHARS))

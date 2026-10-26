@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
 
 from ..core import author
 from ..core.models import Monster, Quest
-from ..core.paths import items_dir, maps_dir, sprites_dir
+from ..core.paths import items_dir, maps_dir, npcs_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
         # author_file: plik quests.json edytowany w trybie autora (None = zwykły tryb).
         self._author_file = author_file
         self._editor: QuestEditor | None = None
-        self._quest_view = QuestView(progress, maps_dir(), sprites_dir(), editable=author_file is not None)
+        self._quest_view = QuestView(progress, maps_dir(), sprites_dir(), npcs_dir(), editable=author_file is not None)
         self._stack = QStackedWidget()
         self._stack.addWidget(self._home)
         self._stack.addWidget(self._list_page)
@@ -104,9 +104,12 @@ class MainWindow(QMainWindow):
         data_version: int,
         monsters: dict[str, Monster] | None = None,
         item_images: dict[str, str] | None = None,
+        npc_images: dict[str, str] | None = None,
     ) -> None:
+        self._quest_view.set_npc_images(npc_images or {})
         self._data_version = data_version
         self._monster_page.set_item_images(item_images or {})
+        self._monster_page.set_data_version(data_version)
         self._list_page.set_quests(quests)
         self._quest_view.set_data_version(data_version)
         self._quest_view.set_monsters(monsters or {})
@@ -178,7 +181,9 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Edytor", str(exc))
             return
         # W trybie autora widać też szkice.
-        self.set_quests(result.quests, result.data_version, result.monsters, result.item_images)
+        self.set_quests(
+            result.quests, result.data_version, result.monsters, result.item_images, result.npc_images
+        )
         quest = next((q for q in result.quests if q.id == quest_id), None)
         if quest is not None:
             self._open_quest(quest)

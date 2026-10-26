@@ -263,3 +263,35 @@ def test_spoiler_draft_content():
     assert steps[1]["markers"][0]["z"] == 7
     assert steps[2]["text"] == "Drink the mead."
     assert "ignored" not in str(steps)
+
+
+def test_spoiler_skips_gallery_dialogue_and_reads_mapper_links():
+    from generator import spoiler
+
+    wikitext = (
+        "== Method ==\n"
+        "Go [https://tibia.fandom.com/wiki/Mapper?coords=129.174-122.118-7-2-1-1 here] now.\n"
+        "Read [https://example.com the guide].\n"
+        "<gallery>\nA.png|caption\n</gallery>\n"
+        "Combat_Knife_Chest.png\n"
+        "Congratulations! You earned the achievement \"X\".\n"
+        "== Sven (first meeting) ==\n"
+        "Player: hi\n"
+    )
+    steps, _ = spoiler.draft_content(wikitext, "Q")
+    assert [s["text"] for s in steps[1:]] == ["[Method] Go here now.", "Read the guide."]
+    assert steps[1]["markers"][0]["x"] == 129 * 256 + 174
+
+
+def test_is_quest_page():
+    assert quests.is_quest_page("{{Infobox_Quest|name=X}}")
+    assert not quests.is_quest_page("{{Infobox Geography|ruler=Queen}}")
+
+
+def test_untouched_draft_detection():
+    from generator.bulk import _is_untouched_draft
+
+    draft = {"status": "draft", "steps": [{"text": "TODO: x"}, {"text": "Go", "markers": [{"x": 1}]}]}
+    assert _is_untouched_draft(draft)
+    assert not _is_untouched_draft({**draft, "steps": [{"text": "TODO: x"}, {"text": "Go", "npc": "Sven"}]})
+    assert not _is_untouched_draft({**draft, "steps": [{"text": "Idź do Svena"}]})
