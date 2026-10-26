@@ -32,7 +32,8 @@ from PySide6.QtWidgets import (
 from ..core import author
 from ..core.mapdata import floor_label
 from ..core.models import MapPoint
-from ..core.npcs import Npc, find_npc, load_npcs
+from ..core.models import Npc
+from ..core.npcs import find_npc, npcs_from_data
 from .map_window import KIND_NAMES, MapWindow
 
 # Gdy krok nie ma jeszcze pinezki, mapa startuje w Thais (parter).
@@ -55,13 +56,14 @@ class QuestEditor(QWidget):
         self._data_file = data_file
         self._maps_dir = maps_dir
         self._map: MapWindow | None = None
-        # NPC z pozycjami (data/npcs.json obok pliku questów) do „👤 NPC”.
-        self._npcs = load_npcs(data_file.with_name("npcs.json"))
         # Potwory z pliku (id -> nazwa) do wyboru przy „Oznacz potwora”.
         try:
-            raw_monsters = author.load_data(data_file).get("monsters", [])
+            raw_data = author.load_data(data_file)
         except (OSError, ValueError):
-            raw_monsters = []
+            raw_data = {}
+        raw_monsters = raw_data.get("monsters", [])
+        # NPC z pozycjami do „👤 NPC”.
+        self._npcs = npcs_from_data(raw_data)
         self._monster_names = {
             m["id"]: m.get("name", m["id"]) for m in raw_monsters if isinstance(m, dict) and "id" in m
         }
@@ -329,7 +331,7 @@ class QuestEditor(QWidget):
             return
         if not self._npcs:
             QMessageBox.information(
-                self, "Edytor", "Brak listy NPC (data/npcs.json). Pobierz ją generatorem:\npython -m generator npcs"
+                self, "Edytor", "W pliku nie ma listy NPC. Pobierz ją generatorem:\npython -m generator npcs"
             )
             return
         anchor = self._text.textCursor().selectedText().strip() or None

@@ -47,18 +47,8 @@ def check_quests() -> bool:
         if unknown:
             errors.append(f"spawns.json: potwory spoza quests.json: {unknown[:10]}")
         print(f"Spawny: {len(spawns.monsters)} potworów")
-    npcs_file = ROOT / "data" / "npcs.json"
-    if npcs_file.is_file():
-        import json
-
-        from tibiahelper.core.npcs import load_npcs
-
-        # load_npcs pomija błędne wpisy; tu każdy pominięty to błąd w repo.
-        total = len(json.loads(npcs_file.read_text(encoding="utf-8")).get("npcs", []))
-        valid = len(load_npcs(npcs_file))
-        if valid != total:
-            errors.append(f"npcs.json: {total - valid} błędnych wpisów")
-        print(f"NPC: {valid}, obrazki przedmiotów: {len(result.item_images)}")
+    # Błędne przedmioty i NPC repository pomija z komunikatem w errors, więc tu już są policzone.
+    print(f"Przedmioty: {len(result.items)}, NPC: {len(result.npcs)}")
 
     for message in errors:
         print(message)

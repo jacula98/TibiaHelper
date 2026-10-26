@@ -1,4 +1,4 @@
-"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Potwory, Expowiska, Bossy)."""
+"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Potwory, Przedmioty, Expowiska, Bossy)."""
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 class HomePage(QWidget):
     quests_requested = Signal()
     monsters_requested = Signal()
+    items_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -21,6 +22,10 @@ class HomePage(QWidget):
         monsters = _menu_button("🐉  Potwory", "HP, exp, słabości, loot i gdzie występują")
         monsters.clicked.connect(self.monsters_requested)
         layout.addWidget(monsters)
+
+        items = _menu_button("🎒  Przedmioty", "Komu sprzedać, gdzie kupić, z czego wypada")
+        items.clicked.connect(self.items_requested)
+        layout.addWidget(items)
 
         # Expowiska i bossy dojdą w kolejnych etapach; do tego czasu przyciski są nieaktywne.
         for text in ("⚔  Expowiska", "💀  Bossy"):

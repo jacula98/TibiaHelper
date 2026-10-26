@@ -222,17 +222,22 @@ def test_loot_amount_with_unknown_upper_limit():
     assert monster["loot"][0] == {"amount": "0-24?", "name": "Gold Coin", "rarity": "common"}
 
 
-def test_item_images_only_from_wiki(tmp_path):
+def test_items_and_npcs_only_with_wiki_images():
     from tibiahelper.core.repository import parse_quest_data
 
     raw = {
-        "schema_version": 5,
+        "schema_version": 7,
         "data_version": 1,
         "quests": [],
-        "items": {"Gold Coin": IMAGE, "Evil": "https://evil.example/x.gif"},
+        "items": [
+            {"name": "Gold Coin", "source_url": "https://tibia.fandom.com/wiki/Gold_Coin", "image_url": IMAGE},
+            {"name": "Evil", "source_url": "https://tibia.fandom.com/wiki/Evil", "image_url": "https://evil.example/x"},
+        ],
+        "npcs": [{"name": "Sven", "x": 32202, "y": 31153, "z": 7, "city": "Svargrond"}],
     }
     result = parse_quest_data(raw)
-    assert result.item_images == {"Gold Coin": IMAGE}
+    assert list(result.items) == ["gold coin"]
+    assert result.npcs["sven"].title == "Sven (Svargrond)"
     assert any("Evil" in e for e in result.errors)
 
 
@@ -245,18 +250,84 @@ def test_download_items_saves_by_key(tmp_path):
     assert image_path(tmp_path, "dragon-s-tail").name == "dragon-s-tail.gif"
 
 
-def test_make_npc_and_load(tmp_path):
+def test_make_npc_and_find():
     from generator import npcs as gen_npcs
-    from tibiahelper.core.npcs import find_npc, load_npcs
+    from tibiahelper.core.npcs import find_npc, npcs_from_data
 
     page = WikiPage("Sven", 1, "{{Infobox NPC\n| name = Sven\n| city = [[Svargrond]]\n| posx = 125.202\n"
                     "| posy = 121.177\n| posz = 7\n}}")
-    npc = gen_npcs.make_npc(page)
-    assert npc == {"name": "Sven", "x": 32202, "y": 31153, "z": 7, "city": "Svargrond"}
+    npc = gen_npcs.make_npc(page, IMAGE)
+    assert npc == {"name": "Sven", "x": 32202, "y": 31153, "z": 7, "city": "Svargrond", "image_url": IMAGE}
     assert gen_npcs.make_npc(WikiPage("Ghostlands", 1, "{{Infobox Geography}}")) is None
 
-    path = tmp_path / "npcs.json"
-    gen_npcs.save(gen_npcs.build({"Sven": page}), path)
-    loaded = load_npcs(path)
-    assert find_npc(loaded, " sven ").title == "Sven (Svargrond)"
-    assert load_npcs(tmp_path / "brak.json") == []
+    loaded = npcs_from_data({"npcs": gen_npcs.build({"Sven": page}) + [{"name": "Bad", "x": 1}]})
+    assert [n.name for n in loaded] == ["Sven"]
+    assert find_npc(loaded, " sven ").name == "Sven"
+
+
+# --- przedmioty (etap 11) ----------------------------------------------------------
+
+FISH_FIN = """{{Infobox Object|List={{{1|}}}
+| name         = Fish Fin
+| primarytype  = Creature Products
+| pickupable   = yes
+| weight       = 1.20
+| npcvalue     = 150
+| npcprice     = 0
+| buyfrom      = --
+| sellto       = Fiona, Yasir: 160;premium
+}}"""
+
+
+def test_make_item_reads_prices_and_npcs():
+    from generator import items as gen_items
+
+    item = gen_items.make_item(WikiPage("Fish Fin", 1, FISH_FIN), IMAGE, set())
+    assert item == {
+        "name": "Fish Fin",
+        "source_url": "https://tibia.fandom.com/wiki/Fish_Fin",
+        "image_url": IMAGE,
+        "category": "Creature Products",
+        "weight": 1.2,
+        "value": 150,
+        "sell_to": [{"npc": "Fiona"}, {"npc": "Yasir", "price": 160}],
+    }
+    # Nie do podniesienia i nie z lootu: pomijamy (np. ściany, drzewa).
+    wall = FISH_FIN.replace("pickupable   = yes", "pickupable   = no")
+    assert gen_items.make_item(WikiPage("Wall", 1, wall), None, set()) is None
+    assert gen_items.make_item(WikiPage("Wall", 1, wall), None, {"fish fin"}) is not None
+
+
+def test_item_sorting_prices_and_drops():
+    from tibiahelper.core.items import best_sell_price, build_drops, effective_price, sort_items
+    from tibiahelper.core.models import Item, LootItem, Trade
+
+    def item(name, **extra):
+        return Item(name=name, source_url="https://tibia.fandom.com/wiki/" + name, **extra)
+
+    fin = item("Fish Fin", value=150, sell_to=[Trade(npc="Fiona"), Trade(npc="Yasir", price=160)])
+    ham = item("Dragon Ham", price=25, buy_from=[Trade(npc="Jezzara")])
+    assert effective_price(fin.sell_to[0], fin.value) == 150
+    assert best_sell_price(fin) == 160
+    assert sort_items([ham, fin], "A–Z") == [ham, fin]
+    assert sort_items([ham, fin], "Najdroższe u NPC") == [fin]
+    assert sort_items([ham, fin], "Do kupienia u NPC") == [ham]
+
+    shark = Monster(id="shark", name="Shark", hp=1, exp=1, source_url="https://tibia.fandom.com/wiki/Shark",
+                    loot=[LootItem(name="Fish Fin", rarity="rare")])
+    quara = Monster(id="quara", name="Quara", hp=1, exp=1, source_url="https://tibia.fandom.com/wiki/Quara",
+                    loot=[LootItem(name="fish fin", rarity="common")])
+    drops = build_drops({"shark": shark, "quara": quara})
+    assert [d.monster.id for d in drops["fish fin"]] == ["quara", "shark"]
+
+
+def test_item_page_html_is_escaped():
+    from tibiahelper.core.items import Drop
+    from tibiahelper.core.models import Item
+    from tibiahelper.ui.item_pages import drops_html, header_html, item_subtitle
+
+    evil = Item(name="<b>X</b>", source_url="https://tibia.fandom.com/wiki/X", category="<i>c</i>", weight=1.5)
+    assert "&lt;b&gt;X&lt;/b&gt;" in header_html(evil) and "1.50 oz" in header_html(evil)
+    monster = Monster(id="m", name="<script>", hp=1, exp=1, source_url="https://tibia.fandom.com/wiki/M")
+    assert "&lt;script&gt;" in drops_html([Drop(monster, "rare")], lambda i: None)
+    assert item_subtitle(evil) == "<i>c</i>"  # PlainText w liście (rysowane, nie HTML)

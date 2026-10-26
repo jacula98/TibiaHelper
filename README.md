@@ -7,11 +7,15 @@ do przeglądarki.
 
 - **Questy krok po kroku.** Odhaczasz kroki, a aktualny krok sam przewija się na górę.
   Postęp zapisuje się na Twoim komputerze.
-- **Mapa przy krokach.** Kliknij pinezkę 📍 w tekście, a na dole okna wysunie się mapa z zaznaczonym miejscem.
+- **Mapa przy krokach.** Kliknij kafelek z pinezką albo postacią NPC obok kroku, a na dole okna wysunie się
+  mapa z zaznaczonym miejscem.
 - **Potwory w poradnikach.** Przy nazwie potwora jest jego obrazek. Po najechaniu myszką widać HP, exp
   i słabości, a po kliknięciu otwiera się pełna strona potwora.
 - **Zakładka „Potwory”.** Ponad 2000 potworów z wyszukiwarką. Każdy ma HP, exp, obrażenia od żywiołów,
-  umiejętności, loot i mapę miejsc, w których występuje.
+  umiejętności, loot i mapę miejsc (expowisk), w których występuje. Listę można sortować po HP i expie.
+- **Zakładka „Przedmioty”.** Wyszukasz dowolny przedmiot i zobaczysz, któremu NPC go sprzedać i za ile
+  (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada.
+- **Zgłoś błąd** przy queście, potworze i przedmiocie otwiera gotowe zgłoszenie na GitHubie.
 - **Przezroczystość okna** (10–100%) ustawiasz trybikiem ⚙ w prawym górnym rogu.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
 

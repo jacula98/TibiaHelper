@@ -22,7 +22,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..core.models import Monster
+from ..core.models import Item, Monster
 from ..core.monsters import SORTS, download_items, download_missing, image_path, item_key, sort_monsters, sprite_path
 from ..core.issues import monster_issue_url
 from ..core.mapdata import floor_label
@@ -31,9 +31,11 @@ from .map_window import MapPanel, spawn_icon
 from .monster_grid import MonsterGrid
 from .monster_widgets import AnimatedSprite, ElementBars
 from .sprites import display_sprite
+from . import theme
 from .theme import report_button
 
 PAGE_SPRITE = 64
+ITEM_LINK_PREFIX = "item:"
 LOOT_ICON = 32  # obrazki przedmiotów z wiki mają 32x32 px
 SPAWN_MAP_HEIGHT = 320
 RARITY_NAMES = {
@@ -56,7 +58,7 @@ class MonsterListPage(QWidget):
 
     def __init__(self, sprites_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self._monsters: list[Monster] = []
+        self.monsters: list[Monster] = []
         self._search = QLineEdit(placeholderText="Szukaj potwora…", clearButtonEnabled=True)
         self._sort = QComboBox()
         self._sort.addItems(list(SORTS))
@@ -85,14 +87,14 @@ class MonsterListPage(QWidget):
         self._grid.monster_clicked.connect(self.monster_selected)
 
     def set_monsters(self, monsters: dict[str, Monster]) -> None:
-        self._monsters = list(monsters.values())
+        self.monsters = list(monsters.values())
         self._refresh()
 
     def _refresh(self) -> None:
         text = self._search.text().strip().lower()
-        shown = sort_monsters([m for m in self._monsters if text in m.name.lower()], self._sort.currentText())
+        shown = sort_monsters([m for m in self.monsters if text in m.name.lower()], self._sort.currentText())
         self._grid.set_monsters(shown)
-        self._empty.setText("Brak potworów w danych." if not self._monsters else "Nic nie pasuje do wyszukiwania.")
+        self._empty.setText("Brak potworów w danych." if not self.monsters else "Nic nie pasuje do wyszukiwania.")
         self._grid.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 
@@ -105,15 +107,16 @@ class MonsterPage(QWidget):
     """Szczegóły jednego potwora. Przycisk wstecz wraca tam, skąd przyszliśmy (lista albo quest)."""
 
     back_requested = Signal()
+    item_requested = Signal(object)  # klik w przedmiot z lootu
 
     def __init__(self, sprites_dir: Path, maps_dir: Path, items_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._sprites_dir = sprites_dir
         self._items_dir = items_dir
-        self._item_images: dict[str, str] = {}
+        self._items: dict[str, Item] = {}
         self._data_version = 0
         self._spawns = Spawns()
-        self._monster: Monster | None = None
+        self.monster: Monster | None = None
         self._loader = _SpriteLoader(self)
         self._loader.loaded.connect(self._on_sprite_loaded)
 
@@ -143,6 +146,9 @@ class MonsterPage(QWidget):
         self._map = MapPanel(maps_dir)
         self._map.setFixedHeight(SPAWN_MAP_HEIGHT)
         self._bottom = _html_label()
+        # Loot ma linki do stron przedmiotów, więc linki obsługujemy sami (_on_link).
+        self._bottom.setOpenExternalLinks(False)
+        self._bottom.linkActivated.connect(self._on_link)
 
         content = QWidget()
         column = QVBoxLayout(content)
@@ -177,11 +183,11 @@ class MonsterPage(QWidget):
         self._data_version = data_version
 
     def _report_issue(self) -> None:
-        if self._monster is not None:
-            QDesktopServices.openUrl(QUrl(monster_issue_url(self._monster, self._data_version)))
+        if self.monster is not None:
+            QDesktopServices.openUrl(QUrl(monster_issue_url(self.monster, self._data_version)))
 
-    def set_item_images(self, images: dict[str, str]) -> None:
-        self._item_images = images
+    def set_items(self, items: dict[str, Item]) -> None:
+        self._items = items
 
     def set_spawns(self, spawns: Spawns) -> None:
         self._spawns = spawns
@@ -190,7 +196,7 @@ class MonsterPage(QWidget):
         self._back.setText(text)
 
     def show_monster(self, monster: Monster) -> None:
-        self._monster = monster
+        self.monster = monster
         if self._elements is not None:
             self._elements.deleteLater()
         self._elements = ElementBars(monster)
@@ -213,9 +219,9 @@ class MonsterPage(QWidget):
         need_sprite = monster.image_url is not None and sprite_path(self._sprites_dir, monster.id) is None
         # Obrazki przedmiotów z lootu tego potwora, których jeszcze nie ma na dysku.
         items = {
-            item.name: self._item_images[item.name]
-            for item in monster.loot
-            if item.name in self._item_images and image_path(self._items_dir, item_key(item.name)) is None
+            loot.name: self._items[loot.name.lower()].image_url
+            for loot in monster.loot
+            if self._item_url(loot.name) and image_path(self._items_dir, item_key(loot.name)) is None
         }
         if need_sprite or items:
 
@@ -229,7 +235,7 @@ class MonsterPage(QWidget):
             threading.Thread(target=run, daemon=True, name="sprite").start()
 
     def _on_sprite_loaded(self, monster_id: str) -> None:
-        if self._monster is not None and self._monster.id == monster_id:
+        if self.monster is not None and self.monster.id == monster_id:
             self._render()
             self._map.set_spawn_icon(self._spawn_icon())
 
@@ -240,19 +246,34 @@ class MonsterPage(QWidget):
 
     def _spawn_icon(self) -> QPixmap | None:
         """Obrazek potwora do mapy albo None (wtedy mapa ma same kropki)."""
-        path = display_sprite(self._sprites_dir, self._monster.id) if self._monster else None
+        path = display_sprite(self._sprites_dir, self.monster.id) if self.monster else None
         image = QImage(str(path)) if path else QImage()
         return None if image.isNull() else spawn_icon(image)
 
     def _render(self) -> None:
-        if self._monster is not None:
-            self._sprite.set_path(sprite_path(self._sprites_dir, self._monster.id))
-            self._header.setText(header_html(self._monster))
-            self._top.setText(monster_html(self._monster))
-            self._bottom.setText(loot_html(self._monster, self._item_icon))
+        if self.monster is not None:
+            self._sprite.set_path(sprite_path(self._sprites_dir, self.monster.id))
+            self._header.setText(header_html(self.monster))
+            self._top.setText(monster_html(self.monster))
+            self._bottom.setText(loot_html(self.monster, self._item_icon, lambda name: name.lower() in self._items))
+
+    def _item_url(self, name: str) -> str | None:
+        item = self._items.get(name.lower())
+        return item.image_url if item else None
 
     def _item_icon(self, name: str) -> Path | None:
-        return image_path(self._items_dir, item_key(name)) if name in self._item_images else None
+        return image_path(self._items_dir, item_key(name)) if self._item_url(name) else None
+
+    def _on_link(self, link: str) -> None:
+        # Linki „item:N” to przedmioty z lootu; inne (np. TibiaWiki) otwiera przeglądarka.
+        if link.startswith(ITEM_LINK_PREFIX):
+            index = link.removeprefix(ITEM_LINK_PREFIX)
+            if self.monster is not None and index.isdigit() and int(index) < len(self.monster.loot):
+                item = self._items.get(self.monster.loot[int(index)].name.lower())
+                if item is not None:
+                    self.item_requested.emit(item)
+        else:
+            QDesktopServices.openUrl(QUrl(link))
 
 
 def _html_label() -> QLabel:
@@ -295,21 +316,31 @@ def monster_html(monster: Monster) -> str:
     return "<br>".join(parts)
 
 
-def loot_html(monster: Monster, icon: Callable[[str], Path | None] = lambda name: None) -> str:
-    """Dolna część strony (pod mapą): loot z obrazkami przedmiotów i źródło."""
+def loot_html(
+    monster: Monster,
+    icon: Callable[[str], Path | None] = lambda name: None,
+    known: Callable[[str], bool] = lambda name: False,
+) -> str:
+    """Dolna część strony (pod mapą): loot z obrazkami przedmiotów i źródło.
+
+    Przedmioty, które mamy w danych (known), są linkami „item:N” do ich strony.
+    """
     parts = []
     if monster.loot:
         parts.append(_section("LOOT"))
         # Tabela: obrazek w pierwszej kolumnie, opis w drugiej, więc nazwy stoją równo.
         rows = []
-        for item in monster.loot:
+        for index, item in enumerate(monster.loot):
             amount = f"{escape(item.amount)}× " if item.amount else ""
+            name = escape(item.name)
+            if known(item.name):
+                name = f'<a href="{ITEM_LINK_PREFIX}{index}" style="color: {theme.TEXT};">{name}</a>'
             rarity = f' <span style="color: #9aa0a6;">({RARITY_NAMES[item.rarity]})</span>' if item.rarity else ""
             path = icon(item.name)
             image = f'<img src="{path.as_uri()}" width="{LOOT_ICON}" height="{LOOT_ICON}">' if path else ""
             rows.append(
                 f'<tr><td width="{LOOT_ICON + 6}" style="vertical-align: middle">{image}</td>'
-                f'<td style="vertical-align: middle">{amount}{escape(item.name)}{rarity}</td></tr>'
+                f'<td style="vertical-align: middle">{amount}{name}{rarity}</td></tr>'
             )
         parts.append(f'<table cellspacing="0" cellpadding="1">{"".join(rows)}</table>')
 

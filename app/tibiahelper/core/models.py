@@ -12,8 +12,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 # Najnowsza wersja formatu pliku, którą ta wersja aplikacji rozumie.
 # Podbijamy ją tylko przy zmianach niekompatybilnych wstecz.
 # 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters),
-# 4: szczegóły potworów (loot, umiejętności, miejsca) do zakładki „Potwory”
-SCHEMA_VERSION = 6
+# 4: szczegóły potworów (loot, umiejętności, miejsca) do zakładki „Potwory”,
+# 5-6: obrazki przedmiotów i NPC, 7: przedmioty (Item) i NPC (Npc) do zakładki „Przedmioty”
+SCHEMA_VERSION = 7
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -60,6 +61,61 @@ class LootItem(_Model):
     name: str = Field(min_length=1)
     amount: str | None = None  # np. "0-10"; None = 1 sztuka
     rarity: Rarity | None = None
+
+
+def _check_image(url: str | None) -> None:
+    if url is not None and not url.startswith(SPRITE_URL_PREFIX):
+        raise ValueError(f"image_url musi zaczynać się od {SPRITE_URL_PREFIX}")
+
+
+class Npc(_Model):
+    """NPC z TibiaWiki: gdzie stoi (pinezki w krokach, „komu sprzedać”) i jak wygląda."""
+
+    name: str = Field(min_length=1)
+    x: int = Field(ge=MAP_X_MIN, le=MAP_X_MAX)
+    y: int = Field(ge=MAP_Y_MIN, le=MAP_Y_MAX)
+    z: int = Field(ge=0, le=15)
+    city: str | None = None
+    image_url: str | None = None
+
+    @model_validator(mode="after")
+    def _check_url(self) -> "Npc":
+        _check_image(self.image_url)
+        return self
+
+    @property
+    def title(self) -> str:
+        """Tekst na liście: imię i miasto (NPC o tym samym imieniu bywa kilku)."""
+        return f"{self.name} ({self.city})" if self.city else self.name
+
+
+class Trade(_Model):
+    """NPC, który kupuje albo sprzedaje przedmiot. price None = cena jak w polu przedmiotu."""
+
+    npc: str = Field(min_length=1)
+    price: int | None = Field(default=None, ge=0)
+
+
+class Item(_Model):
+    """Przedmiot z TibiaWiki do zakładki „Przedmioty”."""
+
+    name: str = Field(min_length=1)
+    source_url: str
+    image_url: str | None = None
+    category: str | None = None
+    weight: float | None = Field(default=None, ge=0)
+    # Za ile NPC kupuje od gracza (value) i za ile sprzedaje graczowi (price), w gp.
+    value: int | None = Field(default=None, ge=0)
+    price: int | None = Field(default=None, ge=0)
+    sell_to: list[Trade] = Field(default_factory=list)  # tym NPC gracz może sprzedać
+    buy_from: list[Trade] = Field(default_factory=list)  # od tych NPC gracz może kupić
+
+    @model_validator(mode="after")
+    def _check_urls(self) -> "Item":
+        _check_image(self.image_url)
+        if not self.source_url.startswith(WIKI_URL_PREFIX):
+            raise ValueError(f"source_url musi zaczynać się od {WIKI_URL_PREFIX}")
+        return self
 
 
 class Monster(_Model):
@@ -186,8 +242,7 @@ class QuestFileHeader(_Model):
     data_version: int = Field(ge=1)
     # Też surowe: błędny potwór nie może zablokować wszystkich questów.
     monsters: list[Any] = Field(default_factory=list)
-    # Obrazki przedmiotów z lootu: nazwa -> adres pliku na wiki. Też surowe (sprawdzane w repository.py).
-    items: dict[str, Any] = Field(default_factory=dict)
-    # Obrazki NPC: imię -> adres pliku na wiki (postać NPC przy kroku z jego pinezką).
-    npc_images: dict[str, Any] = Field(default_factory=dict)
+    # Przedmioty i NPC: też surowe, każdy wpis sprawdzany osobno w repository.py.
+    items: list[Any] = Field(default_factory=list)
+    npcs: list[Any] = Field(default_factory=list)
     quests: list[Any]
