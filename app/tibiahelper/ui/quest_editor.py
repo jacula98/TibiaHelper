@@ -53,6 +53,9 @@ class QuestEditor(QWidget):
         self._maps_dir = maps_dir
         self._map: MapWindow | None = None
         self._current = -1  # indeks edytowanego kroku
+        # Krok i fragment tekstu, dla których otwarto wybieranie miejsca na mapie.
+        self._pending_step: int | None = None
+        self._pending_anchor: str | None = None
 
         content = QWidget()
         layout = QVBoxLayout(content)
@@ -224,6 +227,7 @@ class QuestEditor(QWidget):
 
     def _add_step(self) -> None:
         self._store_step()
+        self._cancel_pick()
         index = self._current + 1
         self._steps.insert(index, {"text": "Nowy krok"})
         self._current = -1  # nowy krok nie nadpisuje formularza poprzedniego
@@ -239,6 +243,7 @@ class QuestEditor(QWidget):
         index = self._current
         if index < 0:
             return
+        self._cancel_pick()
         del self._steps[index]
         self._current = -1  # usunięty krok nie ma już czego zapisywać
         self._refresh_step_list()
@@ -247,6 +252,7 @@ class QuestEditor(QWidget):
 
     def _move_step(self, delta: int) -> None:
         self._store_step()
+        self._cancel_pick()
         index, target = self._current, self._current + delta
         if index < 0 or not 0 <= target < len(self._steps):
             return
@@ -276,6 +282,7 @@ class QuestEditor(QWidget):
     def _add_marker(self) -> None:
         if self._current < 0:
             return
+        self._pending_step = self._current
         self._pending_anchor = self._text.textCursor().selectedText().strip() or None
         step = self._steps[self._current]
         existing = [MapPoint.model_validate(m) for m in step.get("markers", [])]
@@ -292,9 +299,18 @@ class QuestEditor(QWidget):
                 return MapPoint.model_validate(step["markers"][-1])
         return DEFAULT_START
 
+    def _cancel_pick(self) -> None:
+        """Po dodaniu, usunięciu lub przesunięciu kroków numer kroku z wybierania jest nieaktualny."""
+        self._pending_step = None
+        if self._map is not None:
+            self._map.close()
+
     def _on_point_picked(self, x: int, y: int, z: int) -> None:
-        if self._current < 0:
+        if self._pending_step is None:
             return
+        if self._pending_step != self._current:
+            # Autor przełączył krok w trakcie: pinezka trafia do kroku, z którego ją dodawał.
+            self._steps_list.setCurrentRow(self._pending_step)
         dialog = _MarkerDialog(self._pending_anchor or self._location.text().strip(), self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
@@ -303,8 +319,7 @@ class QuestEditor(QWidget):
         if self._pending_anchor:
             marker["anchor"] = self._pending_anchor
         self._steps[self._current].setdefault("markers", []).append(marker)
-        if self._map is not None:
-            self._map.close()
+        self._cancel_pick()
         self._refresh_step_list()
         self._refresh_markers()
 
