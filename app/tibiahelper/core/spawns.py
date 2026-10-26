@@ -17,8 +17,45 @@ log = logging.getLogger(__name__)
 
 SOURCE_NOTE = "Źródło danych: tibiaroute.com"
 CLUSTER = 64  # kratki: wielkość kwadratu, w którym szukamy największego skupiska
+PLACE_CELL = 32  # kratki: punkty w sąsiednich kwadratach tej wielkości to jedno miejsce (expowisko)
+
+# Świątynie miast (x, y): podpisujemy miejsce najbliższym miastem, np. „okolice Thais”.
+CITIES = {
+    "Ab'Dendriel": (32732, 31634),
+    "Ankrahmun": (33194, 32853),
+    "Carlin": (32360, 31782),
+    "Darashia": (33213, 32454),
+    "Dawnport": (32064, 31894),
+    "Edron": (33217, 31814),
+    "Farmine": (33023, 31521),
+    "Gray Beach": (33447, 31323),
+    "Issavi": (33921, 31477),
+    "Kazordoon": (32649, 31925),
+    "Krailos": (33657, 31665),
+    "Liberty Bay": (32317, 32826),
+    "Marapur": (33776, 32754),
+    "Port Hope": (32595, 32746),
+    "Rathleton": (33594, 31899),
+    "Rookgaard": (32097, 32219),
+    "Roshamuul": (33513, 32363),
+    "Svargrond": (32212, 31132),
+    "Thais": (32369, 32241),
+    "Venore": (32957, 32076),
+    "Yalahar": (32787, 31276),
+}
 
 Point = tuple[int, int, int]
+
+
+@dataclass(frozen=True)
+class Place:
+    """Jedno skupisko potworów (expowisko): środek na piętrze, gdzie jest ich najwięcej."""
+
+    x: int
+    y: int
+    z: int
+    count: int
+    city: str
 
 
 @dataclass(frozen=True)
@@ -84,3 +121,38 @@ def busiest_spot(points: list[Point], z: int) -> tuple[int, int] | None:
     cell = cells.most_common(1)[0][0]
     inside = [(x, y) for x, y in on_floor if (x // CLUSTER, y // CLUSTER) == cell]
     return sum(x for x, _ in inside) // len(inside), sum(y for _, y in inside) // len(inside)
+
+
+def nearest_city(x: int, y: int) -> str:
+    return min(CITIES, key=lambda name: (CITIES[name][0] - x) ** 2 + (CITIES[name][1] - y) ** 2)
+
+
+def places(points: list[Point]) -> list[Place]:
+    """Skupiska punktów (od największego): sąsiednie kwadraty PLACE_CELL łączymy w jedno miejsce.
+
+    Piętra przy łączeniu pomijamy, bo jedno expowisko często ma kilka pięter (np. jaskinia pod wejściem).
+    """
+    cells: dict[tuple[int, int], list[Point]] = {}
+    for point in points:
+        cells.setdefault((point[0] // PLACE_CELL, point[1] // PLACE_CELL), []).append(point)
+    seen: set[tuple[int, int]] = set()
+    result = []
+    for start in cells:
+        if start in seen:
+            continue
+        # Przeszukiwanie sąsiadów (także po skosie), aż skupisko się skończy.
+        seen.add(start)
+        stack, group = [start], []
+        while stack:
+            cx, cy = stack.pop()
+            group.extend(cells[(cx, cy)])
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    neighbour = (cx + dx, cy + dy)
+                    if neighbour in cells and neighbour not in seen:
+                        seen.add(neighbour)
+                        stack.append(neighbour)
+        z = floors(group)[0][0]
+        x, y = busiest_spot(group, z)
+        result.append(Place(x, y, z, len(group), nearest_city(x, y)))
+    return sorted(result, key=lambda p: (-p.count, p.city))

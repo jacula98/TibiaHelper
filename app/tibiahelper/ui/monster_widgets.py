@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QGridLayout, QLabel, QSizePolicy, QWidget
 from ..core.models import ELEMENTS, Monster
 from ..core.monsters import ELEMENT_NAMES
 from . import theme
+from .sprites import opaque_rect
 
 ELEMENT_ICONS = {
     "physical": "⚔",
@@ -27,19 +28,7 @@ BAR_MAX = 200  # pasek pokazuje 0-200%; 100% to zwykłe obrażenia
 _crop_cache: dict[str, QRect] = {}
 
 
-def _opaque_rect(image: QImage) -> QRect:
-    left, top, right, bottom = image.width(), image.height(), -1, -1
-    for y in range(image.height()):
-        for x in range(image.width()):
-            if image.pixelColor(x, y).alpha() > 0:
-                left, top = min(left, x), min(top, y)
-                right, bottom = max(right, x), max(bottom, y)
-    if right < 0:
-        return image.rect()
-    return QRect(left, top, right - left + 1, bottom - top + 1)
-
-
-def _animation_crop(path: Path) -> QRect:
+def animation_crop(path: Path) -> QRect:
     """Wspólny prostokąt postaci ze wszystkich klatek, żeby obrazek nie „skakał” w animacji."""
     key = str(path)
     if key not in _crop_cache:
@@ -49,7 +38,7 @@ def _animation_crop(path: Path) -> QRect:
             movie.jumpToFrame(frame)
             image = movie.currentImage().convertToFormat(QImage.Format.Format_ARGB32)
             if not image.isNull():
-                box = box.united(_opaque_rect(image))
+                box = box.united(opaque_rect(image))
         _crop_cache[key] = box if box.isValid() else QRect(0, 0, 64, 64)
     return _crop_cache[key]
 
@@ -75,7 +64,7 @@ class AnimatedSprite(QWidget):
             self._movie.deleteLater()
             self._movie = None
         if path is not None:
-            self._crop = _animation_crop(path)
+            self._crop = animation_crop(path)
             self._movie = QMovie(str(path), parent=self)
             self._movie.frameChanged.connect(self.update)
             self._movie.start()
@@ -125,18 +114,16 @@ class _Bar(QWidget):
 
 
 def element_verdict(percent: int) -> tuple[str, str]:
-    """(opis, kolor) dla procentu obrażeń od żywiołu."""
+    """(procent, kolor) dla obrażeń od żywiołu: o ile więcej albo mniej niż zwykle."""
     if percent > 100:
-        return f"+{percent - 100}% · słaby", WEAK_COLOR
-    if percent == 0:
-        return "odporny (0%)", STRONG_COLOR
+        return f"+{percent - 100}%", WEAK_COLOR
     if percent < 100:
-        return f"−{100 - percent}% · mocny", STRONG_COLOR
-    return "normalnie", theme.MUTED
+        return f"−{100 - percent}%", STRONG_COLOR
+    return "0%", theme.MUTED
 
 
 class ElementBars(QWidget):
-    """Żywioły od najlepszego do najgorszego: ikona, nazwa, pasek i opis słowami."""
+    """Żywioły od najlepszego do najgorszego: ikona, nazwa, pasek i procent."""
 
     def __init__(self, monster: Monster) -> None:
         super().__init__()
@@ -155,7 +142,8 @@ class ElementBars(QWidget):
             text, color = element_verdict(percent)
             name = QLabel(f"{ELEMENT_ICONS[element]} {ELEMENT_NAMES[element]}")
             verdict = QLabel(text)
-            verdict.setStyleSheet(f"color: {color};")
+            verdict.setStyleSheet(f"color: {color}; font-weight: 600;")
+            verdict.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             grid.addWidget(name, row, 0)
             grid.addWidget(_Bar(percent, color if percent != 100 else theme.MUTED), row, 1)
             grid.addWidget(verdict, row, 2)

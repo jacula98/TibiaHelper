@@ -9,24 +9,23 @@ import logging
 from pathlib import Path
 
 from PySide6.QtCore import QRect
-from PySide6.QtGui import QImage, QPainter
+from PySide6.QtGui import QBitmap, QImage, QPainter, QRegion
 
 from ..core.monsters import sprite_path
 
 log = logging.getLogger(__name__)
 
 
-def _opaque_rect(image: QImage) -> QRect:
-    """Najmniejszy prostokąt z nieprzezroczystymi pikselami."""
-    left, top, right, bottom = image.width(), image.height(), -1, -1
-    for y in range(image.height()):
-        for x in range(image.width()):
-            if image.pixelColor(x, y).alpha() > 0:
-                left, top = min(left, x), min(top, y)
-                right, bottom = max(right, x), max(bottom, y)
-    if right < 0:
-        return image.rect()  # cały przezroczysty: zostawiamy jak jest
-    return QRect(left, top, right - left + 1, bottom - top + 1)
+def opaque_rect(image: QImage) -> QRect:
+    """Najmniejszy prostokąt z nieprzezroczystymi pikselami.
+
+    Maska przezroczystości i QRegion liczą to w C++ (Qt), a nie w pętli Pythona
+    piksel po pikselu: przy siatce potworów to różnica między płynnym a szarpanym przewijaniem.
+    """
+    if not image.hasAlphaChannel():
+        return image.rect()
+    box = QRegion(QBitmap.fromImage(image.createAlphaMask())).boundingRect()
+    return box if box.isValid() else image.rect()  # cały przezroczysty: zostawiamy jak jest
 
 
 def display_sprite(sprites_dir: Path, monster_id: str) -> Path | None:
@@ -40,7 +39,7 @@ def display_sprite(sprites_dir: Path, monster_id: str) -> Path | None:
     image = QImage(str(original)).convertToFormat(QImage.Format.Format_ARGB32)
     if image.isNull():
         return original
-    box = _opaque_rect(image)
+    box = opaque_rect(image)
     # Kwadrat: obrazek w tekście ma stałą szerokość i wysokość, więc nie może się rozciągać.
     side = max(box.width(), box.height())
     square = QImage(side, side, QImage.Format.Format_ARGB32)

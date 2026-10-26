@@ -177,7 +177,38 @@ def test_monster_page_escapes_wiki_text():
 
 @pytest.mark.parametrize(
     ("percent", "text"),
-    [(125, "+25% · słaby"), (100, "normalnie"), (80, "−20% · mocny"), (0, "odporny (0%)")],
+    [(125, "+25%"), (100, "0%"), (80, "−20%"), (0, "−100%")],
 )
 def test_element_verdict(percent, text):
     assert element_verdict(percent)[0] == text
+
+
+def _monster(name, hp, exp):
+    return Monster(id=name.lower(), name=name, hp=hp, exp=exp, source_url="https://tibia.fandom.com/wiki/" + name)
+
+
+def test_sort_monsters():
+    from tibiahelper.core.monsters import sort_monsters
+
+    rat, troll, demon = _monster("Rat", 20, 5), _monster("Troll", 50, 20), _monster("Demon", 8200, 6000)
+    monsters = [troll, demon, rat]
+    assert sort_monsters(monsters, "A–Z") == [demon, rat, troll]
+    assert sort_monsters(monsters, "HP malejąco") == [demon, troll, rat]
+    assert sort_monsters(monsters, "Exp rosnąco") == [rat, troll, demon]
+    assert sort_monsters(monsters, "Exp / HP (najlepsze)") == [demon, troll, rat]
+
+
+def test_places_groups_nearby_points_and_names_city():
+    from tibiahelper.core.spawns import places
+
+    near_thais = [(32370 + i, 32250, 7) for i in range(5)] + [(32372, 32252, 8)]
+    near_carlin = [(32360, 31790, 7), (32361, 31790, 7)]
+    found = places(near_carlin + near_thais)
+    assert [(p.city, p.count, p.z) for p in found] == [("Thais", 6, 7), ("Carlin", 2, 7)]
+
+
+@pytest.mark.parametrize(("value", "text"), [(950, "950"), (8200, "8.2k"), (1000, "1k"), (82000, "82k"), (1500000, "1.5M")])
+def test_short_number(value, text):
+    from tibiahelper.ui.monster_grid import short_number
+
+    assert short_number(value) == text
