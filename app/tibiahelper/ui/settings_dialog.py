@@ -33,6 +33,18 @@ class SettingsDialog(QDialog):
         version = QLabel(f"Wersja poradników: {data_version}")
         version.setObjectName("muted")
 
+        # Źródła i licencje: CC BY-SA wymaga podania, skąd są dane.
+        sources = QLabel(
+            "Źródła:<br>"
+            '• poradniki na podstawie <a href="https://tibia.fandom.com/">TibiaWiki</a> '
+            '(<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>)<br>'
+            '• mapy z <a href="https://tibiamaps.io/">tibiamaps</a> '
+            '(<a href="https://github.com/tibiamaps/tibia-map-data">tibia-map-data</a>)'
+        )
+        sources.setObjectName("muted")
+        sources.setWordWrap(True)
+        sources.setOpenExternalLinks(True)
+
         close = QPushButton("Zamknij")
         close.setObjectName("primary")
         close.clicked.connect(self.accept)
@@ -42,6 +54,7 @@ class SettingsDialog(QDialog):
         layout.addWidget(slider)
         layout.addSpacing(12)
         layout.addWidget(version)
+        layout.addWidget(sources)
         layout.addWidget(close, 0, Qt.AlignmentFlag.AlignRight)
 
     def _on_slider(self, percent: int) -> None:

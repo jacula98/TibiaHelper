@@ -1,7 +1,7 @@
 """Ekran startowy: duże przyciski jeden pod drugim (Questy, Expowiska, Bossy)."""
 
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
 
 class HomePage(QWidget):
@@ -24,10 +24,6 @@ class HomePage(QWidget):
             layout.addWidget(button)
 
         layout.addStretch(1)
-        note = QLabel("Dane: TibiaWiki (CC BY-SA 4.0), mapy: tibiamaps")
-        note.setObjectName("muted")
-        note.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        layout.addWidget(note)
 
 
 def _menu_button(text: str, hint: str) -> QPushButton:
