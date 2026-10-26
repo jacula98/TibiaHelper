@@ -50,6 +50,7 @@ def step_html(
     step: Step,
     pin_img: str,
     monster_img: Callable[[int], str] = lambda index: "",
+    pins: bool = True,
 ) -> str:
     """„N. tekst” z pinezką za fragmentem `anchor` punktu na mapie i obrazkiem za potworem.
 
@@ -59,7 +60,7 @@ def step_html(
     text = step.text
     # (miejsce w tekście, kolejność, gotowy HTML): pinezki i potwory wstawiamy jednym przejściem.
     inserts = []
-    for index, marker in enumerate(step.markers):
+    for index, marker in enumerate(step.markers if pins else []):
         title = escape(marker.label, quote=True)
         html = f'&nbsp;<a href="{pin_link(index)}" title="{title}">{pin_img}</a>'
         inserts.append((_anchor_end(text, marker.anchor), len(inserts), html))

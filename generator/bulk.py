@@ -72,9 +72,20 @@ def import_monsters(data: dict, client: WikiClient, refresh: bool = False) -> tu
 
 
 def _is_untouched_draft(quest: dict) -> bool:
-    """Szkic, którego autor jeszcze nie ruszał (sam krok „TODO” z importu)."""
+    """Szkic prosto z importu, którego autor jeszcze nie ruszał.
+
+    Import zawsze zaczyna od kroku „TODO” i nigdy nie wypełnia pól, które dodaje tylko autor
+    (NPC, potwory, miejsce, przedmioty, pinezki przypięte do fragmentu tekstu). Gdy któreś z nich
+    jest, albo pierwszy krok już nie jest „TODO”, szkic ma pracę autora i import go nie nadpisuje.
+    """
     steps = quest.get("steps", [])
-    return quest.get("status") == "draft" and len(steps) == 1 and steps[0].get("text", "").startswith(TODO_MARK)
+    if quest.get("status") != "draft" or not steps or not steps[0].get("text", "").startswith(TODO_MARK):
+        return False
+    author_fields = ("npc", "monsters", "location", "items")
+    return not any(
+        any(step.get(name) for name in author_fields) or any(m.get("anchor") for m in step.get("markers", []))
+        for step in steps
+    )
 
 
 def import_quests(data: dict, client: WikiClient, refresh: bool = False) -> tuple[int, int]:
@@ -93,10 +104,13 @@ def import_quests(data: dict, client: WikiClient, refresh: bool = False) -> tupl
     existing = {quests.title_from_url(q["source_url"]): q for q in data["quests"]}
     todo = [t for t in titles if t not in existing or _is_untouched_draft(existing[t])]
     pages = load_pages(client, [t for title in todo for t in (title, title + quests.SPOILER_SUFFIX)], refresh)
+    # Nieruszone szkice stron, które nie są questami (miasta, expowiska), wylatują z pliku.
+    not_quests = {t for t in todo if t in pages and not quests.is_quest_page(pages[t].wikitext)}
+    data["quests"] = [q for q in data["quests"] if quests.title_from_url(q["source_url"]) not in not_quests]
     taken = {q["id"] for q in data["quests"]}
     added = refreshed = 0
     for title in todo:
-        if title not in pages:
+        if title not in pages or title in not_quests:
             continue
         draft = quests.make_draft(quests.QuestPages(main=pages[title], spoiler=pages.get(title + quests.SPOILER_SUFFIX)))
         old = existing.get(title)

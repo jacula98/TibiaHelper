@@ -6,6 +6,7 @@ Zrobione kroki zostają wyżej, wyszarzone.
 """
 
 import threading
+from collections.abc import Callable
 from html import escape
 from pathlib import Path
 
@@ -36,20 +37,23 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.issues import issue_url
-from ..core.models import Monster, Quest, Step
-from ..core.monsters import download_missing, sprite_path
+from ..core.models import MapPoint, Monster, Quest, Step
+from ..core.monsters import download_items, download_missing, image_path, item_key, sprite_path
 from ..core.progress import ProgressStore
-from .map_window import MapPanel
+from .map_window import KIND_COLORS, KIND_NAMES, MapPanel
 from .monster_widgets import AnimatedSprite
 from .rich_text import monster_tooltip, parse_monster_link, parse_pin_link, step_html
 from .sprites import display_sprite
-from .theme import ASSETS_DIR, icon
+from .theme import icon, report_button
 
 SCROLL_MARGIN = 6  # odstęp aktualnego kroku od górnej krawędzi
 SCROLL_MS = 250
 TILE_SPRITE = 48  # obrazek w sekcji „Potwory”
 TOOLTIP_SPRITE = 64  # obrazek w dymku (oryginalny rozmiar z wiki)
 TILE_COLUMNS = 4
+MARKER_TILE_WIDTH = 58  # kafelek pinezki obok tekstu kroku
+MARKER_TILE_HEIGHT = 64
+MARKER_SPRITE = 36
 
 
 class _SpriteLoader(QObject):
@@ -80,12 +84,15 @@ class QuestView(QWidget):
         progress: ProgressStore,
         maps_dir: Path,
         sprites_dir: Path,
+        npcs_dir: Path,
         editable: bool = False,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._progress = progress
         self._sprites_dir = sprites_dir
+        self._npcs_dir = npcs_dir
+        self._npc_images: dict[str, str] = {}
         self._monsters: dict[str, Monster] = {}
         self._tiles: list[_MonsterTile] = []
         self._sprite_loader = _SpriteLoader(self)
@@ -126,11 +133,7 @@ class QuestView(QWidget):
         self._scroll_animation.setDuration(SCROLL_MS)
         self._scroll_animation.setEasingCurve(QEasingCurve.Type.OutCubic)
 
-        report = QPushButton(" Zgłoś błąd")
-        report.setIcon(icon("github.svg"))
-        report.setIconSize(QSize(16, 16))
-        report.setToolTip("Otwiera zgłoszenie na GitHubie (potrzebne darmowe konto GitHub)")
-        report.setCursor(Qt.CursorShape.PointingHandCursor)
+        report = report_button()
         report.clicked.connect(self._report_issue)
 
         # Mapa wysuwa się na dole, pod krokami: widać naraz tekst kroku i miejsce.
@@ -158,6 +161,12 @@ class QuestView(QWidget):
 
     def set_monsters(self, monsters: dict[str, Monster]) -> None:
         self._monsters = monsters
+
+    def set_npc_images(self, images: dict[str, str]) -> None:
+        self._npc_images = images
+
+    def _npc_image(self, name: str) -> Path | None:
+        return image_path(self._npcs_dir, item_key(name)) if name in self._npc_images else None
 
     def show_quest(self, quest: Quest) -> None:
         self._quest = quest
@@ -204,7 +213,7 @@ class QuestView(QWidget):
 
         layout.addWidget(_label("KROKI", "sectionTitle"))
         for index, step in enumerate(quest.steps):
-            row = _StepRow(index, step, index in done, self._monsters, self._sprites_dir)
+            row = _StepRow(index, step, index in done, self._monsters, self._sprites_dir, self._npc_image)
             row.toggled.connect(self._on_step_toggled)
             # row=row: lambda zapamiętuje swój krok (inaczej wszystkie wskazywałyby ostatni).
             row.map_requested.connect(lambda points, focus, row=row: self._show_map(points, focus, row))
@@ -254,11 +263,19 @@ class QuestView(QWidget):
             for i in sorted(ids)
             if i in self._monsters and sprite_path(self._sprites_dir, i) is None
         ]
-        if not missing:
+        npcs = {
+            marker.label: self._npc_images[marker.label]
+            for step in quest.steps
+            for marker in step.markers
+            if marker.kind == "npc" and marker.label in self._npc_images and self._npc_image(marker.label) is None
+        }
+        if not missing and not npcs:
             return
 
         def run() -> None:
-            if download_missing(self._sprites_dir, missing):
+            monsters_done = download_missing(self._sprites_dir, missing) if missing else []
+            npcs_done = download_items(self._npcs_dir, npcs) if npcs else []
+            if monsters_done or npcs_done:
                 self._sprite_loader.loaded.emit(quest.id)
 
         # daemon=True: zamknięcie okna nie czeka na pobieranie.
@@ -270,6 +287,7 @@ class QuestView(QWidget):
             return
         for row in self._step_rows:
             row.refresh_text()
+            row.refresh_markers()
         for tile in self._tiles:
             tile.refresh()
 
@@ -412,7 +430,13 @@ class _StepRow(QFrame):
     monster_requested = Signal(object)
 
     def __init__(
-        self, index: int, step: Step, checked: bool, monsters: dict[str, Monster], sprites_dir: Path
+        self,
+        index: int,
+        step: Step,
+        checked: bool,
+        monsters: dict[str, Monster],
+        sprites_dir: Path,
+        npc_image: Callable[[str], Path | None] = lambda name: None,
     ) -> None:
         super().__init__()
         self.setObjectName("step")
@@ -420,6 +444,8 @@ class _StepRow(QFrame):
         self._step = step
         self._monsters = monsters
         self._sprites_dir = sprites_dir
+        self._npc_image = npc_image
+        self._marker_tiles: list[_MarkerTile] = []
         self._rich: QLabel | None = None
         self._hovered_link = ""
         self._box = QCheckBox()
@@ -437,11 +463,23 @@ class _StepRow(QFrame):
         layout.setContentsMargins(10, 10, 10, 10)
         layout.addWidget(self._box, 0, Qt.AlignmentFlag.AlignTop)
         layout.addLayout(text, 1)
+        if step.markers:
+            # Pinezki po prawej jako kafelki (NPC z postacią, miejsce jako prostokąt):
+            # łatwiej w nie trafić niż w małą ikonkę w tekście. Najwyżej 2 w rzędzie.
+            aside = QGridLayout()
+            aside.setSpacing(4)
+            for position, marker in enumerate(step.markers):
+                tile = _MarkerTile(marker, npc_image(marker.label) if marker.kind == "npc" else None)
+                tile.clicked.connect(lambda marker: self.map_requested.emit(list(self._step.markers), marker))
+                self._marker_tiles.append(tile)
+                aside.addWidget(tile, position // 2, position % 2)
+            layout.addLayout(aside)
+            layout.setAlignment(aside, Qt.AlignmentFlag.AlignTop)
 
         self._box.toggled.connect(lambda value: self.toggled.emit(self.index, value))
 
     def _text_label(self, number: int, step: Step) -> QLabel:
-        if not step.markers and not step.monsters:
+        if not step.monsters:
             return _label(f"{number}. {step.text}")
         label = QLabel(wordWrap=True, textFormat=Qt.TextFormat.RichText)
         self._rich = label
@@ -455,15 +493,18 @@ class _StepRow(QFrame):
         """Buduje HTML kroku od nowa (np. gdy obrazki potworów się pobrały)."""
         if self._rich is None:
             return
-        # Pinezka ma wysokość linii tekstu, żeby nie rozpychała wiersza.
         line = self._rich.fontMetrics().height()
-        size = line - 2
-        pin = (ASSETS_DIR / "pin.svg").as_uri()
-        pin_img = f'<img src="{pin}" height="{size}" width="{size * 3 // 4}">'
+        # Pinezki są kafelkami obok tekstu (pins=False), w tekście zostają tylko obrazki potworów.
         # Potwór jest większy (2 linie): w wysokości linii obrazek 64 px byłby nieczytelny.
         self._rich.setText(
-            step_html(self.index + 1, self._step, pin_img, lambda i: _img(self._sprite(i), line * 2))
+            step_html(self.index + 1, self._step, "", lambda i: _img(self._sprite(i), line * 2), pins=False)
         )
+
+    def refresh_markers(self) -> None:
+        """Obrazki NPC mogły się właśnie pobrać."""
+        for tile in self._marker_tiles:
+            if tile.marker.kind == "npc":
+                tile.set_image(self._npc_image(tile.marker.label))
 
     def _sprite(self, index: int) -> Path | None:
         return display_sprite(self._sprites_dir, self._step.monsters[index].id)
@@ -551,6 +592,51 @@ class _MonsterTile(QFrame):
         self._sprite.set_path(sprite_path(self._sprites_dir, self._monster.id))
         tooltip_img = _img(display_sprite(self._sprites_dir, self._monster.id), TOOLTIP_SPRITE)
         self.setToolTip(monster_tooltip(self._monster, tooltip_img))
+
+
+class _MarkerTile(QFrame):
+    """Pinezka kroku: NPC jako jego postać z imieniem, inne miejsca jako pionowy prostokąt z ikoną.
+
+    Kliknięcie pokazuje to miejsce na mapie (i nie odhacza kroku).
+    """
+
+    clicked = Signal(object)
+
+    def __init__(self, marker: MapPoint, image: Path | None) -> None:
+        super().__init__()
+        self.setObjectName("markerTile")
+        self.marker = marker
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setFixedWidth(MARKER_TILE_WIDTH)
+        self.setMinimumHeight(MARKER_TILE_HEIGHT)
+        self.setToolTip(f"{marker.label} ({KIND_NAMES[marker.kind]}): kliknij, żeby zobaczyć na mapie")
+        # Kolorowy pasek u góry: ten sam kolor co kropka tego rodzaju na mapie.
+        self.setStyleSheet(f"QFrame#markerTile {{ border-top: 3px solid {KIND_COLORS[marker.kind]}; }}")
+
+        self._sprite = AnimatedSprite(MARKER_SPRITE)
+        self._icon = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
+        self._icon.setPixmap(icon("pin.svg").pixmap(QSize(18, 24)))
+        caption = QLabel(marker.label, wordWrap=True, alignment=Qt.AlignmentFlag.AlignCenter)
+        caption.setTextFormat(Qt.TextFormat.PlainText)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(2, 4, 2, 4)
+        layout.setSpacing(2)
+        layout.addWidget(self._sprite, 0, Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self._icon)
+        layout.addWidget(caption)
+        layout.addStretch(1)
+        self.set_image(image)
+
+    def set_image(self, image: Path | None) -> None:
+        # NPC z pobranym obrazkiem: jego postać; inaczej ikona pinezki.
+        self._sprite.set_path(image)
+        self._sprite.setVisible(image is not None)
+        self._icon.setVisible(image is None)
+
+    def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        if event.button() == Qt.MouseButton.LeftButton:
+            event.accept()  # nie przekazujemy kliknięcia karcie, więc krok się nie odhacza
+            self.clicked.emit(self.marker)
 
 
 def _step_details(step: Step) -> str:

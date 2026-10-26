@@ -7,8 +7,9 @@ grzebania w kodzie stron.
 
 from pathlib import Path
 
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QColor, QIcon, QPalette
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QPushButton
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
@@ -110,6 +111,15 @@ QFrame#monsterTile {{
 }}
 QFrame#monsterTile QLabel {{ font-size: 11px; background: transparent; }}
 
+/* Pinezki kroku (NPC, miejsce) jako kafelki po prawej stronie karty: klik pokazuje mapę. */
+QFrame#markerTile {{
+    background: {BACKGROUND};
+    border: 1px solid {BORDER};
+    border-radius: 6px;
+}}
+QFrame#markerTile:hover {{ border: 1px solid {ACCENT}; }}
+QFrame#markerTile QLabel {{ font-size: 10px; background: transparent; border: none; }}
+
 QCheckBox::indicator {{
     width: 18px;
     height: 18px;
@@ -150,3 +160,13 @@ def apply_theme(app: QApplication) -> None:
 
 def icon(name: str) -> QIcon:
     return QIcon(str(ASSETS_DIR / name))
+
+
+def report_button() -> QPushButton:
+    """Przycisk „Zgłoś błąd” (logo GitHuba), ten sam przy queście i przy potworze."""
+    button = QPushButton(" Zgłoś błąd")
+    button.setIcon(icon("github.svg"))
+    button.setIconSize(QSize(16, 16))
+    button.setToolTip("Otwiera zgłoszenie na GitHubie (potrzebne darmowe konto GitHub)")
+    button.setCursor(Qt.CursorShape.PointingHandCursor)
+    return button

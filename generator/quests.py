@@ -61,6 +61,18 @@ def title_from_url(url: str) -> str:
     return urllib.parse.unquote(url.removeprefix(WIKI_URL_PREFIX)).replace("_", " ")
 
 
+_QUEST_INFOBOX = re.compile(r"\{\{\s*Infobox[ _]Quest", re.IGNORECASE)
+
+
+def is_quest_page(wikitext: str) -> bool:
+    """Czy strona sama jest questem (ma własny infobox questa).
+
+    Strony miast czy expowisk też trafiają na listę „używa Infobox Quest”,
+    bo pokazują questy z okolicy, ale same questami nie są.
+    """
+    return bool(_QUEST_INFOBOX.search(wikitext))
+
+
 def make_draft(pages: QuestPages, quest_id: str | None = None) -> dict:
     """Szkic questa z danych infoboxu. Kroki uzupełnia autor razem z Claude."""
     info = {key: apply_terms(value) for key, value in parse_infobox(pages.main.wikitext).items()}

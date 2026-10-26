@@ -56,6 +56,11 @@ def items_dir() -> Path:
     return user_data_dir() / "items"
 
 
+def npcs_dir() -> Path:
+    """Pobrane obrazki NPC (TibiaWiki, © CipSoft)."""
+    return user_data_dir() / "npcs"
+
+
 def bundled_spawns_file() -> Path:
     """spawns.json dołączony do aplikacji (obok quests.json)."""
     return bundled_data_file().with_name("spawns.json")

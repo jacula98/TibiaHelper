@@ -9,8 +9,8 @@ from collections.abc import Callable
 from html import escape
 from pathlib import Path
 
-from PySide6.QtCore import QObject, Qt, Signal
-from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtCore import QObject, Qt, QUrl, Signal
+from PySide6.QtGui import QDesktopServices, QImage, QPixmap
 from PySide6.QtWidgets import (
     QHBoxLayout,
     QComboBox,
@@ -24,12 +24,14 @@ from PySide6.QtWidgets import (
 
 from ..core.models import Monster
 from ..core.monsters import SORTS, download_items, download_missing, image_path, item_key, sort_monsters, sprite_path
+from ..core.issues import monster_issue_url
 from ..core.mapdata import floor_label
 from ..core.spawns import SOURCE_NOTE, Place, Spawns, places
 from .map_window import MapPanel, spawn_icon
 from .monster_grid import MonsterGrid
 from .monster_widgets import AnimatedSprite, ElementBars
 from .sprites import display_sprite
+from .theme import report_button
 
 PAGE_SPRITE = 64
 LOOT_ICON = 32  # obrazki przedmiotów z wiki mają 32x32 px
@@ -109,6 +111,7 @@ class MonsterPage(QWidget):
         self._sprites_dir = sprites_dir
         self._items_dir = items_dir
         self._item_images: dict[str, str] = {}
+        self._data_version = 0
         self._spawns = Spawns()
         self._monster: Monster | None = None
         self._loader = _SpriteLoader(self)
@@ -161,10 +164,21 @@ class MonsterPage(QWidget):
         self._scroll = scroll
         self._column = column
 
+        report = report_button()
+        report.clicked.connect(self._report_issue)
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(top)
         layout.addWidget(scroll, 1)
+        layout.addWidget(report, 0, Qt.AlignmentFlag.AlignRight)
+
+    def set_data_version(self, data_version: int) -> None:
+        self._data_version = data_version
+
+    def _report_issue(self) -> None:
+        if self._monster is not None:
+            QDesktopServices.openUrl(QUrl(monster_issue_url(self._monster, self._data_version)))
 
     def set_item_images(self, images: dict[str, str]) -> None:
         self._item_images = images
