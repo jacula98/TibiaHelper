@@ -164,7 +164,9 @@ class _StepRow(QWidget):
         self._apply_style()
 
     def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
-        self._box.toggle()
+        # Tylko lewy przycisk: prawy/środkowy nie powinien zmieniać postępu.
+        if event.button() == Qt.MouseButton.LeftButton:
+            self._box.toggle()
 
     def _on_toggled(self, checked: bool) -> None:
         self._apply_style()
