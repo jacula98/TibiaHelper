@@ -242,3 +242,24 @@ def test_mapper_coords_and_infobox_position():
     npc = "{{Infobox NPC\n| name = Tom\n| posx = 125.85\n| posy = 125.199\n| posz = 7\n}}"
     assert infobox_position(npc) == {"x": 32085, "y": 32199, "z": 7}
     assert infobox_position("{{Infobox NPC\n| name = X\n}}") is None
+
+
+def test_spoiler_draft_content():
+    from generator import spoiler
+
+    wikitext = (
+        "== Required Equipment ==\n"
+        "* [[Honeycomb]] ''(more than one)''\n"
+        "== Mission 1 ==\n"
+        "Go to {{Mapper Coords|125.252|121.75|7|3|text=Sven}} and say {{KW|mead}}.\n"
+        "{{Infobox Hint\n|text=ignored\n}}\n"
+        "Drink [[Mead|the mead]].\n"
+    )
+    steps, required = spoiler.draft_content(wikitext, "Barbarian Test Quest")
+    assert steps[0]["text"] == spoiler.TODO_STEP
+    assert required == ["Honeycomb (more than one)"]
+    assert steps[1]["text"] == "[Mission 1] Go to Sven and say mead."
+    assert steps[1]["markers"][0]["x"] == 125 * 256 + 252
+    assert steps[1]["markers"][0]["z"] == 7
+    assert steps[2]["text"] == "Drink the mead."
+    assert "ignored" not in str(steps)

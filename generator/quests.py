@@ -8,7 +8,7 @@ from pathlib import Path
 
 from tibiahelper.core.models import WIKI_URL_PREFIX
 
-from . import cache
+from . import cache, spoiler
 from .wiki_api import WikiClient, WikiPage
 from .terminology import apply_terms
 from .wikitext import parse_infobox
@@ -65,18 +65,23 @@ def make_draft(pages: QuestPages, quest_id: str | None = None) -> dict:
     """Szkic questa z danych infoboxu. Kroki uzupełnia autor razem z Claude."""
     info = {key: apply_terms(value) for key, value in parse_infobox(pages.main.wikitext).items()}
     name = info.get("name") or pages.main.title
-    level = info.get("lvl", "")
+    level = re.match(r"\d+", info.get("lvl", ""))
+    steps = [{"text": f"{TODO_MARK}: uproszczone kroki na podstawie strony /Spoiler"}]
+    required: list[str] = []
+    if pages.spoiler is not None:
+        # Materiał z wiki do przerobienia przez autora (po angielsku, pierwszy krok z TODO).
+        steps, required = spoiler.draft_content(pages.spoiler.wikitext, name)
     return {
         "id": quest_id or slugify(name),
         "name": name,
-        "min_level": int(level) if level.isdigit() else 0,
+        "min_level": int(level.group()) if level else 0,
         "premium": info.get("premium", "").lower() == "yes",
         "source_url": source_url(pages.main.title),
         "wiki_revision": pages.revision,
         "status": "draft",
         "reviewed_at": None,
-        "steps": [{"text": f"{TODO_MARK}: uproszczone kroki na podstawie strony /Spoiler"}],
-        "required_items": [],
+        "steps": steps,
+        "required_items": required,
         "rewards": [info["reward"]] if info.get("reward") else [],
     }
 

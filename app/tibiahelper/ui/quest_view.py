@@ -40,6 +40,7 @@ from ..core.models import Monster, Quest, Step
 from ..core.monsters import download_missing, sprite_path
 from ..core.progress import ProgressStore
 from .map_window import MapPanel
+from .monster_widgets import AnimatedSprite
 from .rich_text import monster_tooltip, parse_monster_link, parse_pin_link, step_html
 from .sprites import display_sprite
 from .theme import ASSETS_DIR, icon
@@ -515,8 +516,8 @@ class _StepRow(QFrame):
             self._box.toggle()
 
 
-class _MonsterTile(QLabel):
-    """Kafelek w sekcji „Potwory”: obrazek, a pod nim „2x Skeleton”. Dymek jak w tekście kroku.
+class _MonsterTile(QFrame):
+    """Kafelek w sekcji „Potwory”: animacja, a pod nią „2x Skeleton”. Dymek jak w tekście kroku.
 
     Kliknięcie otwiera stronę potwora w zakładce „Potwory”.
     """
@@ -524,15 +525,22 @@ class _MonsterTile(QLabel):
     clicked = Signal(object)
 
     def __init__(self, monster: Monster, count: int | None, sprites_dir: Path) -> None:
-        super().__init__(textFormat=Qt.TextFormat.RichText, alignment=Qt.AlignmentFlag.AlignCenter)
+        super().__init__()
         self.setObjectName("monsterTile")
-        self.setWordWrap(True)
         # Ignored: kafelki dzielą się szerokością okna, zamiast ją rozpychać długą nazwą.
         self.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
-        self._monster = monster
-        self._count = count
-        self._sprites_dir = sprites_dir
         self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._monster = monster
+        self._sprites_dir = sprites_dir
+        self._sprite = AnimatedSprite(TILE_SPRITE)
+        caption = f"{count}x {monster.name}" if count else monster.name
+        self._caption = QLabel(caption, wordWrap=True, alignment=Qt.AlignmentFlag.AlignCenter)
+        self._caption.setTextFormat(Qt.TextFormat.PlainText)
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(4, 4, 4, 4)
+        layout.setSpacing(2)
+        layout.addWidget(self._sprite, 0, Qt.AlignmentFlag.AlignHCenter)
+        layout.addWidget(self._caption)
         self.refresh()
 
     def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
@@ -540,11 +548,9 @@ class _MonsterTile(QLabel):
             self.clicked.emit(self._monster)
 
     def refresh(self) -> None:
-        path = display_sprite(self._sprites_dir, self._monster.id)
-        name = escape(self._monster.name)
-        caption = f"{self._count}x {name}" if self._count else name
-        self.setText(f"{_img(path, TILE_SPRITE)}<br>{caption}")
-        self.setToolTip(monster_tooltip(self._monster, _img(path, TOOLTIP_SPRITE)))
+        self._sprite.set_path(sprite_path(self._sprites_dir, self._monster.id))
+        tooltip_img = _img(display_sprite(self._sprites_dir, self._monster.id), TOOLTIP_SPRITE)
+        self.setToolTip(monster_tooltip(self._monster, tooltip_img))
 
 
 def _step_details(step: Step) -> str:

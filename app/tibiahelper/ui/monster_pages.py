@@ -21,11 +21,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..core.models import ELEMENTS, Monster
-from ..core.monsters import ELEMENT_NAMES, download_missing, sprite_path
+from ..core.models import Monster
+from ..core.monsters import download_missing, sprite_path
 from ..core.spawns import SOURCE_NOTE, Spawns
 from .map_window import MapPanel
-from .sprites import display_sprite
+from .monster_widgets import AnimatedSprite, ElementBars
 
 PAGE_SPRITE = 64
 SPAWN_MAP_HEIGHT = 320
@@ -116,7 +116,15 @@ class MonsterPage(QWidget):
         top.addWidget(self._back)
         top.addStretch(1)
 
-        # Strona: opis (HTML) / mapa występowania / loot i źródło (HTML).
+        # Strona: nagłówek z animacją / żywioły (paski) / opis (HTML) / mapa / loot i źródło (HTML).
+        self._sprite = AnimatedSprite(PAGE_SPRITE)
+        self._header = _html_label()
+        header = QHBoxLayout()
+        header.addWidget(self._sprite)
+        header.addWidget(self._header, 1)
+        self._elements_title = QLabel("CZYM BIĆ (OBRAŻENIA OD ŻYWIOŁÓW)")
+        self._elements_title.setObjectName("sectionTitle")
+        self._elements: QWidget | None = None
         self._top = _html_label()
         self._map_title = QLabel("MAPA WYSTĘPOWANIA")
         self._map_title.setObjectName("sectionTitle")
@@ -127,6 +135,9 @@ class MonsterPage(QWidget):
         content = QWidget()
         column = QVBoxLayout(content)
         column.setContentsMargins(0, 0, 4, 0)
+        column.addLayout(header)
+        column.addWidget(self._elements_title)
+        self._elements_at = column.count()  # tu wstawiamy paski żywiołów konkretnego potwora
         column.addWidget(self._top)
         column.addWidget(self._map_title)
         column.addWidget(self._map)
@@ -138,6 +149,7 @@ class MonsterPage(QWidget):
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scroll.setWidget(content)
         self._scroll = scroll
+        self._column = column
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -152,6 +164,10 @@ class MonsterPage(QWidget):
 
     def show_monster(self, monster: Monster) -> None:
         self._monster = monster
+        if self._elements is not None:
+            self._elements.deleteLater()
+        self._elements = ElementBars(monster)
+        self._column.insertWidget(self._elements_at, self._elements)
         self._render()
         self._scroll.verticalScrollBar().setValue(0)
         points = self._spawns.of(monster.id)
@@ -173,8 +189,9 @@ class MonsterPage(QWidget):
 
     def _render(self) -> None:
         if self._monster is not None:
-            sprite = display_sprite(self._sprites_dir, self._monster.id)
-            self._top.setText(monster_html(self._monster, sprite))
+            self._sprite.set_path(sprite_path(self._sprites_dir, self._monster.id))
+            self._header.setText(header_html(self._monster))
+            self._top.setText(monster_html(self._monster))
             self._bottom.setText(loot_html(self._monster))
 
 
@@ -186,11 +203,8 @@ def _html_label() -> QLabel:
     return label
 
 
-def monster_html(monster: Monster, sprite: Path | None) -> str:
-    """Górna część strony potwora (nad mapą). Każdy tekst z danych przechodzi przez escape."""
-    img = (
-        f'<img src="{sprite.as_uri()}" width="{PAGE_SPRITE}" height="{PAGE_SPRITE}">' if sprite else "🐾"
-    )
+def header_html(monster: Monster) -> str:
+    """Nazwa, rodzaj i statystyki obok animacji. Każdy tekst z danych przechodzi przez escape."""
     tags = []
     if monster.boss:
         tags.append("boss")
@@ -198,28 +212,20 @@ def monster_html(monster: Monster, sprite: Path | None) -> str:
         tags.append(escape(monster.bestiary_class))
     if monster.bestiary_level:
         tags.append(f"bestiariusz: {escape(monster.bestiary_level)}")
-    parts = [
-        f'<table cellspacing="6"><tr><td>{img}</td><td valign="middle">'
-        f'<span style="font-size: 18px; font-weight: 600;">{escape(monster.name)}</span><br>'
-        f'<span style="color: #9aa0a6;">{" · ".join(tags)}</span></td></tr></table>'
-    ]
-
     stats = [f"HP <b>{_thousands(monster.hp)}</b>", f"exp <b>{_thousands(monster.exp)}</b>"]
     if monster.armor is not None:
         stats.append(f"armor <b>{monster.armor}</b>")
     if monster.speed is not None:
         stats.append(f"speed <b>{monster.speed}</b>")
-    parts.append(" · ".join(stats))
+    return (
+        f'<span style="font-size: 18px; font-weight: 600;">{escape(monster.name)}</span><br>'
+        f'<span style="color: #9aa0a6;">{" · ".join(tags)}</span><br>{" · ".join(stats)}'
+    )
 
-    parts.append(_section("OBRAŻENIA OD ŻYWIOŁÓW"))
-    cells = []
-    for element in ELEMENTS:
-        percent = monster.elements.get(element, 100)
-        # Kolor od razu mówi, czym bić: zielony = słaby na to, czerwony = odporny.
-        color = "#81c784" if percent > 100 else "#ef5350" if percent < 100 else "#e8eaed"
-        cells.append(f'{ELEMENT_NAMES[element]} <span style="color: {color};"><b>{percent}%</b></span>')
-    parts.append(" · ".join(cells))
 
+def monster_html(monster: Monster) -> str:
+    """Umiejętności i opis miejsc (pod paskami żywiołów)."""
+    parts = []
     if monster.abilities:
         parts.append(_section("UMIEJĘTNOŚCI"))
         parts.append("<br>".join(f"• {escape(a)}" for a in monster.abilities))

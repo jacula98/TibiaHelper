@@ -31,9 +31,9 @@ DATA_URL = "https://raw.githubusercontent.com/jacula98/TibiaHelper/main/data/que
 # Miejsca występowania potworów (TibiaRoute): pobierane razem z nowymi poradnikami.
 SPAWNS_URL = "https://raw.githubusercontent.com/jacula98/TibiaHelper/main/data/spawns.json"
 TIMEOUT_SECONDS = 10
-# Plik z bazą potworów ma ok. 3,5 MB (spakowany gzipem ok. 0,5 MB).
+# Plik z bazą potworów i questów ma ok. 5 MB (spakowany gzipem ok. 0,7 MB).
 # Limity chronią przed pobieraniem albo rozpakowaniem czegoś ogromnego.
-MAX_BYTES = 5 * 1024 * 1024  # tyle pobieramy z sieci
+MAX_BYTES = 15 * 1024 * 1024  # tyle pobieramy z sieci (gdyby serwer nie spakował pliku)
 MAX_UNPACKED = 30 * 1024 * 1024  # tyle może mieć plik po rozpakowaniu
 
 # Funkcja pobierająca: url -> bajty. W testach podmieniamy ją na sztuczną.
