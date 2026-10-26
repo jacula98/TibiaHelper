@@ -1,7 +1,8 @@
 """Proste wyciąganie danych z wikitekstu TibiaWiki.
 
 Nie piszemy pełnego parsera MediaWiki: potrzebujemy tylko pól z
-{{Infobox Quest ...}}, gdzie każde pole jest w osobnej linii "| klucz = wartość".
+{{Infobox Quest ...}} i {{Infobox Creature ...}}, gdzie każde pole jest
+w osobnej linii "| klucz = wartość".
 """
 
 import re
@@ -19,12 +20,12 @@ def strip_markup(text: str) -> str:
     return " ".join(text.split())
 
 
-def parse_infobox(wikitext: str) -> dict[str, str]:
-    """Pola z {{Infobox Quest}} jako tekst bez znaczników wiki."""
+def parse_infobox(wikitext: str, template: str = "Infobox Quest") -> dict[str, str]:
+    """Pola z {{Infobox ...}} jako tekst bez znaczników wiki (klucze małymi literami)."""
     fields: dict[str, str] = {}
     inside = False
     for line in wikitext.splitlines():
-        if line.lstrip().startswith("{{Infobox Quest"):
+        if line.lstrip().startswith("{{" + template):
             inside = True
             continue
         if not inside:

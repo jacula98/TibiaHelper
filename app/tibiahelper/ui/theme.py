@@ -102,6 +102,15 @@ QFrame#step[state="current"] {{ border: 2px solid {ACCENT}; }}
 QFrame#step[state="done"] {{ background: transparent; }}
 QFrame#step[state="done"] QLabel {{ color: {MUTED}; }}
 
+/* Kafelki w sekcji „Potwory”: obrazek i podpis, jak lista potworów w poradnikach. */
+QLabel#monsterTile {{
+    background: {SURFACE};
+    border: 1px solid {BORDER};
+    border-radius: 8px;
+    padding: 4px;
+    font-size: 11px;
+}}
+
 QCheckBox::indicator {{
     width: 18px;
     height: 18px;

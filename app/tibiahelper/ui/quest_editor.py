@@ -52,6 +52,14 @@ class QuestEditor(QWidget):
         self._data_file = data_file
         self._maps_dir = maps_dir
         self._map: MapWindow | None = None
+        # Potwory z pliku (id -> nazwa) do wyboru przy „Oznacz potwora”.
+        try:
+            raw_monsters = author.load_data(data_file).get("monsters", [])
+        except (OSError, ValueError):
+            raw_monsters = []
+        self._monster_names = {
+            m["id"]: m.get("name", m["id"]) for m in raw_monsters if isinstance(m, dict) and "id" in m
+        }
         self._current = -1  # indeks edytowanego kroku
         # Krok i fragment tekstu, dla których otwarto wybieranie miejsca na mapie.
         self._pending_step: int | None = None
@@ -146,8 +154,19 @@ class QuestEditor(QWidget):
         pin_buttons.addWidget(add_pin)
         pin_buttons.addWidget(remove_pin)
 
-        hint = QLabel("Wskazówka: zaznacz fragment tekstu (np. „między Venore a Thais”), "
-                      "a potem „Dodaj pinezkę” i kliknij miejsce na mapie.")
+        self._step_monsters = QListWidget()
+        self._step_monsters.setFixedHeight(90)
+        add_monster = QPushButton("🐾 Oznacz potwora")
+        add_monster.setToolTip("Zaznacz w tekście nazwę potwora (np. „2 szkielety”), potem kliknij")
+        add_monster.clicked.connect(self._add_monster)
+        remove_monster = QPushButton("Usuń potwora")
+        remove_monster.clicked.connect(self._remove_monster)
+        monster_buttons = QHBoxLayout()
+        monster_buttons.addWidget(add_monster)
+        monster_buttons.addWidget(remove_monster)
+
+        hint = QLabel("Wskazówka: zaznacz fragment tekstu (np. „między Venore a Thais” albo „2 szkielety”), "
+                      "a potem „Dodaj pinezkę” (i kliknij miejsce na mapie) lub „Oznacz potwora”.")
         hint.setObjectName("muted")
         hint.setWordWrap(True)
 
@@ -160,6 +179,8 @@ class QuestEditor(QWidget):
         form.addRow("Przedmioty", self._items)
         form.addRow("Pinezki", self._markers)
         form.addRow("", pin_buttons)
+        form.addRow("Potwory", self._step_monsters)
+        form.addRow("", monster_buttons)
         form.addRow("", hint)
         return box
 
@@ -188,7 +209,7 @@ class QuestEditor(QWidget):
         self._steps_list.clear()
         for number, step in enumerate(self._steps, start=1):
             first_line = step.get("text", "").splitlines()[0] if step.get("text") else "(pusty krok)"
-            pins = " 📍" * len(step.get("markers", []))
+            pins = " 📍" * len(step.get("markers", [])) + " 🐾" * len(step.get("monsters", []))
             self._steps_list.addItem(f"{number}. {first_line[:60]}{pins}")
         self._steps_list.setCurrentRow(min(row, len(self._steps) - 1))
         self._steps_list.blockSignals(False)
@@ -204,6 +225,7 @@ class QuestEditor(QWidget):
         self._npc.setText(step.get("npc") or "")
         self._items.setText(", ".join(step.get("items", [])))
         self._refresh_markers()
+        self._refresh_monsters()
 
     def _store_step(self) -> None:
         """Przepisuje pola formularza do słownika edytowanego kroku."""
@@ -333,6 +355,54 @@ class QuestEditor(QWidget):
             self._refresh_step_list()
             self._refresh_markers()
 
+    # --- potwory ----------------------------------------------------------------
+
+    def _refresh_monsters(self) -> None:
+        self._step_monsters.clear()
+        if self._current < 0:
+            return
+        text = self._text.toPlainText()
+        for monster in self._steps[self._current].get("monsters", []):
+            name = self._monster_names.get(monster["id"], f"{monster['id']} ⚠ nieznany")
+            count = f"{monster['count']}x " if monster.get("count") else ""
+            anchor = monster.get("anchor")
+            where = f" · po „{anchor}”" if anchor else " · na końcu tekstu"
+            warning = " ⚠ brak tego fragmentu w tekście" if anchor and anchor not in text else ""
+            self._step_monsters.addItem(f"{count}{name}{where}{warning}")
+
+    def _add_monster(self) -> None:
+        if self._current < 0:
+            return
+        if not self._monster_names:
+            QMessageBox.information(
+                self, "Edytor", "W pliku nie ma jeszcze potworów. Dodaj je generatorem:\n"
+                'python -m generator monster "Skeleton"'
+            )
+            return
+        anchor = self._text.textCursor().selectedText().strip() or None
+        dialog = _MonsterDialog(self._monster_names, anchor or "", self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        self._store_step()
+        entry: dict = {"id": dialog.monster_id()}
+        if dialog.count():
+            entry["count"] = dialog.count()
+        if anchor:
+            entry["anchor"] = anchor
+        self._steps[self._current].setdefault("monsters", []).append(entry)
+        self._refresh_step_list()
+        self._refresh_monsters()
+
+    def _remove_monster(self) -> None:
+        row = self._step_monsters.currentRow()
+        monsters = self._steps[self._current].get("monsters", []) if self._current >= 0 else []
+        if 0 <= row < len(monsters):
+            del monsters[row]
+            if not monsters:
+                del self._steps[self._current]["monsters"]
+            self._refresh_step_list()
+            self._refresh_monsters()
+
     # --- zapis ------------------------------------------------------------------
 
     def _collect(self) -> dict:
@@ -411,6 +481,39 @@ class _MarkerDialog(QDialog):
 
     def kind(self) -> str:
         return self._kind.currentData()
+
+
+class _MonsterDialog(QDialog):
+    """Który potwór i ilu ich jest (0 = nie podajemy liczby)."""
+
+    def __init__(self, names: dict[str, str], anchor: str, parent: QWidget) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Oznacz potwora")
+        self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
+        self._monster = QComboBox()
+        for monster_id, name in sorted(names.items(), key=lambda item: item[1]):
+            self._monster.addItem(name, monster_id)
+        # Podpowiedź: liczba z początku zaznaczenia, np. „2 szkielety” -> 2.
+        first = anchor.split()[0] if anchor.split() else ""
+        self._count = QSpinBox(minimum=0, maximum=999, value=int(first) if first.isdigit() else 0)
+        self._count.setSpecialValueText("nie podawaj")
+        where = f"za „{anchor}”" if anchor else "na końcu tekstu (nic nie zaznaczono)"
+
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+
+        form = QFormLayout(self)
+        form.addRow("Potwór", self._monster)
+        form.addRow("Ile", self._count)
+        form.addRow("Obrazek", QLabel(where))
+        form.addRow(buttons)
+
+    def monster_id(self) -> str:
+        return self._monster.currentData()
+
+    def count(self) -> int:
+        return self._count.value()
 
 
 def _section(text: str) -> QLabel:

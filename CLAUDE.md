@@ -21,6 +21,8 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
 ## Czego nie robimy
 
 - Aplikacja nie łączy się z TibiaWiki. Robi to tylko generator, uruchamiany przez autora.
+  Jedyny wyjątek: obrazki potworów (© CipSoft, nie trzymamy ich w repo). Aplikacja pobiera je
+  przy pierwszym użyciu z `static.wikia.nocookie.net/tibia/images/`, pod adresami zapisanymi w danych.
 - Brak automatyzacji gry i czytania jej pamięci: to tylko poradnik.
 
 ## Sprawdzenie przed PR

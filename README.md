@@ -33,6 +33,12 @@ pinezka: kliknięcie wysuwa na dole okna mapę Tibii z kropką w tym miejscu (ko
 z projektu [tibiamaps](https://github.com/tibiamaps/tibia-map-data) i pobierają się przy pierwszym
 użyciu do `%APPDATA%\TibiaHelper\maps`.
 
+Potwory: w tekście kroku przy nazwie potwora jest jego obrazek, a nad questem sekcja „Potwory”
+(obrazek, ile ich jest i nazwa). Po najechaniu myszką widać HP, exp, słabości i odporności.
+Dane potworów są z TibiaWiki, a obrazki (grafiki © CipSoft) pobierają się przy pierwszym
+użyciu z serwera plików TibiaWiki do `%APPDATA%\TibiaHelper\monsters`. Zanim się pobiorą,
+w tekście jest łapka 🐾.
+
 ## Tryb autora (edycja questów)
 
 ```
@@ -43,6 +49,8 @@ python -m tibiahelper --author
 W widoku questa pojawia się przycisk „✎ Edytuj”. W edytorze można zmieniać nazwę, level,
 przedmioty, nagrody i kroki (dodawać, usuwać, przesuwać). Pinezkę dodaje się tak: zaznacz w tekście
 kroku fragment, za którym ma stać, kliknij „📍 Dodaj pinezkę” i wskaż miejsce na mapie.
+Potwora oznacza się podobnie: zaznacz w tekście np. „2 szkielety”, kliknij „🐾 Oznacz potwora”,
+wybierz potwora i liczbę. Lista potworów do wyboru pochodzi z pliku danych (dodaje je generator).
 „Oznacz jako przejrzany” zmienia szkic w quest widoczny dla graczy. „Zapisz” sprawdza dane
 (także nazewnictwo, np. „bramka lvl-owa”) i zapisuje `data/quests.json`.
 Publikacja: wyślij ten plik Claude w czacie projektu.
@@ -58,6 +66,7 @@ python -m generator review katana-quest          # po uzupełnieniu kroków: sta
 python -m generator check-updates                # które questy zmieniły się na wiki
 python -m generator fetch "Katana Quest" --refresh   # pobierz ponownie (np. przed ponownym przeglądem)
 python -m generator coords "Tom"                 # współrzędne NPC/miejsca do pinezek (pole "markers")
+python -m generator monster "Skeleton"           # dodaj/odśwież potwora: HP, exp, słabości, adres obrazka
 ```
 
 Kroki questa piszemy ręcznie (razem z Claude) na podstawie strony `/Spoiler` z cache.
