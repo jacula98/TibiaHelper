@@ -17,8 +17,9 @@ def _zip(entries: dict[str, bytes]) -> bytes:
 
 
 def test_every_choice_has_a_package():
-    assert minimap.package_url("all", False).endswith("/minimap-with-markers.zip")
-    assert minimap.package_url("poi", True).endswith("/minimap-with-grid-overlay-and-poi-markers.zip")
+    assert minimap.package_url(True, False).endswith("/minimap-with-markers.zip")
+    assert minimap.package_url(False, True).endswith("/minimap-with-grid-overlay-without-markers.zip")
+    assert len(minimap.PACKAGES) == 4
     assert all(url.startswith("https://tibiamaps.github.io/") for url in map(minimap.BASE_URL.__add__, minimap.PACKAGES.values()))
 
 

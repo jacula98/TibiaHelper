@@ -19,14 +19,12 @@ from pathlib import Path
 from .storage import write_bytes_atomic
 
 BASE_URL = "https://tibiamaps.github.io/tibia-map-data/"
-# (markery, siatka) -> nazwa paczki. Markery: "all" (wszystkie), "poi" (tylko ciekawe miejsca), "none".
-# Wersja „tylko POI” istnieje wyłącznie z siatką.
+# (z markerami, z siatką) -> nazwa paczki: cztery wersje, jak na tibiamaps.io.
 PACKAGES = {
-    ("all", False): "minimap-with-markers.zip",
-    ("none", False): "minimap-without-markers.zip",
-    ("all", True): "minimap-with-grid-overlay-and-markers.zip",
-    ("none", True): "minimap-with-grid-overlay-without-markers.zip",
-    ("poi", True): "minimap-with-grid-overlay-and-poi-markers.zip",
+    (True, False): "minimap-with-markers.zip",
+    (False, False): "minimap-without-markers.zip",
+    (True, True): "minimap-with-grid-overlay-and-markers.zip",
+    (False, True): "minimap-with-grid-overlay-without-markers.zip",
 }
 MARKERS_FILE = "minimapmarkers.bin"
 BACKUP_NAME = "minimap.tibiahelper-backup"
@@ -38,7 +36,7 @@ MAX_FILES = 5000  # paczka ma ok. 2200 plików
 ALLOWED_NAME = re.compile(r"^minimap/(Minimap_(?:Color|WaypointCost)_\d+_\d+_\d+\.png|minimapmarkers\.bin)$")
 
 
-def package_url(markers: str, grid: bool) -> str:
+def package_url(markers: bool, grid: bool) -> str:
     return BASE_URL + PACKAGES[(markers, grid)]
 
 
