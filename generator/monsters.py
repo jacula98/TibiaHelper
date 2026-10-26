@@ -131,7 +131,8 @@ def make_monster(page: WikiPage, image_url: str | None, monster_id: str | None =
         "location": location or None,
     }
     # Puste pola wyrzucamy, żeby plik był mniejszy (model ma dla nich wartości domyślne).
-    monster = {k: v for k, v in monster.items() if v not in (None, [], {}, False) or k in ("hp", "exp")}
+    # „is”, a nie „in (…False)”: w Pythonie 0 == False, a armor 0 to prawdziwa wartość.
+    monster = {k: v for k, v in monster.items() if not (v is None or v is False or v == [] or v == {})}
     # Ta sama walidacja co w aplikacji, zanim cokolwiek trafi do pliku.
     Monster.model_validate(monster)
     return monster

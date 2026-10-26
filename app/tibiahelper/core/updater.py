@@ -137,9 +137,11 @@ def _check_spawns(current_version: int, fetch: Fetch) -> dict | None:
 def apply_update(update: Update, cached: Path, cached_spawns: Path | None = None) -> bool:
     """Zapisuje pobrane dane jako lokalną kopię. False, gdy zapis się nie udał."""
     try:
-        write_json_atomic(cached, update.raw)
+        # Najpierw spawny: gdy ten zapis się nie uda, poradniki zostają stare
+        # i przy następnym starcie aktualizacja (razem ze spawnami) będzie zaproponowana znowu.
         if update.spawns_raw is not None and cached_spawns is not None:
             write_json_atomic(cached_spawns, update.spawns_raw)
+        write_json_atomic(cached, update.raw)
     except OSError as exc:
         log.error("Nie można zapisać pobranych danych do %s: %s", cached, exc)
         return False

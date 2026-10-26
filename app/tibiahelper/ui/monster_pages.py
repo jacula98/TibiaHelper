@@ -25,6 +25,7 @@ from ..core.models import ELEMENTS, Monster
 from ..core.monsters import ELEMENT_NAMES, download_missing, sprite_path
 from ..core.spawns import SOURCE_NOTE, Spawns
 from .map_window import MapPanel
+from .sprites import display_sprite
 
 PAGE_SPRITE = 64
 SPAWN_MAP_HEIGHT = 320
@@ -172,7 +173,7 @@ class MonsterPage(QWidget):
 
     def _render(self) -> None:
         if self._monster is not None:
-            sprite = sprite_path(self._sprites_dir, self._monster.id)
+            sprite = display_sprite(self._sprites_dir, self._monster.id)
             self._top.setText(monster_html(self._monster, sprite))
             self._bottom.setText(loot_html(self._monster))
 
