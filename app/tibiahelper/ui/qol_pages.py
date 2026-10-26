@@ -1,4 +1,4 @@
-"""Zakładka „Quality of life”: drobne ułatwienia (minimapa Tibii, ustawienia lootu i cen)."""
+"""Zakładka „Quality of life”: drobne ułatwienia (minimapa Tibii, loot filter i ceny, UI i hotkeye)."""
 
 import threading
 from pathlib import Path
@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..core import loot_settings, minimap
+from ..core import client_options, loot_settings, minimap
 from . import theme
 
 TIBIA_MAPS_URL = "https://tibiamaps.io/"
@@ -25,6 +25,7 @@ class QolPage(QWidget):
     back_requested = Signal()
     loot_requested = Signal()
     maps_requested = Signal()
+    ui_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -41,6 +42,10 @@ class QolPage(QWidget):
         loot = _small_button("💰  Loot filter && market", "Pomijanie śmieci i ceny z Marketu")
         loot.clicked.connect(self.loot_requested)
         layout.addWidget(loot)
+
+        ui = _small_button("⌨  UI + Hotkeys", "Czyste UI bez zbędnych animacji, podstawowe hotkeye")
+        ui.clicked.connect(self.ui_requested)
+        layout.addWidget(ui)
         layout.addStretch(1)
 
 
@@ -194,6 +199,61 @@ class LootSettingsPage(QWidget):
         text = f"Gotowe. Wgrano na postacie: {result.characters}."
         if result.errors:
             text += "\n\nNie udało się dla:\n" + "\n".join(result.errors)
+        QMessageBox.information(self, "Wgraj", text)
+
+
+class UiHotkeysPage(QWidget):
+    back_requested = Signal()
+
+    def __init__(self, source: Path, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self._source = source
+
+        title = QLabel("UI + Hotkeys")
+        title.setObjectName("title")
+        upload = QPushButton("Wgraj")
+        upload.setObjectName("primary")
+        upload.setCursor(Qt.CursorShape.PointingHandCursor)
+        upload.clicked.connect(self._upload)
+        info = QLabel(
+            "Kliknięcie „Wgraj” ustawi w Tibii oczyszczone UI z nadmiaru animacji i komunikatów, "
+            "podstawowe hotkeye (zestawy Basic, Knight, Paladin, Sorcerer, Druid, Monk), przyciski "
+            "na pasku i action bary (m.in. czary i podróże statkiem).<br><br>"
+            "Ustawienia dotyczą całego konta. Twoje logowanie, dźwięk, grafika i pozycja okna zostają. "
+            "Zestawy hotkeyów o tych samych nazwach zostaną podmienione, inne zostają. Przed wgraniem "
+            "zamknij Tibię. Oryginalny plik trafia do kopii z końcówką "
+            f"„{client_options.BACKUP_SUFFIX}”.",
+            wordWrap=True,
+        )
+        info.setObjectName("muted")
+
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(10)
+        layout.addLayout(_top_bar("← Quality of life", self.back_requested))
+        layout.addWidget(title)
+        layout.addWidget(upload)
+        layout.addWidget(info)
+        layout.addStretch(1)
+
+    def _upload(self) -> None:
+        target = client_options.options_file()
+        # Folder Tibii (packages/Tibia) musi istnieć; sam plik może jeszcze nie istnieć.
+        if target is None or not target.parent.parent.is_dir():
+            QMessageBox.warning(self, "Wgraj", "Nie znalazłem Tibii na tym komputerze.")
+            return
+        # Klient zapisuje ustawienia przy zamknięciu, więc przy włączonej Tibii by je nadpisał.
+        answer = QMessageBox.question(self, "Wgraj", "Czy Tibia jest zamknięta? Wgrać UI i hotkeye?")
+        if answer != QMessageBox.StandardButton.Yes:
+            return
+        try:
+            made_backup = client_options.install(target, self._source)
+        except (OSError, ValueError, TypeError) as exc:
+            QMessageBox.warning(self, "Wgraj", f"Nie udało się wgrać ustawień:\n{exc}")
+            return
+        text = "Gotowe. Uruchom Tibię, UI i hotkeye są ustawione."
+        if made_backup:
+            text += f"\nStary plik: {target.name}{client_options.BACKUP_SUFFIX}"
         QMessageBox.information(self, "Wgraj", text)
 
 

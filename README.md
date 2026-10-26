@@ -23,6 +23,9 @@ do przeglądarki.
   dla itemów do delivery tasków i imbu (ustawienia od Yuukiciu). Przed wgraniem zamknij Tibię. Twoje listy
   zostają, a oryginalne pliki mają kopię z końcówką `.tibiahelper-backup` w folderze postaci
   (`%LOCALAPPDATA%\Tibia\packages\Tibia\characterdata`).
+  „UI + Hotkeys”: „Wgraj” ustawia oczyszczone UI (mniej animacji i komunikatów), podstawowe hotkeye dla każdej
+  profesji i action bary. Twoje logowanie, dźwięk, grafika i okno zostają, a stary `conf\clientoptions.json`
+  ma kopię `.tibiahelper-backup`. Przed wgraniem zamknij Tibię.
 - **Zgłoś błąd** przy queście, potworze i przedmiocie otwiera gotowe zgłoszenie na GitHubie.
 - **Przezroczystość okna** (10–100%) ustawiasz trybikiem ⚙ w prawym górnym rogu.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
