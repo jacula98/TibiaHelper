@@ -34,6 +34,16 @@ ITEM_SORTS: dict[str, tuple[Callable[[Item], bool], Callable[[Item], object], bo
 }
 
 
+# Filtry listy: nazwa -> „czy przedmiot należy do tej grupy”. Grupy są domyślnie ukryte,
+# a gracz może je pokazać w menu „Filtry”. Kolejność tu = kolejność w menu.
+ITEM_FILTERS: dict[str, Callable[[Item], bool]] = {
+    "Quest itemy": lambda i: i.category == "Quest Items",
+    "Soul core": lambda i: i.category == "Soul Cores",
+    "Pojemniki": lambda i: i.category == "Containers",
+    "Bez handlu z NPC": lambda i: not i.sell_to and not i.buy_from,
+}
+
+
 def sort_items(items: list[Item], sort: str) -> list[Item]:
     keep, key, reverse = ITEM_SORTS[sort]
     # Najpierw alfabetycznie, potem stabilne sortowanie po kluczu: remisy zostają w kolejności A–Z.

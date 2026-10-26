@@ -28,11 +28,13 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.issues import item_issue_url
-from ..core.items import ITEM_SORTS, Drop, effective_price, sort_items
+from ..core.filters import hide_groups
+from ..core.items import ITEM_FILTERS, ITEM_SORTS, Drop, effective_price, sort_items
 from ..core.models import Item, MapPoint, Monster, Npc, Trade
 from ..core.monsters import download_items, image_path, item_key
 from . import theme
 from .map_window import MapPanel
+from .filter_button import FilterButton
 from .monster_grid import SpriteAnimator
 from .monster_pages import RARITY_NAMES
 from .monster_widgets import AnimatedSprite
@@ -152,6 +154,8 @@ class ItemListPage(QWidget):
         self._list.setFrameShape(QListView.Shape.NoFrame)
         self._list.setVerticalScrollMode(QListView.ScrollMode.ScrollPerPixel)
         self._list.setStyleSheet("QListView { background: transparent; }")
+        # Wiersze mieszczą się w szerokości okna (długie nazwy są ucinane), poziomy pasek tylko przeszkadza.
+        self._list.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self._list.clicked.connect(lambda index: self.item_selected.emit(index.data(Qt.ItemDataRole.UserRole)))
         self._animator.loaded.connect(self._list.viewport().update)
         # Część obrazków to animacje; odświeżamy widoczne wiersze, ale tylko gdy lista jest na ekranie.
@@ -165,6 +169,9 @@ class ItemListPage(QWidget):
         top = QHBoxLayout()
         top.addWidget(back)
         top.addStretch(1)
+        self._filters = FilterButton(list(ITEM_FILTERS))
+        self._filters.changed.connect(self._refresh)
+        top.addWidget(self._filters)
         filters = QHBoxLayout()
         filters.addWidget(self._search, 1)
         filters.addWidget(self._sort)
@@ -185,10 +192,11 @@ class ItemListPage(QWidget):
 
     def _refresh(self) -> None:
         text = self._search.text().strip().lower()
-        shown = sort_items([i for i in self._items if text in i.name.lower()], self._sort.currentText())
+        found = [i for i in self._items if text in i.name.lower()]
+        shown = sort_items(hide_groups(found, ITEM_FILTERS, self._filters.shown()), self._sort.currentText())
         self._model.set_items(shown)
         self._list.scrollToTop()
-        self._empty.setText("Brak przedmiotów w danych." if not self._items else "Nic nie pasuje do wyszukiwania.")
+        self._empty.setText("Brak przedmiotów w danych." if not self._items else "Nic nie pasuje do wyszukiwania i filtrów.")
         self._list.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 

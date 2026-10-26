@@ -331,3 +331,49 @@ def test_item_page_html_is_escaped():
     monster = Monster(id="m", name="<script>", hp=1, exp=1, source_url="https://tibia.fandom.com/wiki/M")
     assert "&lt;script&gt;" in drops_html([Drop(monster, "rare")], lambda i: None)
     assert item_subtitle(evil) == "<i>c</i>"  # PlainText w liście (rysowane, nie HTML)
+
+
+# --- filtry list (porządki po etapie 11) -------------------------------------------
+
+
+def test_generator_marks_event_and_unavailable_monsters_and_skips_fansite_items():
+    from generator import items as gen_items
+
+    def flags(extra: str) -> tuple[bool, bool]:
+        monster = make_monster(WikiPage("X", 1, DEMON.replace("| isboss         = no", "| isboss = no\n" + extra)), IMAGE)
+        return monster.get("event", False), monster.get("unavailable", False)
+
+    assert flags("") == (False, False)
+    assert flags("| primarytype = Event Creatures") == (True, False)
+    assert flags("| status = event") == (True, False)
+    assert flags("| spawntype = Event, Triggered") == (True, False)
+    assert flags("| spawntype = Regular, Event") == (False, False)  # zwykły spawn, który bywa też na evencie
+    assert flags("| status = deprecated") == (False, True)
+
+    fansite = FISH_FIN.replace("Creature Products", "Fansite Items")
+    assert gen_items.make_item(WikiPage("Fansite Thing", 1, fansite), IMAGE, set()) is None
+
+
+def test_list_filters_hide_junk_by_default():
+    from tibiahelper.core.filters import hide_groups
+    from tibiahelper.core.items import ITEM_FILTERS
+    from tibiahelper.core.models import Item
+    from tibiahelper.core.monsters import MONSTER_FILTERS
+
+    url = "https://tibia.fandom.com/wiki/X"
+    quest = Item(name="Key", source_url=url, category="Quest Items", sell_to=[{"npc": "A"}])
+    junk = Item(name="Junk", source_url=url, category="Rubbish")
+    food = Item(name="Ham", source_url=url, category="Food", buy_from=[{"npc": "B"}])
+    assert hide_groups([quest, junk, food], ITEM_FILTERS, set()) == [food]
+    assert hide_groups([quest, junk, food], ITEM_FILTERS, {"Quest itemy"}) == [quest, food]
+    # Quest item bez NPC jest w dwóch grupach: widać go dopiero, gdy obie są pokazane.
+    lonely_quest = Item(name="Note", source_url=url, category="Quest Items")
+    assert hide_groups([lonely_quest], ITEM_FILTERS, {"Quest itemy"}) == []
+    assert hide_groups([lonely_quest], ITEM_FILTERS, {"Quest itemy", "Bez handlu z NPC"}) == [lonely_quest]
+
+    def monster(**fields):
+        return Monster(**{"id": "x", "name": "X", "hp": 100, "exp": 1, "source_url": url, **fields})
+
+    normal, boss, event, no_hp, no_exp = monster(), monster(boss=True), monster(event=True), monster(hp=0), monster(exp=0)
+    assert hide_groups([normal, boss, event, no_hp, no_exp], MONSTER_FILTERS, set()) == [normal]
+    assert hide_groups([normal, boss], MONSTER_FILTERS, {"Bossy"}) == [normal, boss]

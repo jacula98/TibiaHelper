@@ -13,8 +13,10 @@ do przeglądarki.
   i słabości, a po kliknięciu otwiera się pełna strona potwora.
 - **Zakładka „Potwory”.** Ponad 2000 potworów z wyszukiwarką. Każdy ma HP, exp, obrażenia od żywiołów,
   umiejętności, loot i mapę miejsc (expowisk), w których występuje. Listę można sortować po HP i expie.
+  Przycisk „Filtry” pokazuje też bossy, potwory eventowe, niedostępne w grze, bez HP i bez expa (domyślnie ukryte).
 - **Zakładka „Przedmioty”.** Wyszukasz dowolny przedmiot i zobaczysz, któremu NPC go sprzedać i za ile
-  (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada.
+  (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada. Quest itemy, soul core, pojemniki i przedmioty
+  bez handlu z NPC są domyślnie ukryte (do pokazania przyciskiem „Filtry”). Przedmiotów z fansite'ów nie ma wcale.
 - **Zakładka „Quality of life”.** „TibiaMaps”: zaznaczasz, czy chcesz markery i siatkę (grid overlay),
   i klikasz „Wgraj mapę”. Program sam pobiera pełną minimapę z [tibiamaps.io](https://tibiamaps.io/) i wgrywa ją
   do Tibii (`%LOCALAPPDATA%\Tibia\packages\Tibia\minimap`, stara minimapa trafia raz do `minimap.tibiahelper-backup`).

@@ -97,6 +97,21 @@ def _loot(value: str) -> list[dict]:
     return loot
 
 
+# Statusy z wiki dla potworów, których nie ma już w grze (albo są tylko na serwerach testowych).
+UNAVAILABLE_STATUSES = {"unavailable", "deprecated", "ts-only"}
+# Sposoby pojawiania się, które nie oznaczają zwykłego spawnu.
+_NON_REGULAR_SPAWNS = {"event", "triggered", "unblockable", "unique"}
+
+
+def _is_event(info: dict[str, str]) -> bool:
+    """Potwór eventowy: typ „Event Creatures”, status „event” albo spawn tylko na evencie."""
+    types = {info.get("primarytype", "").strip(), info.get("secondarytype", "").strip()}
+    if "Event Creatures" in types or info.get("status", "").strip().lower() == "event":
+        return True
+    spawns = {part.strip().lower() for part in info.get("spawntype", "").split(",") if part.strip()}
+    return "event" in spawns and spawns <= _NON_REGULAR_SPAWNS
+
+
 def make_monster(page: WikiPage, image_url: str | None, monster_id: str | None = None) -> dict:
     """Wpis potwora z wikitekstu strony. Rzuca ValueError, gdy strona nie jest potworem."""
     infobox = templates.find(page.wikitext, "Infobox Creature")
@@ -124,6 +139,8 @@ def make_monster(page: WikiPage, image_url: str | None, monster_id: str | None =
         "armor": _number(info.get("armor", "")),
         "speed": _number(info.get("speed", "")),
         "boss": info.get("isboss", "").strip().lower() == "yes",
+        "event": _is_event(info),
+        "unavailable": info.get("status", "").strip().lower() in UNAVAILABLE_STATUSES,
         "bestiary_class": _text(info.get("bestiaryclass", "")) or None,
         "bestiary_level": _text(info.get("bestiarylevel", "")) or None,
         "abilities": _abilities(info.get("abilities", "")),
