@@ -11,12 +11,13 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from .core.paths import bundled_data_file, cached_data_file, progress_file, settings_file
 from .core.progress import ProgressStore
 from .core.repository import LoadResult, QuestFileError, load_quest_file
-from .core.updater import load_best_local, update_from_github
+from .core.updater import Update, apply_update, check_for_update, load_best_local
 from .ui.main_window import MainWindow
+from .ui.theme import apply_theme
 
 
 class _UpdateNotifier(QObject):
-    """Przenosi wynik pobierania z wątku w tle do wątku okna.
+    """Przenosi wynik sprawdzania z wątku w tle do wątku okna.
 
     Okna Qt wolno zmieniać tylko z głównego wątku. Sygnał wysłany z innego
     wątku Qt sam dostarcza w głównym wątku (połączenie kolejkowane).
@@ -37,6 +38,7 @@ def main() -> int:
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     app = QApplication(sys.argv)
+    apply_theme(app)
 
     def visible(result: LoadResult) -> list:
         return result.quests if args.show_drafts else result.visible_quests
@@ -62,8 +64,16 @@ def main() -> int:
 
     if not args.no_update:
         notifier = _UpdateNotifier()
+
+        def install(update: Update) -> None:
+            # Wywoływane dopiero po kliknięciu „Zaktualizuj”.
+            if not apply_update(update, cached_data_file()):
+                QMessageBox.warning(window, "TibiaHelper", "Nie udało się zapisać nowych poradników.")
+            # Nawet gdy zapis się nie udał, pokazujemy nowe dane do końca tej sesji.
+            window.set_quests(visible(update.result), update.data_version)
+
         notifier.updated.connect(
-            lambda new: window.set_quests(visible(new), new.data_version, "zaktualizowano")
+            lambda update: window.offer_update(update.data_version, lambda: install(update))
         )
         current = result.data_version if result else 0
         # Pobieranie w tle, żeby okno nie zamarzło przy wolnym internecie.
@@ -76,9 +86,9 @@ def main() -> int:
 
 
 def _run_update(notifier: _UpdateNotifier, current_version: int) -> None:
-    new = update_from_github(current_version, cached_data_file())
-    if new is not None:
-        notifier.updated.emit(new)
+    update = check_for_update(current_version)
+    if update is not None:
+        notifier.updated.emit(update)
 
 
 if __name__ == "__main__":

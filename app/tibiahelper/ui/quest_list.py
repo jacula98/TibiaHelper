@@ -43,6 +43,7 @@ class QuestListPage(QWidget):
         filters.addWidget(self._level)
 
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)  # odstępy daje już główne okno
         layout.addLayout(filters)
         layout.addWidget(self._list, 1)
         layout.addWidget(self._empty, 1)
