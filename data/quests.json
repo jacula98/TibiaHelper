@@ -1,6 +1,6 @@
 {
-  "schema_version": 7,
-  "data_version": 24,
+  "schema_version": 8,
+  "data_version": 26,
   "quests": [
     {
       "id": "20-years-a-cook-quest",
@@ -37227,6 +37227,7 @@
       "wiki_revision": 1192293,
       "armor": 19,
       "speed": 90,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
       "abilities": [
@@ -39252,6 +39253,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/16/Angry_Plant.gif/revision/latest?cb=20170111210230&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Angry_Plant",
       "wiki_revision": 1085625,
+      "event": true,
       "abilities": [
         "Melee: 0-?"
       ],
@@ -39941,6 +39943,7 @@
       "wiki_revision": 1191645,
       "armor": 25,
       "speed": 115,
+      "event": true,
       "bestiary_class": "Construct",
       "bestiary_level": "Medium",
       "abilities": [
@@ -40028,6 +40031,7 @@
       "wiki_revision": 1133416,
       "speed": 100,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 100-170",
         "Fire Wave: 100-250 (fire)",
@@ -40243,6 +40247,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/99/Dog.gif/revision/latest?cb=20150416141602&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Annoying_Dog",
       "wiki_revision": 1116568,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -40430,6 +40435,7 @@
       "armor": 188,
       "speed": 350,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-3098",
         "Armageddon: 450-4000? (death)",
@@ -40990,6 +40996,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Arkhothep_(Creature)",
       "wiki_revision": 1181454,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-2000+?",
         "Summon Ancient Scarab: 6",
@@ -41491,6 +41498,7 @@
       "wiki_revision": 1191667,
       "armor": 40,
       "speed": 120,
+      "event": true,
       "bestiary_class": "Demon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -41573,6 +41581,7 @@
       "wiki_revision": 1191668,
       "armor": 45,
       "speed": 125,
+      "event": true,
       "bestiary_class": "Demon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -42046,6 +42055,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/ce/Baby_Pet_of_Chayenne.gif/revision/latest?cb=20171218213733&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Baby_Pet_of_Chayenne",
       "wiki_revision": 934001,
+      "unavailable": true,
       "location": "Draconia."
     },
     {
@@ -42266,6 +42276,7 @@
       "wiki_revision": 1192103,
       "armor": 35,
       "speed": 170,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Medium",
       "abilities": [
@@ -42388,6 +42399,7 @@
       "wiki_revision": 1192118,
       "armor": 17,
       "speed": 115,
+      "event": true,
       "bestiary_class": "Plant",
       "bestiary_level": "Medium",
       "abilities": [
@@ -42425,6 +42437,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Bane_Lord",
       "wiki_revision": 1124159,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-50",
         "Healing: 100-270",
@@ -42476,6 +42489,7 @@
       "wiki_revision": 1192309,
       "armor": 38,
       "speed": 115,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Medium",
       "abilities": [
@@ -43487,6 +43501,7 @@
       "wiki_revision": 1181359,
       "armor": 160,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-2200",
         "Healing: 500-7500",
@@ -43556,6 +43571,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/30/Bear_%28Nostalgia%29.gif/revision/latest?cb=20120118123128&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Bear_(Nostalgia)",
       "wiki_revision": 891787,
+      "event": true,
       "abilities": [
         "Melee: 0-25?"
       ],
@@ -43718,6 +43734,7 @@
       "wiki_revision": 1191779,
       "armor": 35,
       "speed": 126,
+      "event": true,
       "bestiary_class": "Giant",
       "bestiary_level": "Medium",
       "loot": [
@@ -43797,6 +43814,7 @@
       "wiki_revision": 1192313,
       "armor": 0,
       "speed": 105,
+      "event": true,
       "bestiary_class": "Vermin",
       "bestiary_level": "Harmless",
       "location": "Spawns in the winterberry cellar during the Annual Autumn Vintage event."
@@ -43963,6 +43981,7 @@
       "wiki_revision": 1209218,
       "armor": 58,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-200 (physical)",
         "Scratch Wave [ energy wave's size; 5 SQM long; 3 SQM wide; looks like yellow spark - same as Mutated Tiger]: 0-200",
@@ -44126,7 +44145,8 @@
       "exp": 0,
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a5/Billdodger.gif/revision/latest?cb=20191009183834&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Billdodger",
-      "wiki_revision": 909219
+      "wiki_revision": 909219,
+      "unavailable": true
     },
     {
       "id": "biting-book",
@@ -46096,6 +46116,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Bloom_of_Doom",
       "wiki_revision": 1116364,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 9600+",
         "Healing: 500-1200?",
@@ -46646,6 +46667,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Bolfrim_(Creature)",
       "wiki_revision": 1181412,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: ?",
         "confetti bomb: summons Sandcrawlers and bugs (summon)",
@@ -46890,6 +46913,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/49/Bonelord_%28Nostalgia%29.gif/revision/latest?cb=20120118123404&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Bonelord_(Nostalgia)",
       "wiki_revision": 1083368,
+      "event": true,
       "abilities": [
         "Melee: ?",
         "Fire Missile: 0-45 (fire)",
@@ -47006,6 +47030,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Bones",
       "wiki_revision": 1172356,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-500",
         "Healing",
@@ -47074,6 +47100,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/2e/Bonny_Bunny.gif/revision/latest?cb=20221125115148&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Bonny_Bunny",
       "wiki_revision": 1152228,
+      "event": true,
       "abilities": [
         "Melee",
         "Hearts Beam: 0-6? (fire)",
@@ -48642,6 +48669,7 @@
       "wiki_revision": 1192294,
       "armor": 15,
       "speed": 125,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Medium",
       "abilities": [
@@ -49445,6 +49473,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/fb/Bug_%28Nostalgia%29.gif/revision/latest?cb=20221125110811&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Bug_(Nostalgia)",
       "wiki_revision": 889734,
+      "event": true,
       "abilities": [
         "Melee: 0-23?"
       ],
@@ -50304,6 +50333,7 @@
       "wiki_revision": 1191624,
       "armor": 8,
       "speed": 95,
+      "event": true,
       "bestiary_class": "Construct",
       "bestiary_level": "Easy",
       "abilities": [
@@ -50683,6 +50713,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/73/Beer_Cask.gif/revision/latest?cb=20070319014306&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Captured_Beer",
       "wiki_revision": 1116687,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -50704,6 +50735,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Captured_Versperoth",
       "wiki_revision": 930177,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee",
         "Hell's Core (?)",
@@ -51288,6 +51320,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c0/Celebrating_Orger.gif/revision/latest?cb=20200805030207&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Celebrating_Orger",
       "wiki_revision": 967875,
+      "event": true,
       "abilities": [
         "Melee: 0-1"
       ],
@@ -51928,6 +51961,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Chayenne_(Creature)",
       "wiki_revision": 1181504,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-2705?",
         "Blue Musical Bomb: 0-500? (mana drain)",
@@ -52019,6 +52054,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Chikhaton",
       "wiki_revision": 1126270,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-1130+",
         "Throws boulders: 0-500+ (physical)",
@@ -53250,6 +53286,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/49/Cockroach.gif/revision/latest?cb=20150418075515&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Cockroach",
       "wiki_revision": 1024659,
+      "unavailable": true,
       "loot": [
         {
           "name": "Cockroach Leg",
@@ -53276,6 +53313,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Cocoon",
       "wiki_revision": 853207,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: ?",
         "Healing"
@@ -53399,6 +53437,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a2/Community_Handler_2.0_CipHard.gif/revision/latest?cb=20210506131825&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Community_Handler_2.0_CipHard",
       "wiki_revision": 1181406,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee",
         "Green Exori: ? (?)",
@@ -53429,6 +53469,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/35/Community_Handler_2.0_CipSoft.gif/revision/latest?cb=20210514170505&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Community_Handler_2.0_CipSoft",
       "wiki_revision": 1179350,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-3500+",
         "Fireworks Wave: 870-883 (life drain)",
@@ -54513,6 +54555,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Count_Tofifti_(Creature)",
       "wiki_revision": 1181424,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-1100+?",
         "Strong mana drain: 0-1000+? (mana drain)",
@@ -54979,6 +55023,7 @@
       "wiki_revision": 1192105,
       "armor": 28,
       "speed": 95,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Medium",
       "abilities": [
@@ -55061,6 +55106,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Craban_(Creature)",
       "wiki_revision": 934005,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee",
         "Sudden death: 180+ (death)",
@@ -56140,6 +56187,7 @@
       "wiki_revision": 1191818,
       "armor": 6,
       "speed": 95,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
       "abilities": [
@@ -59424,6 +59472,7 @@
       "wiki_revision": 1192212,
       "armor": 38,
       "speed": 102,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Medium",
       "abilities": [
@@ -61016,6 +61065,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Delany_(Creature)",
       "wiki_revision": 1181411,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: ?",
         "confetti bomb: summons Sandcrawlers (summon)",
@@ -61644,6 +61695,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Denson_Larika_(Creature)",
       "wiki_revision": 934007,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "location": "Around the pirate tavern, near Klaus."
     },
     {
@@ -61672,6 +61725,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Depowered_Minotaur",
       "wiki_revision": 889942,
       "speed": 106,
+      "event": true,
       "abilities": [
         "Melee: 0-200+"
       ],
@@ -62250,6 +62304,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Devovorga",
       "wiki_revision": 1116358,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-3000?",
         "Great Life Drain Beam: 0-1000? (life drain)",
@@ -62276,6 +62331,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Devovorga_(Invincible)",
       "wiki_revision": 1166716,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-817",
         "Life Drain strike: 63-150? (life drain)",
@@ -63461,6 +63517,7 @@
       "wiki_revision": 1191986,
       "armor": 9,
       "speed": 75,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
       "abilities": [
@@ -63788,6 +63845,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/09/Dragon_Essence.gif/revision/latest?cb=20180115030439&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Dragon_Essence",
       "wiki_revision": 1085622,
+      "event": true,
       "abilities": [
         "Melee",
         "Fire Beam (fire)",
@@ -64078,6 +64136,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5c/Dragon_Warden.gif/revision/latest?cb=20170111204105&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Dragon_Warden",
       "wiki_revision": 1085626,
+      "event": true,
       "abilities": [
         "Melee: 0-500?"
       ],
@@ -65610,6 +65669,7 @@
       "wiki_revision": 1191744,
       "armor": 15,
       "speed": 115,
+      "event": true,
       "bestiary_class": "Fey",
       "bestiary_level": "Medium",
       "abilities": [
@@ -66001,6 +66061,7 @@
       "wiki_revision": 1191661,
       "armor": 42,
       "speed": 185,
+      "event": true,
       "bestiary_class": "Demon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -67034,6 +67095,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/99/Dog.gif/revision/latest?cb=20150416141602&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Eating_Dog",
       "wiki_revision": 1166718,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -67112,6 +67174,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b5/Dark_Torturer.gif/revision/latest?cb=20061212191617&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Eclipse_Knight",
       "wiki_revision": 978569,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-5000+?"
       ],
@@ -67512,6 +67576,7 @@
       "wiki_revision": 1192213,
       "armor": 35,
       "speed": 85,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Medium",
       "abilities": [
@@ -68036,6 +68101,7 @@
       "wiki_revision": 1191892,
       "armor": 15,
       "speed": 88,
+      "event": true,
       "bestiary_class": "Humanoid",
       "bestiary_level": "Medium",
       "abilities": [
@@ -69976,6 +70042,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/98/Essence_of_Darkness.gif/revision/latest?cb=20210420181911&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Essence_of_Darkness",
       "wiki_revision": 1181302,
+      "event": true,
       "abilities": [
         "Life Drain 0-15 (life drain)",
         "Curses you starting with 2 or 3 hp (death)",
@@ -71464,6 +71531,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/6f/Undead_Dragon.gif/revision/latest?cb=20171218212220&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Fallen_Challenger",
       "wiki_revision": 1084452,
+      "event": true,
       "abilities": [
         "Melee: 0-500?"
       ],
@@ -71666,6 +71734,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/28/Fan.gif/revision/latest?cb=20141205142327&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Fan",
       "wiki_revision": 902490,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-45"
       ],
@@ -71697,6 +71767,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Fat_Porker",
       "wiki_revision": 1116574,
       "boss": true,
+      "event": true,
       "loot": [
         {
           "amount": "0-35?",
@@ -73262,6 +73333,7 @@
       "wiki_revision": 1191816,
       "armor": 14,
       "speed": 73,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
       "abilities": [
@@ -73679,6 +73751,7 @@
       "wiki_revision": 1191891,
       "armor": 15,
       "speed": 100,
+      "event": true,
       "bestiary_class": "Humanoid",
       "bestiary_level": "Easy",
       "abilities": [
@@ -73738,6 +73811,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_First_Dragon",
       "wiki_revision": 1054200,
       "boss": true,
+      "event": true,
       "abilities": [
         "Fire Wave: ? (fire)"
       ],
@@ -74493,6 +74567,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Fluffy",
       "wiki_revision": 970974,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-200",
         "Earth Missile: 219 (earth)",
@@ -74712,6 +74788,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/6c/Water_Elemental.gif/revision/latest?cb=20221111063341&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Font_of_Refreshment",
       "wiki_revision": 1116678,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -74722,6 +74799,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b9/Food_Wagon.gif/revision/latest?cb=20220708153546&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Food_Wagon",
       "wiki_revision": 944323,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -74742,6 +74820,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Football_(Creature)",
       "wiki_revision": 1046249,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "location": "It was first seen near the Rathleton Magistrate on the Test Server prior to the Summer Update 2014. It also spawned in Thais during the same Test Server."
     },
     {
@@ -75209,6 +75289,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Freegoiz",
       "wiki_revision": 937783,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee",
         "Throws Snowball",
@@ -76600,6 +76681,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/93/Gamemaster_%28Creature%29.gif/revision/latest?cb=20081226045549&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Gamemaster_(Creature)",
       "wiki_revision": 910371,
+      "unavailable": true,
       "abilities": [
         "Melee: 100%"
       ],
@@ -77139,6 +77221,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Gelidrazah_the_Frozen",
       "wiki_revision": 1181540,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-380?",
         "Healing: 180-240?",
@@ -77461,6 +77544,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f6/Ghastly_Dragon.gif/revision/latest?cb=20091219143827&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Ghastly_Pet_of_Chayenne",
       "wiki_revision": 907633,
+      "unavailable": true,
       "location": "Draconia"
     },
     {
@@ -77855,6 +77939,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ac/Ghost_Rat.gif/revision/latest?cb=20171219235944&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Ghost_Rat",
       "wiki_revision": 1181376,
+      "event": true,
       "abilities": [
         "Drunk"
       ],
@@ -77886,6 +77971,7 @@
       "wiki_revision": 1192222,
       "armor": 12,
       "speed": 135,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Easy",
       "abilities": [
@@ -78027,6 +78113,7 @@
       "wiki_revision": 1192209,
       "armor": 21,
       "speed": 102,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Medium",
       "abilities": [
@@ -78357,6 +78444,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/15/Giant_Spider_7.4.gif/revision/latest?cb=20170207170055&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_7.4",
       "wiki_revision": 936879,
+      "event": true,
       "abilities": [
         "Melee"
       ],
@@ -78370,6 +78458,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b7/Giant_Spider_7.6.gif/revision/latest?cb=20170207170056&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_7.6",
       "wiki_revision": 936880,
+      "event": true,
       "abilities": [
         "Melee"
       ],
@@ -78383,6 +78472,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/17/Giant_Spider_8.1.gif/revision/latest?cb=20170207170057&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_8.1",
       "wiki_revision": 936881,
+      "event": true,
       "abilities": [
         "Melee"
       ],
@@ -78396,6 +78486,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/de/Giant_Spider_Brood_7.4.gif/revision/latest?cb=20170207170058&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Brood_7.4",
       "wiki_revision": 936867,
+      "event": true,
       "abilities": [
         "Melee: 0-190+"
       ],
@@ -78409,6 +78500,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/0b/Giant_Spider_Brood_7.6.gif/revision/latest?cb=20170207170058&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Brood_7.6",
       "wiki_revision": 967827,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78422,6 +78514,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/28/Giant_Spider_Brood_8.1.gif/revision/latest?cb=20170207170059&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Brood_8.1",
       "wiki_revision": 967828,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78435,6 +78528,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a3/Giant_Spider_Drone_7.4.gif/revision/latest?cb=20170207170100&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Drone_7.4",
       "wiki_revision": 967826,
+      "event": true,
       "abilities": [
         "Melee: 0-225+"
       ],
@@ -78448,6 +78542,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/4a/Giant_Spider_Drone_7.6.gif/revision/latest?cb=20170207170100&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Drone_7.6",
       "wiki_revision": 967829,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78461,6 +78556,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/2d/Giant_Spider_Drone_8.1.gif/revision/latest?cb=20170207170101&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Drone_8.1",
       "wiki_revision": 967830,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78474,6 +78570,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/44/Giant_Spider_Hatchling_7.4.gif/revision/latest?cb=20170207170102&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Hatchling_7.4",
       "wiki_revision": 967831,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78487,6 +78584,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ab/Giant_Spider_Hatchling_7.6.gif/revision/latest?cb=20170207170102&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Hatchling_7.6",
       "wiki_revision": 967832,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78500,6 +78598,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/40/Giant_Spider_Hatchling_8.1.gif/revision/latest?cb=20170207170103&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Hatchling_8.1",
       "wiki_revision": 967833,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78519,6 +78618,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/4a/Giant_Spider_%28Nostalgia%29.gif/revision/latest?cb=20120118123431&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_(Nostalgia)",
       "wiki_revision": 936862,
+      "event": true,
       "abilities": [
         "Same as the Giant Spider but with a little higher damage (?)"
       ],
@@ -78560,6 +78660,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/02/Giant_Spider_Warrior_7.4.gif/revision/latest?cb=20170207170104&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Warrior_7.4",
       "wiki_revision": 967834,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78573,6 +78674,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/62/Giant_Spider_Warrior_7.6.gif/revision/latest?cb=20170207170104&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Warrior_7.6",
       "wiki_revision": 967835,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78586,6 +78688,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/36/Giant_Spider_Warrior_8.1.gif/revision/latest?cb=20170207170105&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Giant_Spider_Warrior_8.1",
       "wiki_revision": 967836,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -78992,6 +79095,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a4/Gloombringer.gif/revision/latest?cb=20180710151045&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Gloombringer",
       "wiki_revision": 978565,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-3000+"
       ],
@@ -79244,6 +79349,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ae/Glooth_Battery.gif/revision/latest?cb=20141205131001&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Glooth_Battery",
       "wiki_revision": 1104973,
+      "event": true,
       "abilities": [
         "Melee: 0",
         "Poison Storm: 206?-582+ (poison)",
@@ -79382,6 +79488,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Glooth_Bomb",
       "wiki_revision": 1197730,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-328+ (physical)",
         "Purple Thunderstorm: 200-300? physical",
@@ -79860,6 +79967,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/50/Glooth_Powered_Minotaur.gif/revision/latest?cb=20171218214814&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Glooth_Powered_Minotaur",
       "wiki_revision": 1104958,
+      "event": true,
       "location": "Second floor Glooth Underground Factory, east side during a minotaur raid."
     },
     {
@@ -82734,6 +82842,7 @@
       "wiki_revision": 1192210,
       "armor": 35,
       "speed": 100,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Medium",
       "abilities": [
@@ -82794,6 +82903,7 @@
       "wiki_revision": 1191817,
       "armor": 7,
       "speed": 95,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
       "abilities": [
@@ -83144,6 +83254,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Great_Schnitzel",
       "wiki_revision": 1055370,
       "boss": true,
+      "event": true,
       "abilities": [
         "Lemon Juice of Doom: makes you drunk (drunk)"
       ],
@@ -83158,6 +83269,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Great_Timedisplaced_Anomaly",
       "wiki_revision": 925914,
       "boss": true,
+      "unavailable": true,
       "loot": [
         {
           "amount": "1-3",
@@ -83865,6 +83977,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Grimrat",
       "wiki_revision": 1181382,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-200",
         "mana drain attack: strong (manadran)",
@@ -83885,6 +83999,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/0c/Grims_Little_Hamster.gif/revision/latest?cb=20120204172953&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Grims_Little_Hamster",
       "wiki_revision": 934010,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee",
         "Fire Attack: 0-300+ (fire)"
@@ -84027,6 +84143,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c1/Groupie.gif/revision/latest?cb=20120205040106&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Groupie",
       "wiki_revision": 926859,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Love Hit: 0-30 (?)"
       ],
@@ -84060,6 +84178,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/bf/Groupie_of_Skyrr.gif/revision/latest?cb=20141205142810&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Groupie_of_Skyrr",
       "wiki_revision": 932939,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 240",
         "blood spark beam (?)",
@@ -84110,6 +84230,7 @@
       "wiki_revision": 1191885,
       "armor": 5,
       "speed": 100,
+      "event": true,
       "bestiary_class": "Humanoid",
       "bestiary_level": "Trivial",
       "abilities": [
@@ -84718,6 +84839,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/21/Hacker_%28Creature%29.gif/revision/latest?cb=20070109014857&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Hacker_(Creature)",
       "wiki_revision": 970975,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-35+",
         "Strong Haste"
@@ -84861,6 +84984,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b9/The_Halloween_Hare.gif/revision/latest?cb=20171219235004&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/The_Halloween_Hare",
       "wiki_revision": 976670,
+      "event": true,
       "location": "Wanders around Rookgaard, Dawnport and Mainland south of Dwarven Bridge. Keep in mind that the Hare can be lured far (as far away as Plains of Havoc)."
     },
     {
@@ -85102,6 +85226,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e0/Harbinger_of_Darkness.gif/revision/latest?cb=20221125123603&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Harbinger_of_Darkness",
       "wiki_revision": 968008,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-4066"
       ],
@@ -85387,6 +85513,7 @@
       "wiki_revision": 1191702,
       "armor": 58,
       "speed": 140,
+      "event": true,
       "bestiary_class": "Dragon",
       "bestiary_level": "Hard",
       "abilities": [
@@ -87071,6 +87198,7 @@
       "wiki_revision": 1191985,
       "armor": 25,
       "speed": 85,
+      "event": true,
       "bestiary_class": "Demon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -87884,6 +88012,7 @@
       "wiki_revision": 1192214,
       "armor": 4,
       "speed": 77,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Easy",
       "abilities": [
@@ -88092,6 +88221,7 @@
       "wiki_revision": 1181381,
       "speed": 170,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-450?",
         "Death Strike: 200-750? (death)",
@@ -88289,6 +88419,7 @@
       "wiki_revision": 1192353,
       "armor": 2,
       "speed": 124,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Trivial",
       "location": "South-east, east and north-east of Thais and depending on the Horse Station World Change; one near Roswitha in Rathleton."
@@ -88303,6 +88434,7 @@
       "wiki_revision": 1192354,
       "armor": 2,
       "speed": 124,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Trivial",
       "location": "South-east, east and north-east of Thais depending on the Horse Station World Change; one in the Gardens of Night (, unreachable); one near Roswitha in Rathleton."
@@ -88317,6 +88449,7 @@
       "wiki_revision": 1192355,
       "armor": 2,
       "speed": 124,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Trivial",
       "location": "South-east, east and north-east of Thais depending on the Horse Station World Change."
@@ -88520,6 +88653,7 @@
       "wiki_revision": 986700,
       "armor": 0,
       "speed": 110,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-7"
       ],
@@ -89140,6 +89274,7 @@
       "wiki_revision": 1191703,
       "armor": 41,
       "speed": 106,
+      "event": true,
       "bestiary_class": "Dragon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -90992,6 +91127,7 @@
       "armor": 165,
       "speed": 330,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-2800+",
         "Explosion Bomb: 250-750 (physical)",
@@ -91669,6 +91805,7 @@
       "wiki_revision": 1192316,
       "armor": 27,
       "speed": 101,
+      "event": true,
       "bestiary_class": "Vermin",
       "bestiary_level": "Easy",
       "abilities": [
@@ -91975,6 +92112,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Irahsae",
       "wiki_revision": 1181508,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-600",
         "Musical Notes attack: 0-100; causes Paralysis",
@@ -93520,6 +93658,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Kalyassa",
       "wiki_revision": 1090227,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-500?",
         "Fire Wave: 300-550? (fire)",
@@ -93916,6 +94055,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5d/Killjoy.gif/revision/latest?cb=20121128142707&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Killjoy",
       "wiki_revision": 910372,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-3461"
       ],
@@ -94560,6 +94700,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/d2/Kongra_%28Anti-Botter%29.gif/revision/latest?cb=20090305220116&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Kongra_(Anti-Botter)",
       "wiki_revision": 927007,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-90+",
         "Throws Small Stone: 0-45+?",
@@ -94638,6 +94779,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Kraknaknork's_Demon",
       "wiki_revision": 923665,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-95?",
         "Fireball: 10-45 (fire)"
@@ -95120,6 +95262,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Lagatos",
       "wiki_revision": 934011,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Huge Drown Bomb (drown)",
         "Death Hit: 0-587+ (death)"
@@ -97022,6 +97165,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lionet_(Creature)",
       "wiki_revision": 1083372,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: ?",
         "Mana Drain UE: 400-700?; often; 6 field radius; red sparkles (mana drain)",
@@ -99057,6 +99202,7 @@
       "wiki_revision": 1191778,
       "armor": 37,
       "speed": 115,
+      "event": true,
       "bestiary_class": "Giant",
       "bestiary_level": "Medium",
       "loot": [
@@ -100032,6 +100178,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c2/Lucky_Dragon.gif/revision/latest?cb=20220107145127&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Lucky_Dragon",
       "wiki_revision": 925905,
+      "unavailable": true,
       "location": "Thais, Carlin and Edron."
     },
     {
@@ -100132,6 +100279,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lyxoph_(Creature)",
       "wiki_revision": 1084102,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 100-250",
         "Healing: 600-900",
@@ -101096,6 +101245,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Major_Timedisplaced_Anomaly_(Fiehonja)",
       "wiki_revision": 966200,
       "boss": true,
+      "unavailable": true,
       "loot": [
         {
           "amount": "1-3",
@@ -101113,6 +101263,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Major_Timedisplaced_Anomaly_(Issavi)",
       "wiki_revision": 966199,
       "boss": true,
+      "unavailable": true,
       "loot": [
         {
           "amount": "1-3",
@@ -101130,6 +101281,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Major_Timedisplaced_Anomaly_(Rascacoon)",
       "wiki_revision": 966198,
       "boss": true,
+      "unavailable": true,
       "loot": [
         {
           "amount": "1-3",
@@ -101537,6 +101689,7 @@
       "wiki_revision": 1181428,
       "armor": 58,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-400+",
         "Poison Spit: 0-225+ (earth)",
@@ -105922,6 +106075,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/72/Merlkin_%28Anti-Botter%29.gif/revision/latest?cb=20090305181949&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Merlkin_(Anti-Botter)",
       "wiki_revision": 923666,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-10+",
         "Invisible: some seconds (invisible)",
@@ -106352,6 +106506,7 @@
       "wiki_revision": 1192170,
       "armor": 40,
       "speed": 170,
+      "event": true,
       "bestiary_class": "Slime",
       "bestiary_level": "Medium",
       "abilities": [
@@ -106384,6 +106539,7 @@
       "wiki_revision": 1191815,
       "armor": 30,
       "speed": 120,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Medium",
       "abilities": [
@@ -106607,6 +106763,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Minion_of_Skyrr",
       "wiki_revision": 1036272,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "location": "In the Raider Camp mountains ."
     },
     {
@@ -106645,6 +106803,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Minishabaal",
       "wiki_revision": 1181453,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Blue Firework Explosion: 226-250+ (fire)",
         "Red Firework Bomb: 182-250+ (fire)",
@@ -106738,6 +106898,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Minor_Timedisplaced_Anomaly_(Ankrahmun)",
       "wiki_revision": 966203,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Summon Orclops Doomhauler: 1"
       ],
@@ -106765,6 +106926,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Minor_Timedisplaced_Anomaly_(Greenshore)",
       "wiki_revision": 966202,
       "boss": true,
+      "unavailable": true,
       "loot": [
         {
           "amount": "1-3",
@@ -106789,6 +106951,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Minor_Timedisplaced_Anomaly_(Rookgaard)",
       "wiki_revision": 966201,
       "boss": true,
+      "unavailable": true,
       "loot": [
         {
           "amount": "1-3",
@@ -107153,6 +107316,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/7a/Question_Mark.gif/revision/latest?cb=20230309180750&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Minotaur_Commander",
       "wiki_revision": 1039803,
+      "unavailable": true,
       "location": "Nowhere, but was probably supposed to appear somewhere in Oramond."
     },
     {
@@ -108012,6 +108176,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Minotaur_Totem",
       "wiki_revision": 1107717,
       "speed": 39,
+      "event": true,
       "abilities": [
         "Blood Effect Mass Healing: 500-1000, heals wild creatures as well"
       ],
@@ -108036,6 +108201,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Mirade_(Creature)",
       "wiki_revision": 969529,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-1000+ (physical)",
         "Healing: 4500-5500",
@@ -109089,6 +109256,7 @@
       "wiki_revision": 1104959,
       "speed": 40,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-163?",
         "Groundshaker: 100-200+ (?)",
@@ -110876,6 +111044,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c8/Muse_of_Penciljack.gif/revision/latest?cb=20120129160216&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Muse_of_Penciljack",
       "wiki_revision": 1084101,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-?",
         "Distance Life Drain: 75-142+ (life drain)",
@@ -111148,6 +111318,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Mutated_Pumpkin",
       "wiki_revision": 1139122,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-300",
         "Mana Drain Wave: 0-15 (mana drain)",
@@ -112848,6 +113019,7 @@
       "wiki_revision": 1191814,
       "armor": 25,
       "speed": 90,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Medium",
       "abilities": [
@@ -112995,6 +113167,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/97/Dragon_Lord.gif/revision/latest?cb=20150418105002&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Noble_Pet_of_Chayenne",
       "wiki_revision": 934017,
+      "unavailable": true,
       "location": "Draconia"
     },
     {
@@ -113080,6 +113253,7 @@
       "wiki_revision": 1204867,
       "armor": 6,
       "speed": 95,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
       "abilities": [
@@ -113148,6 +113322,7 @@
       "wiki_revision": 1204868,
       "armor": 6,
       "speed": 95,
+      "event": true,
       "bestiary_class": "Human",
       "bestiary_level": "Easy",
       "abilities": [
@@ -116803,6 +116978,7 @@
       "wiki_revision": 1191777,
       "armor": 35,
       "speed": 120,
+      "event": true,
       "bestiary_class": "Giant",
       "bestiary_level": "Medium",
       "loot": [
@@ -117481,6 +117657,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Owin_(Creature)",
       "wiki_revision": 1179332,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-300",
         "Bleeding Beam (bleeding)",
@@ -118249,6 +118426,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Penciljack_(Creature)",
       "wiki_revision": 968562,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-500?",
         "Healing: 400-800",
@@ -118307,6 +118486,7 @@
       "wiki_revision": 1191755,
       "armor": 40,
       "speed": 135,
+      "event": true,
       "bestiary_class": "Fey",
       "bestiary_level": "Medium",
       "abilities": [
@@ -118409,6 +118589,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/fb/Percht_Minion.gif/revision/latest?cb=20221125122551&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Percht_Minion",
       "wiki_revision": 1086714,
+      "event": true,
       "location": "Under Percht Island."
     },
     {
@@ -118429,6 +118610,7 @@
       "wiki_revision": 1116552,
       "speed": 0,
       "boss": true,
+      "event": true,
       "loot": [
         {
           "name": "Abyss Hammer"
@@ -118853,6 +119035,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Phrodomo",
       "wiki_revision": 1126271,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-2000?",
         "Haste"
@@ -118871,6 +119054,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Pi%C3%B1ata_Dragon",
       "wiki_revision": 1084454,
       "speed": 0,
+      "event": true,
       "abilities": [
         "Throwing Cakes: 6-40? (physical)",
         "Healing: 130-170"
@@ -118987,6 +119171,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/01/Pig_%28Nostalgia%29.gif/revision/latest?cb=20220108190430&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pig_(Nostalgia)",
       "wiki_revision": 906946,
+      "event": true,
       "location": "Nostalgia Island."
     },
     {
@@ -120219,6 +120404,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cf/Pit_Battler.gif/revision/latest?cb=20160615161658&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Battler",
       "wiki_revision": 1037243,
+      "unavailable": true,
       "location": "Monster Arena"
     },
     {
@@ -120229,6 +120415,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/2e/Pit_Berserker.gif/revision/latest?cb=20160615170705&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Berserker",
       "wiki_revision": 1037245,
+      "unavailable": true,
       "location": "Monster Arena"
     },
     {
@@ -120242,6 +120429,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/32/Pit_Blackling.gif/revision/latest?cb=20160627113156&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Blackling",
       "wiki_revision": 1037246,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-331+ (physical)",
         "Physical damage area attack on itself"
@@ -120256,6 +120444,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/ff/Pit_Brawler.gif/revision/latest?cb=20160615165636&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Brawler",
       "wiki_revision": 1037239,
+      "unavailable": true,
       "abilities": [
         "Throwing Sudden Death: 0-161+ (death)",
         "Invisibility (invisible)"
@@ -120270,6 +120459,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e6/Pit_Condemned.gif/revision/latest?cb=20171122145356&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Condemned",
       "wiki_revision": 1037242,
+      "unavailable": true,
       "location": "Monster Arena."
     },
     {
@@ -120280,6 +120470,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/8/84/Pit_Demon.gif/revision/latest?cb=20171122145356&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Demon",
       "wiki_revision": 1037241,
+      "unavailable": true,
       "location": "Monster Arena."
     },
     {
@@ -120290,6 +120481,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/64/Pit_Destroyer.gif/revision/latest?cb=20160615161926&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Destroyer",
       "wiki_revision": 1037251,
+      "unavailable": true,
       "abilities": [
         "Invisibility (invisible)",
         "Sudden Death: 0-297+ (death)",
@@ -120305,6 +120497,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/93/Pit_Fiend.gif/revision/latest?cb=20171113225042&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Fiend",
       "wiki_revision": 1037240,
+      "unavailable": true,
       "location": "Monster Arena."
     },
     {
@@ -120315,6 +120508,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/da/Pit_Groveller.gif/revision/latest?cb=20160615164535&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Groveller",
       "wiki_revision": 1037237,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-149+"
       ],
@@ -120328,6 +120522,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/12/Pit_Grunt.gif/revision/latest?cb=20160615165026&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Grunt",
       "wiki_revision": 1037238,
+      "unavailable": true,
       "location": "Monster Arena"
     },
     {
@@ -120373,6 +120568,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/3c/Pit_Maimer.gif/revision/latest?cb=20160615161528&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Maimer",
       "wiki_revision": 1037244,
+      "unavailable": true,
       "location": "Monster Arena"
     },
     {
@@ -120383,6 +120579,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a8/Pit_Overlord.gif/revision/latest?cb=20160627113738&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Overlord",
       "wiki_revision": 1037248,
+      "unavailable": true,
       "abilities": [
         "Death Ball: 0-254+ (death)",
         "Great Death Beam: 0-? (death)",
@@ -120398,6 +120595,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/6c/Pit_Reaver.gif/revision/latest?cb=20160615160734&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Reaver",
       "wiki_revision": 1037249,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-257+"
       ],
@@ -120411,6 +120609,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/26/Pit_Scourge.gif/revision/latest?cb=20160615160956&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Pit_Scourge",
       "wiki_revision": 1037250,
+      "unavailable": true,
       "abilities": [
         "Great Fireball: 0-244+ (fire)"
       ],
@@ -122149,6 +122348,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/1c/Primitive.gif/revision/latest?cb=20070109190945&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Primitive",
       "wiki_revision": 1181314,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-35",
         "Creates Fire Fields (fire field)",
@@ -123500,6 +123701,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e9/Queen_Nostalgia_%281%29.gif/revision/latest?cb=20170207170103&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Queen_Nostalgia_(1)",
       "wiki_revision": 936866,
+      "event": true,
       "abilities": [
         "Melee: ?",
         "and probably other attacks (?)"
@@ -123514,6 +123716,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5f/Queen_Nostalgia_%282%29.gif/revision/latest?cb=20170207170059&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Queen_Nostalgia_(2)",
       "wiki_revision": 936870,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -123527,6 +123730,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/bf/Queen_Nostalgia_%283%29.gif/revision/latest?cb=20170207170101&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Queen_Nostalgia_(3)",
       "wiki_revision": 936874,
+      "event": true,
       "abilities": [
         "Melee: ?"
       ],
@@ -123540,6 +123744,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/fb/Queen_Nostalgia_%284%29.gif/revision/latest?cb=20170207170105&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Queen_Nostalgia_(4)",
       "wiki_revision": 936878,
+      "event": true,
       "abilities": [
         "Melee: ?",
         "and probably other attacks (?)"
@@ -123554,6 +123759,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f7/Queen_Nostalgia_%285%29.gif/revision/latest?cb=20170207170057&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Queen_Nostalgia_(5)",
       "wiki_revision": 936882,
+      "event": true,
       "abilities": [
         "Melee: ?",
         "and probably other attacks (?)"
@@ -124419,6 +124625,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ab/Rampaging_Beer_Elemental.gif/revision/latest?cb=20221029040531&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Rampaging_Beer_Elemental",
       "wiki_revision": 1116656,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -125734,6 +125941,7 @@
       "wiki_revision": 1192300,
       "armor": 12,
       "speed": 70,
+      "event": true,
       "bestiary_class": "Magical",
       "bestiary_level": "Easy",
       "abilities": [
@@ -125911,6 +126119,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Rejana_(Creature)",
       "wiki_revision": 934019,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: ?",
         "Healing Confetti Explosion: 200-300 heals near creatures (healing)"
@@ -126115,6 +126325,7 @@
       "wiki_revision": 1191587,
       "armor": 35,
       "speed": 190,
+      "event": true,
       "bestiary_class": "Aquatic",
       "bestiary_level": "Medium",
       "loot": [
@@ -126199,6 +126410,7 @@
       "wiki_revision": 1191588,
       "armor": 30,
       "speed": 245,
+      "event": true,
       "bestiary_class": "Aquatic",
       "bestiary_level": "Medium",
       "loot": [
@@ -126310,6 +126522,7 @@
       "wiki_revision": 1191589,
       "armor": 16,
       "speed": 295,
+      "event": true,
       "bestiary_class": "Aquatic",
       "bestiary_level": "Medium",
       "loot": [
@@ -126382,6 +126595,7 @@
       "wiki_revision": 1191590,
       "armor": 85,
       "speed": 198,
+      "event": true,
       "bestiary_class": "Aquatic",
       "bestiary_level": "Medium",
       "abilities": [
@@ -126490,6 +126704,7 @@
       "wiki_revision": 1191591,
       "armor": 40,
       "speed": 225,
+      "event": true,
       "bestiary_class": "Aquatic",
       "bestiary_level": "Medium",
       "abilities": [
@@ -127446,6 +127661,7 @@
       "wiki_revision": 1192104,
       "armor": 28,
       "speed": 90,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Medium",
       "abilities": [
@@ -129065,6 +129281,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/ea/Diabolic_Imp.gif/revision/latest?cb=20250926155358&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/The_Ruthless_Herald",
       "wiki_revision": 932947,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Polymorph: Can change any player or creature's appearance into either a Green Frog, a Pig, a Skunk or a Football (shapeshifting)"
       ],
@@ -129183,6 +129401,7 @@
       "wiki_revision": 1192314,
       "armor": 27,
       "speed": 122,
+      "event": true,
       "bestiary_class": "Vermin",
       "bestiary_level": "Medium",
       "abilities": [
@@ -129583,6 +129802,7 @@
       "wiki_revision": 1191628,
       "armor": 42,
       "speed": 110,
+      "event": true,
       "bestiary_class": "Construct",
       "bestiary_level": "Medium",
       "abilities": [
@@ -129952,6 +130172,7 @@
       "wiki_revision": 1191756,
       "armor": 43,
       "speed": 140,
+      "event": true,
       "bestiary_class": "Fey",
       "bestiary_level": "Medium",
       "abilities": [
@@ -130603,6 +130824,7 @@
       "wiki_revision": 1192151,
       "armor": 51,
       "speed": 250,
+      "event": true,
       "bestiary_class": "Reptile",
       "bestiary_level": "Hard",
       "abilities": [
@@ -131004,6 +131226,7 @@
       "wiki_revision": 1191664,
       "armor": 40,
       "speed": 120,
+      "event": true,
       "bestiary_class": "Demon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -131086,6 +131309,7 @@
       "wiki_revision": 1191665,
       "armor": 45,
       "speed": 125,
+      "event": true,
       "bestiary_class": "Demon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -131193,6 +131417,7 @@
       "wiki_revision": 1191662,
       "armor": 38,
       "speed": 115,
+      "event": true,
       "bestiary_class": "Demon",
       "bestiary_level": "Medium",
       "abilities": [
@@ -132087,6 +132312,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f9/Ship_Core.gif/revision/latest?cb=20161006093926&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Ship_Core",
       "wiki_revision": 907074,
+      "event": true,
       "location": "Spectral Ship, upper deck."
     },
     {
@@ -133334,6 +133560,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Siramal_(Creature)",
       "wiki_revision": 1083369,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: ?",
         "confetti bomb: summons Sandcrawlers (summon)",
@@ -133703,6 +133931,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Skyrr_(Creature)",
       "wiki_revision": 1181505,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-975",
         "Ultimate Explosion: 0-700",
@@ -133818,6 +134048,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/1d/Defiler.gif/revision/latest?cb=20171220002856&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Slime_Puddle",
       "wiki_revision": 1181487,
+      "event": true,
       "abilities": [
         "Paralyzing Berserk"
       ],
@@ -133861,6 +134092,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cd/Sloth_Wraith.gif/revision/latest?cb=20141205142405&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Sloth_Wraith",
       "wiki_revision": 1181513,
+      "event": true,
       "abilities": [
         "Paralyze"
       ],
@@ -133884,6 +134116,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Slowing_Slime",
       "wiki_revision": 1181573,
       "speed": 39,
+      "event": true,
       "abilities": [
         "Paralyze Berserk"
       ],
@@ -134250,6 +134483,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e0/Dragon.gif/revision/latest?cb=20140823213526&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Somewhat_Beatable_Dragon",
       "wiki_revision": 1085620,
+      "event": true,
       "abilities": [
         "Melee",
         "Fire Bomb (fire)",
@@ -134830,6 +135064,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/30/Spirit_of_Light.gif/revision/latest?cb=20171219235817&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Soul_Spark",
       "wiki_revision": 1051702,
+      "event": true,
       "abilities": [
         "Healing"
       ],
@@ -135496,6 +135731,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/27/Spawn_of_Despair.gif/revision/latest?cb=20221114133938&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spawn_of_Despair",
       "wiki_revision": 927330,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: ?",
         "UE with sd clouds: 650~ (?)"
@@ -135510,6 +135747,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e5/Spawn_of_Devovorga.gif/revision/latest?cb=20100913201319&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spawn_of_Devovorga",
       "wiki_revision": 1076769,
+      "event": true,
       "abilities": [
         "Melee: ?",
         "Healing: ?"
@@ -135539,6 +135777,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c7/Spawn_of_the_Schnitzel.gif/revision/latest?cb=20200729161913&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spawn_of_the_Schnitzel",
       "wiki_revision": 1209217,
+      "event": true,
       "loot": [
         {
           "name": "Schnitzel Meat Grinder"
@@ -135588,6 +135827,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cb/Spectral_Scum.gif/revision/latest?cb=20171218210234&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spectral_Scum",
       "wiki_revision": 1181375,
+      "event": true,
       "abilities": [
         "Drunkenness: from distance"
       ],
@@ -135989,6 +136229,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a6/Spider_%28Nostalgia%29.gif/revision/latest?cb=20120118123554&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spider_(Nostalgia)",
       "wiki_revision": 889765,
+      "event": true,
       "abilities": [
         "Melee: 0-25"
       ],
@@ -136384,6 +136625,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/30/Spirit_of_Light.gif/revision/latest?cb=20171219235817&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Spirit_of_Light",
       "wiki_revision": 907130,
+      "event": true,
       "abilities": [
         "Small Mass Healing: 0-50 (healing)"
       ],
@@ -137526,6 +137768,7 @@
       "wiki_revision": 1195145,
       "armor": 2,
       "speed": 94,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Easy",
       "abilities": [
@@ -138217,6 +138460,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/2a/Ogre_Beer.gif/revision/latest?cb=20160325135208&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Strong_Orger_Beer",
       "wiki_revision": 1116688,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -139526,6 +139770,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/95/Target_Dummy.gif/revision/latest?cb=20180612024741&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Target_Dummy",
       "wiki_revision": 1116317,
+      "unavailable": true,
       "abilities": [
         "Healing: 150-250"
       ],
@@ -139612,6 +139857,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Tazhadur",
       "wiki_revision": 1088706,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-600",
         "Fire Wave: 100-500 (fire)",
@@ -139736,6 +139982,7 @@
       "wiki_revision": 1181374,
       "speed": 170,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-550",
         "Avalanche: 0-300? (?)",
@@ -140120,6 +140367,7 @@
       "wiki_revision": 1192091,
       "armor": 20,
       "speed": 105,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Easy",
       "abilities": [
@@ -140803,6 +141051,7 @@
       "wiki_revision": 1192010,
       "armor": 18,
       "speed": 160,
+      "event": true,
       "bestiary_class": "Magical",
       "bestiary_level": "Medium",
       "abilities": [
@@ -140926,6 +141175,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/da/Tibia_Bug.gif/revision/latest?cb=20080711190103&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Tibia_Bug",
       "wiki_revision": 970980,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-35",
         "Small Energy Beam: 0-35 (energy)",
@@ -141206,6 +141457,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/15/Time_Travelling_Tourist.gif/revision/latest?cb=20220107222852&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Time_Travelling_Tourist",
       "wiki_revision": 988745,
+      "unavailable": true,
       "location": "Multiple."
     },
     {
@@ -141236,6 +141488,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Timedisplaced_Anomaly_(Banuta)",
       "wiki_revision": 966204,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Summon Pirat Mate: 2"
       ],
@@ -141256,6 +141509,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Timedisplaced_Anomaly_(Chazorai)",
       "wiki_revision": 966205,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Summon Werelion: 2"
       ],
@@ -141276,6 +141530,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Timedisplaced_Anomaly_(Warzone)",
       "wiki_revision": 966206,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Summon Draken Warmaster: 2"
       ],
@@ -141422,6 +141677,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/7a/Tin_Lizzard_of_Lyxoph.gif/revision/latest?cb=20171219235946&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Tin_Lizzard_of_Lyxoph",
       "wiki_revision": 1181691,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-300+",
         "Heavy Magic Missile: 125-200 (energy)",
@@ -141548,6 +141805,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Tjured_(Creature)",
       "wiki_revision": 1166732,
       "boss": true,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Throws polymorphing snowballs: transforms players into either a Penguin, Slime, Acid Blob, Dromedary, Troll, Troll Champion, Frost Troll, Swamp Troll or Island Troll (shapeshifting)"
       ],
@@ -141615,6 +141874,7 @@
       "wiki_revision": 1192211,
       "armor": 22,
       "speed": 78,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Medium",
       "abilities": [
@@ -141681,6 +141941,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/2b/Tormented_Ghost.gif/revision/latest?cb=20221126172222&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Tormented_Ghost",
       "wiki_revision": 1084074,
+      "event": true,
       "abilities": [
         "Melee: 0-100",
         "Life drain: 40-70 (life drain)"
@@ -141819,6 +142080,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/57/Tortoise_%28Anti-Botter%29.gif/revision/latest?cb=20090305181945&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Tortoise_(Anti-Botter)",
       "wiki_revision": 1084164,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-40+ poisons you 2 hp/turn",
         "Life Drain: 35-40 (life drain)",
@@ -144210,6 +144472,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/97/Dragon_Lord.gif/revision/latest?cb=20150418105002&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Unbeatable_Dragon",
       "wiki_revision": 1085621,
+      "event": true,
       "abilities": [
         "Melee: 0-300?",
         "Fire Bomb: 100-400+ (fire)",
@@ -144712,6 +144975,7 @@
       "wiki_revision": 1192194,
       "armor": 3,
       "speed": 112,
+      "event": true,
       "bestiary_class": "Undead",
       "bestiary_level": "Trivial",
       "abilities": [
@@ -144860,6 +145124,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cb/Undead_Minion.gif/revision/latest?cb=20070109002822&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Undead_Minion",
       "wiki_revision": 1181290,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-300+",
         "Life Drain: 0-100+ (life drain)",
@@ -144906,6 +145172,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/6f/Undead_Dragon.gif/revision/latest?cb=20171218212220&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Undead_Pet_of_Chayenne",
       "wiki_revision": 934026,
+      "unavailable": true,
       "location": "Draconia"
     },
     {
@@ -145075,6 +145342,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a7/Unexpected.gif/revision/latest?cb=20220108004050&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Unexpected",
       "wiki_revision": 929615,
+      "unavailable": true,
       "loot": [
         {
           "name": "Platinum Coin"
@@ -145152,6 +145420,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/9b/Uninvited.gif/revision/latest?cb=20220108160023&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Uninvited",
       "wiki_revision": 929614,
+      "unavailable": true,
       "loot": [
         {
           "name": "Birthday Layer Cake"
@@ -145211,6 +145480,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/25/Unsolicited.gif/revision/latest?cb=20220108004258&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Unsolicited",
       "wiki_revision": 1084456,
+      "unavailable": true,
       "loot": [
         {
           "name": "Special Fx Box"
@@ -145280,6 +145550,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a3/Unwanted.gif/revision/latest?cb=20220108004136&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Unwanted",
       "wiki_revision": 929617,
+      "unavailable": true,
       "loot": [
         {
           "name": "Special Fx Box"
@@ -145619,6 +145890,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/0e/Used_Food_Wagon.gif/revision/latest?cb=20220708043058&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Used_Food_Wagon",
       "wiki_revision": 969860,
+      "event": true,
       "location": "Orcsoberfest Island."
     },
     {
@@ -147418,6 +147690,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Verminor",
       "wiki_revision": 1181449,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-2200+",
         "Earth Ball: 250-1000+? (earth)",
@@ -148421,6 +148694,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Vulnerable_Cocoon",
       "wiki_revision": 969549,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee",
         "Stone Shower on itself: 200-350 (?)",
@@ -149328,6 +149602,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/18/Fire_Elemental.gif/revision/latest?cb=20210420141456&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Warm_Fire",
       "wiki_revision": 1154497,
+      "event": true,
       "location": "Unknown"
     },
     {
@@ -149369,6 +149644,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/22/Wasp_%28Nostalgia%29.gif/revision/latest?cb=20120118123250&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Wasp_(Nostalgia)",
       "wiki_revision": 969550,
+      "event": true,
       "abilities": [
         "Melee: 0-20?"
       ],
@@ -149575,6 +149851,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b4/Weak_Eclipse_Knight.gif/revision/latest?cb=20091103222139&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Weak_Eclipse_Knight",
       "wiki_revision": 910367,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee"
       ],
@@ -149616,6 +149894,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e7/Weak_Gloombringer.gif/revision/latest?cb=20091103222140&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Weak_Gloombringer",
       "wiki_revision": 910370,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-350"
       ],
@@ -149660,6 +149940,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e4/Weak_Harbinger_of_Darkness.gif/revision/latest?cb=20221125123547&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Weak_Harbinger_of_Darkness",
       "wiki_revision": 910368,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee"
       ],
@@ -149719,6 +150001,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/99/Weak_Spawn_of_Despair.gif/revision/latest?cb=20091103222142&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Weak_Spawn_of_Despair",
       "wiki_revision": 910369,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee"
       ],
@@ -152001,6 +152285,7 @@
       "wiki_revision": 1192089,
       "armor": 2,
       "speed": 124,
+      "event": true,
       "bestiary_class": "Mammal",
       "bestiary_level": "Trivial",
       "location": "Near the Thais Troll Cave entrance () during the Horse Station World Change. <noinclude><gallery mode=\"nolines\"> Wild Horse spawn locations.png"
@@ -152636,6 +152921,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/34/Wolf_%28Nostalgia%29.gif/revision/latest?cb=20120118123018&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Wolf_(Nostalgia)",
       "wiki_revision": 893795,
+      "event": true,
       "abilities": [
         "Melee: 0-19?"
       ],
@@ -153769,6 +154055,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a4/Yellow_Toilet_Paper_Man.gif/revision/latest?cb=20120113150636&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Yellow_Toilet_Paper_Man",
       "wiki_revision": 934028,
+      "event": true,
+      "unavailable": true,
       "abilities": [
         "Melee",
         "Distance attack: 0-600+ (?)"
@@ -155040,6 +155328,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Zoralurk",
       "wiki_revision": 927006,
       "boss": true,
+      "unavailable": true,
       "abilities": [
         "Melee: 0-1276",
         "Summon Demons: 2",
@@ -155068,6 +155357,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Zorvorax",
       "wiki_revision": 1088633,
       "boss": true,
+      "event": true,
       "abilities": [
         "Melee: 0-385?",
         "Death Wave: 200-520? (death)",
@@ -155557,13 +155847,6 @@
       "source_url": "https://tibia.fandom.com/wiki/7197_Theons",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/ca/None.gif/revision/latest?cb=20050621040353&path-prefix=en",
       "category": "Quest Items"
-    },
-    {
-      "name": "Abacus",
-      "source_url": "https://tibia.fandom.com/wiki/Abacus",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/d/d5/Abacus.gif/revision/latest?cb=20171106154606&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 12.0
     },
     {
       "name": "Abacus (Replica)",
@@ -157047,13 +157330,6 @@
       "weight": 4.0
     },
     {
-      "name": "Armillary Sphere (TibiaMaps)",
-      "source_url": "https://tibia.fandom.com/wiki/Armillary_Sphere_(TibiaMaps)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/4/4f/Armillary_Sphere_%28TibiaMaps%29.gif/revision/latest?cb=20211012130955&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 80.0
-    },
-    {
       "name": "Armor Rack Kit",
       "source_url": "https://tibia.fandom.com/wiki/Armor_Rack_Kit",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cd/Furniture_Kit.gif/revision/latest?cb=20180306155442&path-prefix=en",
@@ -157444,13 +157720,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/2d/Auric_Moon_Sigil.gif/revision/latest?cb=20260623152941&path-prefix=en",
       "category": "Valuables",
       "weight": 1.8
-    },
-    {
-      "name": "Aurora's Collection",
-      "source_url": "https://tibia.fandom.com/wiki/Aurora's_Collection",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b5/Aurora%27s_Collection.gif/revision/latest?cb=20240113213125&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 7.09
     },
     {
       "name": "Aurora's Collection (Replica)",
@@ -157919,13 +158188,6 @@
       ]
     },
     {
-      "name": "Aylie",
-      "source_url": "https://tibia.fandom.com/wiki/Aylie",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a7/Aylie.gif/revision/latest?cb=20230822100745&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 12.06
-    },
-    {
       "name": "Aylie (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Aylie_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/44/Aylie_%28Replica%29.gif/revision/latest?cb=20250618230410&path-prefix=en",
@@ -157946,20 +158208,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/ef/Babel_Swimmer.gif/revision/latest?cb=20111201183206&path-prefix=en",
       "category": "Valuables",
       "weight": 5.0
-    },
-    {
-      "name": "Baby Munster",
-      "source_url": "https://tibia.fandom.com/wiki/Baby_Munster",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/9/96/Baby_Munster.gif/revision/latest?cb=20200901194148&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 17.03
-    },
-    {
-      "name": "Baby Munster (Activated)",
-      "source_url": "https://tibia.fandom.com/wiki/Baby_Munster_(Activated)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/d/d2/Baby_Munster_%28Activated%29.gif/revision/latest?cb=20200901194145&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 17.03
     },
     {
       "name": "Baby Rotworm",
@@ -158168,13 +158416,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/44/Bag_of_Apple_Slices.gif/revision/latest?cb=20110628233915&path-prefix=en",
       "category": "Taming Items",
       "weight": 2.0
-    },
-    {
-      "name": "Bag of Oriental Spices",
-      "source_url": "https://tibia.fandom.com/wiki/Bag_of_Oriental_Spices",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e5/Bag_of_Oriental_Spices.gif/revision/latest?cb=20100311145616&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 15.08
     },
     {
       "name": "Bag of Oriental Spices (Replica)",
@@ -158758,13 +158999,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/dd/Barbarian_Skullhunter_Soul_Core.gif/revision/latest?cb=20240604133736&path-prefix=en",
       "category": "Soul Cores",
       "weight": 10.0
-    },
-    {
-      "name": "Bard Doll",
-      "source_url": "https://tibia.fandom.com/wiki/Bard_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/3/3f/Bard_Doll.gif/revision/latest?cb=20200227180507&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 8.5
     },
     {
       "name": "Bard Doll (Replica)",
@@ -159787,13 +160021,6 @@
       "weight": 10.0
     },
     {
-      "name": "Beaver of Wisdom",
-      "source_url": "https://tibia.fandom.com/wiki/Beaver_of_Wisdom",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/6/69/Beaver_of_Wisdom.gif/revision/latest?cb=20220517225043&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 6.0
-    },
-    {
       "name": "Beaver of Wisdom (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Beaver_of_Wisdom_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/0c/Beaver_of_Wisdom_%28Replica%29.gif/revision/latest?cb=20260416183909&path-prefix=en",
@@ -160027,13 +160254,6 @@
           "npc": "Gnomally"
         }
       ]
-    },
-    {
-      "name": "Bella Bonecrusher's Doll",
-      "source_url": "https://tibia.fandom.com/wiki/Bella_Bonecrusher's_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a9/Bella_Bonecrusher%27s_Doll.gif/revision/latest?cb=20210824172317&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 4.2
     },
     {
       "name": "Bellicose Orger Soul Core",
@@ -160385,13 +160605,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/59/Black_King_Token.gif/revision/latest?cb=20060330212602&path-prefix=en",
       "category": "Game Tokens",
       "weight": 5.0
-    },
-    {
-      "name": "Black Knight Doll",
-      "source_url": "https://tibia.fandom.com/wiki/Black_Knight_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/7/7b/Black_Knight_Doll.gif/revision/latest?cb=20141010213819&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 18.0
     },
     {
       "name": "Black Knight Token",
@@ -162860,13 +163073,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/05/Bonelord_Soul_Core.gif/revision/latest?cb=20240604133218&path-prefix=en",
       "category": "Soul Cores",
       "weight": 10.0
-    },
-    {
-      "name": "Bonelord Tome",
-      "source_url": "https://tibia.fandom.com/wiki/Bonelord_Tome",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/1/1d/Bonelord_Tome.gif/revision/latest?cb=20210824170657&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 46.9
     },
     {
       "name": "Bonelord Tome (Replica)",
@@ -167839,20 +168045,6 @@
       ]
     },
     {
-      "name": "Cateroide's Doll",
-      "source_url": "https://tibia.fandom.com/wiki/Cateroide's_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ae/Cateroide%27s_Doll.gif/revision/latest?cb=20150930204852&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 15.0
-    },
-    {
-      "name": "Cateroide's Doll (Activated)",
-      "source_url": "https://tibia.fandom.com/wiki/Cateroide's_Doll_(Activated)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5b/Cateroide%27s_Doll_%28Activated%29.gif/revision/latest?cb=20150930204857&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 15.0
-    },
-    {
       "name": "Catnip",
       "source_url": "https://tibia.fandom.com/wiki/Catnip",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/ed/Catnip.gif/revision/latest?cb=20260623152837&path-prefix=en",
@@ -168705,13 +168897,6 @@
       "category": "Containers",
       "weight": 15.0,
       "price": 5000
-    },
-    {
-      "name": "Chaos Critical Dice",
-      "source_url": "https://tibia.fandom.com/wiki/Chaos_Critical_Dice",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/8/86/Chaos_Critical_Dice.gif/revision/latest?cb=20210216122149&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 0.4
     },
     {
       "name": "Chaos Critical Dice (Replica)",
@@ -172933,13 +173118,6 @@
       ]
     },
     {
-      "name": "Crunor's Heart",
-      "source_url": "https://tibia.fandom.com/wiki/Crunor's_Heart",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/8/80/Crunor%27s_Heart.gif/revision/latest?cb=20190416193427&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 7.0
-    },
-    {
       "name": "Crusader Helmet",
       "source_url": "https://tibia.fandom.com/wiki/Crusader_Helmet",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/6a/Crusader_Helmet.gif/revision/latest?cb=20050531092848&path-prefix=en",
@@ -174759,13 +174937,6 @@
           "npc": "Yasir"
         }
       ]
-    },
-    {
-      "name": "Dark Oracle",
-      "source_url": "https://tibia.fandom.com/wiki/Dark_Oracle",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/a/ab/Dark_Oracle.gif/revision/latest?cb=20220215122232&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 6.66
     },
     {
       "name": "Dark Rosary",
@@ -177256,13 +177427,6 @@
       "weight": 0.1
     },
     {
-      "name": "Dragon Eye",
-      "source_url": "https://tibia.fandom.com/wiki/Dragon_Eye",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/2/22/Dragon_Eye.gif/revision/latest?cb=20120730203636&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 28.0
-    },
-    {
       "name": "Dragon Eye (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Dragon_Eye_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/34/Dragon_Eye_%28Replica%29.gif/revision/latest?cb=20150624101934&path-prefix=en",
@@ -177332,13 +177496,6 @@
           "npc": "Yonan"
         }
       ]
-    },
-    {
-      "name": "Dragon Goblet",
-      "source_url": "https://tibia.fandom.com/wiki/Dragon_Goblet",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/8/8a/Dragon_Goblet.gif/revision/latest?cb=20220711123457&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 18.0
     },
     {
       "name": "Dragon Goblet (Replica)",
@@ -177897,13 +178054,6 @@
       ]
     },
     {
-      "name": "Draptor Doll",
-      "source_url": "https://tibia.fandom.com/wiki/Draptor_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f0/Draptor_Doll.gif/revision/latest?cb=20220215112029&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 11.16
-    },
-    {
       "name": "Draptor Scales",
       "source_url": "https://tibia.fandom.com/wiki/Draptor_Scales",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/9/9e/Draptor_Scales.gif/revision/latest?cb=20110119114127&path-prefix=en",
@@ -178292,13 +178442,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e1/Dryad_Soul_Core.gif/revision/latest?cb=20240604133812&path-prefix=en",
       "category": "Soul Cores",
       "weight": 10.0
-    },
-    {
-      "name": "Duality Doll",
-      "source_url": "https://tibia.fandom.com/wiki/Duality_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a6/Duality_Doll.gif/revision/latest?cb=20230822094505&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 21.05
     },
     {
       "name": "Dubious Piece of Cloth",
@@ -182174,13 +182317,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/b/be/Evilina.gif/revision/latest?cb=20210713215323&path-prefix=en",
       "category": "Dolls and Bears",
       "weight": 6.0
-    },
-    {
-      "name": "Evora",
-      "source_url": "https://tibia.fandom.com/wiki/Evora",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/3/30/Evora.gif/revision/latest?cb=20211012134151&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 66.6
     },
     {
       "name": "Ewer (Blue)",
@@ -187298,13 +187434,6 @@
       ]
     },
     {
-      "name": "Frozen Heart",
-      "source_url": "https://tibia.fandom.com/wiki/Frozen_Heart",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/1/18/Frozen_Heart.gif/revision/latest?cb=20150603184022&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 20.0
-    },
-    {
       "name": "Frozen Heart (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Frozen_Heart_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/8/8d/Frozen_Heart_%28Replica%29.gif/revision/latest?cb=20150603184238&path-prefix=en",
@@ -191363,13 +191492,6 @@
       "weight": 10.0
     },
     {
-      "name": "Goromaphone",
-      "source_url": "https://tibia.fandom.com/wiki/Goromaphone",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/3/31/Goromaphone.gif/revision/latest?cb=20170923205737&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 66.6
-    },
-    {
       "name": "Goromaphone (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Goromaphone_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/aa/Goromaphone_%28Replica%29.gif/revision/latest?cb=20200611185133&path-prefix=en",
@@ -194518,13 +194640,6 @@
       "weight": 10.0
     },
     {
-      "name": "Hand Puppets",
-      "source_url": "https://tibia.fandom.com/wiki/Hand_Puppets",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/3/30/Hand_Puppets.gif/revision/latest?cb=20171106154619&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 0.05
-    },
-    {
       "name": "Hand Puppets (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Hand_Puppets_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f3/Hand_Puppets_%28Replica%29.gif/revision/latest?cb=20171106154621&path-prefix=en",
@@ -197572,13 +197687,6 @@
       "weight": 0.08
     },
     {
-      "name": "Imortus",
-      "source_url": "https://tibia.fandom.com/wiki/Imortus",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/6/67/Imortus.gif/revision/latest?cb=20150603184956&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 46.9
-    },
-    {
       "name": "Imortus (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Imortus_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/31/Imortus_%28Replica%29.gif/revision/latest?cb=20160831075728&path-prefix=en",
@@ -199238,13 +199346,6 @@
       "weight": 21.0
     },
     {
-      "name": "Journal Shield",
-      "source_url": "https://tibia.fandom.com/wiki/Journal_Shield",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/0/05/Journal_Shield.gif/revision/latest?cb=20171108145004&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 27.0
-    },
-    {
       "name": "Jug",
       "source_url": "https://tibia.fandom.com/wiki/Jug",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/47/Jug.gif/revision/latest?cb=20050530032242&path-prefix=en",
@@ -199554,13 +199655,6 @@
       "source_url": "https://tibia.fandom.com/wiki/Key_(SU26)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/1f/Key_%28SU26%29.gif/revision/latest?cb=20260623152854&path-prefix=en",
       "weight": 1.0
-    },
-    {
-      "name": "Key of Numerous Locks",
-      "source_url": "https://tibia.fandom.com/wiki/Key_of_Numerous_Locks",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/5/54/Key_of_Numerous_Locks.gif/revision/latest?cb=20171106154622&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 1.5
     },
     {
       "name": "Key of Numerous Locks (Replica)",
@@ -203703,13 +203797,6 @@
       "weight": 14.0
     },
     {
-      "name": "Love Elixir",
-      "source_url": "https://tibia.fandom.com/wiki/Love_Elixir",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cc/Love_Elixir.gif/revision/latest?cb=20200324073501&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 13.5
-    },
-    {
       "name": "Love Elixir (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Love_Elixir_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/e/e2/Love_Elixir_%28Replica%29.gif/revision/latest?cb=20241107185459&path-prefix=en",
@@ -203936,13 +204023,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/7/7a/Lump_of_Sacred_Clay.gif/revision/latest?cb=20150610130309&path-prefix=en",
       "category": "Quest Items",
       "weight": 10.0
-    },
-    {
-      "name": "Luna (TibiaGoals)",
-      "source_url": "https://tibia.fandom.com/wiki/Luna_(TibiaGoals)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f1/Luna_%28TibiaGoals%29.gif/revision/latest?cb=20210824164230&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 27.07
     },
     {
       "name": "Lunar Ascension Orb",
@@ -204533,13 +204613,6 @@
       "weight": 3.0
     },
     {
-      "name": "Magic Hat",
-      "source_url": "https://tibia.fandom.com/wiki/Magic_Hat",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/9/9a/Magic_Hat.gif/revision/latest?cb=20210622203214&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 6.3
-    },
-    {
       "name": "Magic Hat (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Magic_Hat_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a5/Magic_Hat_%28Replica%29.gif/revision/latest?cb=20250618231038&path-prefix=en",
@@ -204899,13 +204972,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/1/12/Maimer.gif/revision/latest?cb=20151112183814&path-prefix=en",
       "category": "Club Weapons",
       "weight": 77.0
-    },
-    {
-      "name": "Majestic Shield",
-      "source_url": "https://tibia.fandom.com/wiki/Majestic_Shield",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/7/74/Majestic_Shield.gif/revision/latest?cb=20171106154625&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 150.0
     },
     {
       "name": "Major Crystalline Token",
@@ -206056,13 +206122,6 @@
       ]
     },
     {
-      "name": "Medusa Skull",
-      "source_url": "https://tibia.fandom.com/wiki/Medusa_Skull",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/8/8c/Medusa_Skull.gif/revision/latest?cb=20150603190541&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 10.0
-    },
-    {
       "name": "Medusa Skull (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Medusa_Skull_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/4f/Medusa_Skull_%28Replica%29.gif/revision/latest?cb=20160831075642&path-prefix=en",
@@ -206189,20 +206248,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/42/Melting_Horn.gif/revision/latest?cb=20140315235454&path-prefix=en",
       "category": "Taming Items",
       "weight": 2.0
-    },
-    {
-      "name": "Memory Box",
-      "source_url": "https://tibia.fandom.com/wiki/Memory_Box",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/5/58/Memory_Box.gif/revision/latest?cb=20150604110343&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 20.0
-    },
-    {
-      "name": "Memory Box (Activated)",
-      "source_url": "https://tibia.fandom.com/wiki/Memory_Box_(Activated)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/2/24/Memory_Box_%28Activated%29.gif/revision/latest?cb=20150616124059&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 20.0
     },
     {
       "name": "Memory Crystal",
@@ -206619,20 +206664,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/43/Mini_Mummy.gif/revision/latest?cb=20091218142245&path-prefix=en",
       "category": "Dolls and Bears",
       "weight": 4.5
-    },
-    {
-      "name": "Mini NabBot",
-      "source_url": "https://tibia.fandom.com/wiki/Mini_NabBot",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/1/17/Mini_NabBot.gif/revision/latest?cb=20191108175347&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 60.0
-    },
-    {
-      "name": "Mini NabBot (Activated)",
-      "source_url": "https://tibia.fandom.com/wiki/Mini_NabBot_(Activated)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/1/19/Mini_NabBot_%28Activated%29.gif/revision/latest?cb=20191108175442&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 60.0
     },
     {
       "name": "Miniature House",
@@ -209482,20 +209513,6 @@
       "weight": 10.0
     },
     {
-      "name": "Noble Sword",
-      "source_url": "https://tibia.fandom.com/wiki/Noble_Sword",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/8/8c/Noble_Sword.gif/revision/latest?cb=20150604104412&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 50.0
-    },
-    {
-      "name": "Noble Sword (Activated)",
-      "source_url": "https://tibia.fandom.com/wiki/Noble_Sword_(Activated)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/3/3d/Noble_Sword_%28Activated%29.gif/revision/latest?cb=20150604104436&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 50.0
-    },
-    {
       "name": "Noble Sword (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Noble_Sword_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/3f/Noble_Sword_%28Replica%29.gif/revision/latest?cb=20150624102556&path-prefix=en",
@@ -210542,13 +210559,6 @@
       ]
     },
     {
-      "name": "Old Radio",
-      "source_url": "https://tibia.fandom.com/wiki/Old_Radio",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/b/b6/Old_Radio.gif/revision/latest?cb=20110617010757&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 40.15
-    },
-    {
       "name": "Old Radio (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Old_Radio_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c0/Old_Radio_%28Replica%29.gif/revision/latest?cb=20180616013115&path-prefix=en",
@@ -210643,13 +210653,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/34/Omniphant_Figurine.gif/revision/latest?cb=20250707220741&path-prefix=en",
       "category": "Decorations",
       "weight": 6.5
-    },
-    {
-      "name": "Omniscient Owl",
-      "source_url": "https://tibia.fandom.com/wiki/Omniscient_Owl",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/d/de/Omniscient_Owl.gif/revision/latest?cb=20190701193638&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 9.1
     },
     {
       "name": "Omnivora Soul Core",
@@ -211387,13 +211390,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a8/Orc_Warrior_Soul_Core.gif/revision/latest?cb=20240604133202&path-prefix=en",
       "category": "Soul Cores",
       "weight": 10.0
-    },
-    {
-      "name": "Orc's Jaw Shredder",
-      "source_url": "https://tibia.fandom.com/wiki/Orc's_Jaw_Shredder",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/5/51/Orc%27s_Jaw_Shredder.gif/revision/latest?cb=20150310145206&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 25.0
     },
     {
       "name": "Orc's Jaw Shredder (Replica)",
@@ -213895,13 +213891,6 @@
           "npc": "Nah'Bob"
         }
       ]
-    },
-    {
-      "name": "Phoenix Statue",
-      "source_url": "https://tibia.fandom.com/wiki/Phoenix_Statue",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/6/6a/Phoenix_Statue.gif/revision/latest?cb=20100824131519&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 20.0
     },
     {
       "name": "Phoenix Statue (Replica)",
@@ -224771,20 +224760,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/2/2b/Shield_of_Corruption.gif/revision/latest?cb=20100628145715&path-prefix=en",
       "category": "Shields",
       "weight": 49.0
-    },
-    {
-      "name": "Shield of Destiny",
-      "source_url": "https://tibia.fandom.com/wiki/Shield_of_Destiny",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5e/Shield_of_Destiny.gif/revision/latest?cb=20160516083406&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 68.0
-    },
-    {
-      "name": "Shield of Destiny (Activated)",
-      "source_url": "https://tibia.fandom.com/wiki/Shield_of_Destiny_(Activated)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a6/Shield_of_Destiny_%28Activated%29.gif/revision/latest?cb=20160516084338&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 68.0
     },
     {
       "name": "Shield of Destiny (Replica)",
@@ -236157,13 +236132,6 @@
       "weight": 55.0
     },
     {
-      "name": "The Dragon Spirit",
-      "source_url": "https://tibia.fandom.com/wiki/The_Dragon_Spirit",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/7/75/The_Dragon_Spirit.gif/revision/latest?cb=20230822095158&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 26.02
-    },
-    {
       "name": "The Dragon Spirit (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/The_Dragon_Spirit_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/fe/The_Dragon_Spirit_%28Replica%29.gif/revision/latest?cb=20250618225450&path-prefix=en",
@@ -236295,13 +236263,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/3d/The_Famous_Sword_of_Fury.gif/revision/latest?cb=20231119000856&path-prefix=en"
     },
     {
-      "name": "The Gods' Twilight Doll",
-      "source_url": "https://tibia.fandom.com/wiki/The_Gods'_Twilight_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/1/1f/The_Gods%27_Twilight_Doll.gif/revision/latest?cb=20220823095428&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 253.21
-    },
-    {
       "name": "The Handmaiden's Protector",
       "source_url": "https://tibia.fandom.com/wiki/The_Handmaiden's_Protector",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/35/The_Handmaiden%27s_Protector.gif/revision/latest?cb=20110911005531&path-prefix=en",
@@ -236429,13 +236390,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/4/41/The_Mariner%27s_Compass_From_the_Antoinette.gif/revision/latest?cb=20251104203930&path-prefix=en",
       "category": "Extra Slot",
       "weight": 30.0
-    },
-    {
-      "name": "The Mexcalibur",
-      "source_url": "https://tibia.fandom.com/wiki/The_Mexcalibur",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/c/cb/The_Mexcalibur.gif/revision/latest?cb=20090210041409&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 12.0
     },
     {
       "name": "The Mexcalibur (Replica)",
@@ -237196,13 +237150,6 @@
       "weight": 13.37
     },
     {
-      "name": "TibiaHispano Emblem",
-      "source_url": "https://tibia.fandom.com/wiki/TibiaHispano_Emblem",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5c/TibiaHispano_Emblem.gif/revision/latest?cb=20171106154629&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 5.0
-    },
-    {
       "name": "Tibianus Balloon",
       "source_url": "https://tibia.fandom.com/wiki/Tibianus_Balloon",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/6/69/Tibianus_Balloon.gif/revision/latest?cb=20220107174846&path-prefix=en",
@@ -237211,26 +237158,12 @@
       "price": 400
     },
     {
-      "name": "Tibiapedia",
-      "source_url": "https://tibia.fandom.com/wiki/Tibiapedia",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c3/Tibiapedia.gif/revision/latest?cb=20200901223523&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 2.5
-    },
-    {
       "name": "Tibiapedia (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Tibiapedia_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/f8/Tibiapedia_%28Replica%29.gif/revision/latest?cb=20260416185125&path-prefix=en",
       "category": "Valuables",
       "weight": 2.5,
       "price": 20
-    },
-    {
-      "name": "Tibiora's Box",
-      "source_url": "https://tibia.fandom.com/wiki/Tibiora's_Box",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/9/9b/Tibiora%27s_Box.gif/revision/latest?cb=20220407132012&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 42.0
     },
     {
       "name": "Tibiora's Box (Replica)",
@@ -242942,13 +242875,6 @@
       ]
     },
     {
-      "name": "War Backpack",
-      "source_url": "https://tibia.fandom.com/wiki/War_Backpack",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/a/a4/War_Backpack.gif/revision/latest?cb=20140922143820&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 18.0
-    },
-    {
       "name": "War Backpack (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/War_Backpack_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/5/5c/War_Backpack_%28Replica%29.gif/revision/latest?cb=20260416185126&path-prefix=en",
@@ -245043,20 +244969,6 @@
       ]
     },
     {
-      "name": "Wicked Witch",
-      "source_url": "https://tibia.fandom.com/wiki/Wicked_Witch",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/8/88/Wicked_Witch.gif/revision/latest?cb=20200901200923&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 19.9
-    },
-    {
-      "name": "Wicked Witch (Activated)",
-      "source_url": "https://tibia.fandom.com/wiki/Wicked_Witch_(Activated)",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/4/49/Wicked_Witch_%28Activated%29.gif/revision/latest?cb=20200901200926&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 19.9
-    },
-    {
       "name": "Wicked Witch (Replica)",
       "source_url": "https://tibia.fandom.com/wiki/Wicked_Witch_(Replica)",
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/c9/Wicked_Witch_%28Replica%29.gif/revision/latest?cb=20260416185124&path-prefix=en",
@@ -246645,13 +246557,6 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/3/37/Yellowed_Bone.gif/revision/latest?cb=20130704180325&path-prefix=en",
       "category": "Quest Items",
       "weight": 9.5
-    },
-    {
-      "name": "Yeti Doll",
-      "source_url": "https://tibia.fandom.com/wiki/Yeti_Doll",
-      "image_url": "https://static.wikia.nocookie.net/tibia/images/2/27/Yeti_Doll.gif/revision/latest?cb=20220823094929&path-prefix=en",
-      "category": "Fansite Items",
-      "weight": 20.21
     },
     {
       "name": "Yeti Soul Core",

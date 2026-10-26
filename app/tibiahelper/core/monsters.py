@@ -159,6 +159,17 @@ SORTS: dict[str, tuple[Callable[[Monster], object], bool]] = {
 }
 
 
+# Filtry listy jak przy przedmiotach: grupy domyślnie ukryte, do pokazania w menu „Filtry”.
+MONSTER_FILTERS: dict[str, Callable[[Monster], bool]] = {
+    "Bossy": lambda m: m.boss,
+    "Eventowe": lambda m: m.event,
+    "Niedostępne w grze": lambda m: m.unavailable,
+    "Bez HP na wiki": lambda m: m.hp == 0,
+    # Np. zwierzęta z miast, przyzwańce i obiekty z questów: nic za nie nie wpada.
+    "Bez expa": lambda m: m.exp == 0,
+}
+
+
 def sort_monsters(monsters: list[Monster], sort: str) -> list[Monster]:
     """Potwory posortowane wybranym sposobem; przy remisie alfabetycznie."""
     key, reverse = SORTS[sort]

@@ -23,11 +23,13 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.models import Item, Monster
-from ..core.monsters import SORTS, download_items, download_missing, image_path, item_key, sort_monsters, sprite_path
+from ..core.filters import hide_groups
+from ..core.monsters import MONSTER_FILTERS, SORTS, download_items, download_missing, image_path, item_key, sort_monsters, sprite_path
 from ..core.issues import monster_issue_url
 from ..core.mapdata import floor_label
 from ..core.spawns import SOURCE_NOTE, Place, Spawns, places
 from .map_window import MapPanel, spawn_icon
+from .filter_button import FilterButton
 from .monster_grid import MonsterGrid
 from .monster_widgets import AnimatedSprite, ElementBars
 from .sprites import display_sprite
@@ -71,6 +73,9 @@ class MonsterListPage(QWidget):
         top = QHBoxLayout()
         top.addWidget(back)
         top.addStretch(1)
+        self._filters = FilterButton(list(MONSTER_FILTERS))
+        self._filters.changed.connect(self._refresh)
+        top.addWidget(self._filters)
         filters = QHBoxLayout()
         filters.addWidget(self._search, 1)
         filters.addWidget(self._sort)
@@ -92,9 +97,10 @@ class MonsterListPage(QWidget):
 
     def _refresh(self) -> None:
         text = self._search.text().strip().lower()
-        shown = sort_monsters([m for m in self.monsters if text in m.name.lower()], self._sort.currentText())
+        found = [m for m in self.monsters if text in m.name.lower()]
+        shown = sort_monsters(hide_groups(found, MONSTER_FILTERS, self._filters.shown()), self._sort.currentText())
         self._grid.set_monsters(shown)
-        self._empty.setText("Brak potworów w danych." if not self.monsters else "Nic nie pasuje do wyszukiwania.")
+        self._empty.setText("Brak potworów w danych." if not self.monsters else "Nic nie pasuje do wyszukiwania i filtrów.")
         self._grid.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 

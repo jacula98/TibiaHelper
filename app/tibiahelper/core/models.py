@@ -14,7 +14,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 # 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters),
 # 4: szczegóły potworów (loot, umiejętności, miejsca) do zakładki „Potwory”,
 # 5-6: obrazki przedmiotów i NPC, 7: przedmioty (Item) i NPC (Npc) do zakładki „Przedmioty”
-SCHEMA_VERSION = 7
+SCHEMA_VERSION = 8
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -135,6 +135,9 @@ class Monster(_Model):
     armor: int | None = Field(default=None, ge=0)
     speed: int | None = Field(default=None, ge=0)
     boss: bool = False
+    # Potwór tylko z eventów (np. Halloween) albo już niedostępny w grze; lista domyślnie je ukrywa.
+    event: bool = False
+    unavailable: bool = False
     bestiary_class: str | None = None
     bestiary_level: str | None = None
     abilities: list[str] = Field(default_factory=list)

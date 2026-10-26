@@ -57,6 +57,9 @@ def parse_trades(value: str) -> list[dict]:
     return trades
 
 
+SKIPPED_CATEGORIES = {"Fansite Items"}
+
+
 def make_item(page: WikiPage, image_url: str | None, wanted: set[str]) -> dict | None:
     """Przedmiot ze strony albo None (nie przedmiot, nie do podniesienia i nie z lootu)."""
     infobox = templates.find(page.wikitext, "Infobox Object")
@@ -71,6 +74,9 @@ def make_item(page: WikiPage, image_url: str | None, wanted: set[str]) -> dict |
     if image_url and image_url.startswith(SPRITE_URL_PREFIX):
         item["image_url"] = image_url
     category = strip_markup(info.get("primarytype", "")).strip()
+    # Przedmioty z konkursów fansite'ów: nie do zdobycia w zwykłej grze, tylko zaśmiecają listę.
+    if category in SKIPPED_CATEGORIES:
+        return None
     if category:
         item["category"] = category
     weight = _weight(info.get("weight", ""))

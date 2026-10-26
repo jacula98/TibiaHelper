@@ -1,7 +1,8 @@
-"""Wyszukiwanie i filtrowanie questów. Czysta logika, bez Qt."""
+"""Wyszukiwanie i filtrowanie questów oraz list (potwory, przedmioty). Czysta logika, bez Qt."""
 
 import unicodedata
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
+from typing import TypeVar
 
 from .models import Quest
 
@@ -33,3 +34,12 @@ def filter_quests(
             continue
         result.append(quest)
     return sorted(result, key=lambda q: (q.min_level, _normalize(q.name)))
+
+
+T = TypeVar("T")
+
+
+def hide_groups(things: Iterable[T], groups: dict[str, Callable[[T], bool]], shown: set[str]) -> list[T]:
+    """Usuwa rzeczy z ukrytych grup. Rzecz w kilku grupach zostaje tylko, gdy wszystkie są pokazane."""
+    hidden = [test for name, test in groups.items() if name not in shown]
+    return [thing for thing in things if not any(test(thing) for test in hidden)]
