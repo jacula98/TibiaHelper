@@ -202,7 +202,11 @@ def test_title_and_url_round_trip():
 
 def test_apply_terms_replaces_gate_of_expertise():
     assert apply_terms("Enter the gate of expertise (lvl 20)") == "Enter the bramka lvl-owa (lvl 20)"
-    assert apply_terms("Two Gates of Expertise") == "Two bramka lvl-owa"
+    assert apply_terms("Two Gates of Expertise") == "Two bramki lvl-owe"
+
+
+def test_find_forbidden_reports_matched_text():
+    assert find_forbidden("przez Gate of Expertise") == ["Gate of Expertise"]
 
 
 def test_make_draft_applies_terms():

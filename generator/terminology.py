@@ -8,15 +8,14 @@ test w tests/test_generator.py, który nie przepuści angielskiej nazwy w danych
 
 import re
 
+# Liczba mnoga przed pojedynczą, żeby "Gates" nie zamieniło się w "bramka" + "s".
 TERMS = {
+    "Gates of Expertise": "bramki lvl-owe",
     "Gate of Expertise": "bramka lvl-owa",
 }
 
-# Bez względu na wielkość liter i z opcjonalnym "s" na końcu (Gates of Expertise).
-_PATTERNS = [
-    (re.compile(re.escape(en).replace("Gate", "Gates?"), re.IGNORECASE), pl)
-    for en, pl in TERMS.items()
-]
+# Bez względu na wielkość liter.
+_PATTERNS = [(re.compile(re.escape(en), re.IGNORECASE), pl) for en, pl in TERMS.items()]
 
 
 def apply_terms(text: str) -> str:
@@ -26,5 +25,5 @@ def apply_terms(text: str) -> str:
 
 
 def find_forbidden(text: str) -> list[str]:
-    """Angielskie nazwy, które nie powinny trafić do danych aplikacji."""
-    return [pattern.pattern for pattern, _ in _PATTERNS if pattern.search(text)]
+    """Angielskie nazwy (tak, jak wystąpiły w tekście), które nie powinny trafić do danych."""
+    return [m.group(0) for pattern, _ in _PATTERNS for m in pattern.finditer(text)]
