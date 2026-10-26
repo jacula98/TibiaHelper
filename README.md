@@ -29,7 +29,7 @@ Przycisk „Zgłoś błąd” (z logo GitHuba) otwiera w przeglądarce nowe zgł
 z wypełnioną nazwą questa i wersją danych. Do wysłania potrzebne jest darmowe konto GitHub.
 
 Po starcie widać menu: Questy (Expowiska i Bossy dojdą później). Przy miejscach w krokach jest
-pinezka: kliknięcie otwiera okno z mapą Tibii i kropką w tym miejscu. Mapy pięter pochodzą
+pinezka: kliknięcie wysuwa na dole okna mapę Tibii z kropką w tym miejscu (kolejna pinezka tylko przełącza mapę, „✕” ją chowa). Mapy pięter pochodzą
 z projektu [tibiamaps](https://github.com/tibiamaps/tibia-map-data) i pobierają się przy pierwszym
 użyciu do `%APPDATA%\TibiaHelper\maps`.
 
