@@ -4,7 +4,8 @@ Jak to działa:
 - przy starcie bierzemy lokalną kopię o wyższym data_version: wbudowaną
   w aplikację albo pobraną wcześniej do %APPDATA%/TibiaHelper/quests.json,
 - w tle pobieramy quests.json z repo na GitHubie; jeśli jest poprawny
-  i nowszy, zapisujemy go jako nową kopię lokalną,
+  i nowszy, pytamy użytkownika, czy zaktualizować; dopiero po zgodzie
+  zapisujemy go jako nową kopię lokalną,
 - bez internetu po prostu zostaje to, co już jest na dysku.
 
 Pobrany plik to tylko dane (JSON): walidujemy go tak samo jak lokalny
@@ -16,6 +17,7 @@ import json
 import logging
 import urllib.request
 from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
 
 from .repository import LoadResult, QuestFileError, load_quest_file, parse_quest_data
@@ -67,11 +69,22 @@ def download(url: str = DATA_URL) -> bytes:
     return data
 
 
-def update_from_github(
-    current_version: int, cached: Path, fetch: Fetch = download
-) -> LoadResult | None:
-    """Pobiera dane z GitHuba. Zwraca nowe dane albo None, gdy nie ma nic nowszego.
+@dataclass(frozen=True)
+class Update:
+    """Nowsze dane z GitHuba, jeszcze niezapisane na dysku."""
 
+    result: LoadResult
+    raw: dict
+
+    @property
+    def data_version(self) -> int:
+        return self.result.data_version
+
+
+def check_for_update(current_version: int, fetch: Fetch = download) -> Update | None:
+    """Sprawdza, czy na GitHubie są nowsze dane. Niczego nie zapisuje.
+
+    Zapis robi dopiero apply_update(), gdy użytkownik się zgodzi.
     Każdy problem (brak sieci, zły JSON, za nowy schemat) kończy się None
     i wpisem w logu: aplikacja działa dalej na danych lokalnych.
     """
@@ -81,14 +94,18 @@ def update_from_github(
     except (OSError, http.client.HTTPException, ValueError, QuestFileError) as exc:
         # OSError: błędy sieci (URLError, timeout); HTTPException: zerwane połączenie
         # w trakcie odczytu; ValueError: zły JSON albo UTF-8.
-        log.info("Aktualizacja danych pominięta: %s", exc)
+        log.info("Sprawdzanie aktualizacji pominięte: %s", exc)
         return None
-
     if result.data_version <= current_version:
         return None
+    return Update(result, raw)
+
+
+def apply_update(update: Update, cached: Path) -> bool:
+    """Zapisuje pobrane dane jako lokalną kopię. False, gdy zapis się nie udał."""
     try:
-        write_json_atomic(cached, raw)
+        write_json_atomic(cached, update.raw)
     except OSError as exc:
-        # Nowe dane i tak pokażemy teraz; zapis spróbuje się udać przy kolejnym starcie.
         log.error("Nie można zapisać pobranych danych do %s: %s", cached, exc)
-    return result
+        return False
+    return True

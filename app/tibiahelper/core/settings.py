@@ -16,7 +16,7 @@ from .storage import write_json_atomic
 log = logging.getLogger(__name__)
 
 SETTINGS_VERSION = 1
-MIN_OPACITY = 0.3  # niżej okno jest prawie niewidoczne i trudno je znaleźć
+MIN_OPACITY = 0.1  # 0% schowałoby okno całkiem i nie dałoby się go znaleźć
 MAX_OPACITY = 1.0
 
 

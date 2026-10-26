@@ -56,17 +56,28 @@ def test_best_local_raises_when_nothing_usable(tmp_path):
         updater.load_best_local(tmp_path / "a.json", tmp_path / "b.json")
 
 
-def test_update_saves_newer_data(tmp_path):
+def test_check_finds_newer_data_without_saving(tmp_path):
+    update = updater.check_for_update(3, fetch=fetch_returning(quest_file(4)))
+    assert update is not None and update.data_version == 4
+
+
+def test_apply_update_saves_data(tmp_path):
     cached = tmp_path / "TibiaHelper" / "quests.json"
-    result = updater.update_from_github(3, cached, fetch=fetch_returning(quest_file(4)))
-    assert result is not None and result.data_version == 4
-    assert json.loads(cached.read_text(encoding="utf-8"))["data_version"] == 4
+    update = updater.check_for_update(3, fetch=fetch_returning(quest_file(4)))
+    assert updater.apply_update(update, cached)
+    assert updater.load_best_local(tmp_path / "brak.json", cached).data_version == 4
 
 
-def test_update_skips_same_or_older_data(tmp_path):
-    cached = tmp_path / "quests.json"
-    assert updater.update_from_github(4, cached, fetch=fetch_returning(quest_file(4))) is None
-    assert not cached.exists()
+def test_apply_update_reports_write_error(tmp_path):
+    update = updater.check_for_update(3, fetch=fetch_returning(quest_file(4)))
+    blocker = tmp_path / "plik"
+    blocker.write_text("", encoding="utf-8")
+    # Katalog docelowy jest zwykłym plikiem, więc zapis musi się nie udać.
+    assert not updater.apply_update(update, blocker / "quests.json")
+
+
+def test_check_skips_same_or_older_data():
+    assert updater.check_for_update(4, fetch=fetch_returning(quest_file(4))) is None
 
 
 @pytest.mark.parametrize(
@@ -80,10 +91,8 @@ def test_update_skips_same_or_older_data(tmp_path):
         fetch_returning({"cokolwiek": 1}),
     ],
 )
-def test_update_failures_keep_local_data(tmp_path, fetch):
-    cached = tmp_path / "quests.json"
-    assert updater.update_from_github(1, cached, fetch=fetch) is None
-    assert not cached.exists()
+def test_check_failures_give_no_update(fetch):
+    assert updater.check_for_update(1, fetch=fetch) is None
 
 
 def test_download_requires_https():
