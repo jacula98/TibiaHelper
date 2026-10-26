@@ -5,6 +5,7 @@ nazywa je gra. Polskie są tylko nagłówki.
 """
 
 import threading
+from collections.abc import Callable
 from html import escape
 from pathlib import Path
 
@@ -22,7 +23,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.models import Monster
-from ..core.monsters import SORTS, download_missing, sort_monsters, sprite_path
+from ..core.monsters import SORTS, download_items, download_missing, image_path, item_key, sort_monsters, sprite_path
 from ..core.mapdata import floor_label
 from ..core.spawns import SOURCE_NOTE, Place, Spawns, places
 from .map_window import MapPanel, spawn_icon
@@ -31,6 +32,7 @@ from .monster_widgets import AnimatedSprite, ElementBars
 from .sprites import display_sprite
 
 PAGE_SPRITE = 64
+LOOT_ICON = 32  # obrazki przedmiotów z wiki mają 32x32 px
 SPAWN_MAP_HEIGHT = 320
 RARITY_NAMES = {
     "always": "zawsze",
@@ -102,9 +104,11 @@ class MonsterPage(QWidget):
 
     back_requested = Signal()
 
-    def __init__(self, sprites_dir: Path, maps_dir: Path, parent: QWidget | None = None) -> None:
+    def __init__(self, sprites_dir: Path, maps_dir: Path, items_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._sprites_dir = sprites_dir
+        self._items_dir = items_dir
+        self._item_images: dict[str, str] = {}
         self._spawns = Spawns()
         self._monster: Monster | None = None
         self._loader = _SpriteLoader(self)
@@ -162,6 +166,9 @@ class MonsterPage(QWidget):
         layout.addLayout(top)
         layout.addWidget(scroll, 1)
 
+    def set_item_images(self, images: dict[str, str]) -> None:
+        self._item_images = images
+
     def set_spawns(self, spawns: Spawns) -> None:
         self._spawns = spawns
 
@@ -189,10 +196,20 @@ class MonsterPage(QWidget):
                 self._places.addItem(f"{number}. okolice {place.city} · {place.count} miejsc · piętro {floor_label(place.z)}")
             self._places.blockSignals(False)
             self._on_place_selected(0)
-        if monster.image_url and sprite_path(self._sprites_dir, monster.id) is None:
+        need_sprite = monster.image_url is not None and sprite_path(self._sprites_dir, monster.id) is None
+        # Obrazki przedmiotów z lootu tego potwora, których jeszcze nie ma na dysku.
+        items = {
+            item.name: self._item_images[item.name]
+            for item in monster.loot
+            if item.name in self._item_images and image_path(self._items_dir, item_key(item.name)) is None
+        }
+        if need_sprite or items:
 
             def run() -> None:
-                if download_missing(self._sprites_dir, [monster]):
+                # Najpierw potwór (widać go na górze strony), potem przedmioty.
+                if need_sprite and download_missing(self._sprites_dir, [monster]):
+                    self._loader.loaded.emit(monster.id)
+                if items and download_items(self._items_dir, items):
                     self._loader.loaded.emit(monster.id)
 
             threading.Thread(target=run, daemon=True, name="sprite").start()
@@ -218,7 +235,10 @@ class MonsterPage(QWidget):
             self._sprite.set_path(sprite_path(self._sprites_dir, self._monster.id))
             self._header.setText(header_html(self._monster))
             self._top.setText(monster_html(self._monster))
-            self._bottom.setText(loot_html(self._monster))
+            self._bottom.setText(loot_html(self._monster, self._item_icon))
+
+    def _item_icon(self, name: str) -> Path | None:
+        return image_path(self._items_dir, item_key(name)) if name in self._item_images else None
 
 
 def _html_label() -> QLabel:
@@ -261,21 +281,27 @@ def monster_html(monster: Monster) -> str:
     return "<br>".join(parts)
 
 
-def loot_html(monster: Monster) -> str:
-    """Dolna część strony (pod mapą): loot i źródło."""
+def loot_html(monster: Monster, icon: Callable[[str], Path | None] = lambda name: None) -> str:
+    """Dolna część strony (pod mapą): loot z obrazkami przedmiotów i źródło."""
     parts = []
     if monster.loot:
         parts.append(_section("LOOT"))
-        lines = []
+        # Tabela: obrazek w pierwszej kolumnie, opis w drugiej, więc nazwy stoją równo.
+        rows = []
         for item in monster.loot:
             amount = f"{escape(item.amount)}× " if item.amount else ""
             rarity = f' <span style="color: #9aa0a6;">({RARITY_NAMES[item.rarity]})</span>' if item.rarity else ""
-            lines.append(f"• {amount}{escape(item.name)}{rarity}")
-        parts.append("<br>".join(lines))
+            path = icon(item.name)
+            image = f'<img src="{path.as_uri()}" width="{LOOT_ICON}" height="{LOOT_ICON}">' if path else ""
+            rows.append(
+                f'<tr><td width="{LOOT_ICON + 6}" style="vertical-align: middle">{image}</td>'
+                f'<td style="vertical-align: middle">{amount}{escape(item.name)}{rarity}</td></tr>'
+            )
+        parts.append(f'<table cellspacing="0" cellpadding="1">{"".join(rows)}</table>')
 
     parts.append(
-        f'<br><span style="color: #9aa0a6;">Źródło: <a href="{escape(monster.source_url, quote=True)}">'
-        "TibiaWiki</a> (CC BY-SA 4.0) · obrazek © CipSoft</span>"
+        f'<span style="color: #9aa0a6;">Źródło: <a href="{escape(monster.source_url, quote=True)}">'
+        "TibiaWiki</a> (CC BY-SA 4.0) · obrazki © CipSoft</span>"
     )
     return "<br>".join(parts)
 

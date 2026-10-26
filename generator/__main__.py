@@ -9,6 +9,8 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator monster "Skeleton"      # dodaj/odśwież potwora (HP, exp, obrazek)
     python -m generator import-all               # wszystkie potwory + brakujące questy (szkice)
     python -m generator spawns                   # miejsca występowania potworów z TibiaRoute
+    python -m generator npcs                     # NPC z pozycjami do pinezek w edytorze (data/npcs.json)
+    python -m generator items                    # obrazki przedmiotów z lootu potworów
 """
 
 import argparse
@@ -20,7 +22,7 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import bulk, cache, monsters, quests, quests_file, spawns  # noqa: E402
+from . import bulk, cache, items, monsters, npcs, quests, quests_file, spawns  # noqa: E402
 from tibiahelper.core import author  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
 from .wikitext import infobox_position, mapper_coords  # noqa: E402
@@ -56,6 +58,11 @@ def main(argv: list[str] | None = None) -> int:
     import_all.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
 
     commands.add_parser("spawns", help="pobierz miejsca występowania potworów z TibiaRoute")
+
+    npcs_cmd = commands.add_parser("npcs", help="pobierz NPC z pozycjami do data/npcs.json (dla edytora)")
+    npcs_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
+
+    commands.add_parser("items", help="znajdź na wiki obrazki przedmiotów z lootu potworów")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -124,6 +131,18 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Potwory z miejscami: {len(data['monsters'])}, punktów: {total}")
             if unmatched:
                 print("Bez pary w data/quests.json:", ", ".join(unmatched))
+
+        elif args.command == "npcs":
+            pages = bulk.load_pages(client, client.embedded_in("Infobox NPC"), args.refresh)
+            data = npcs.build(pages)
+            npcs.save(data)
+            print(f"NPC z pozycją: {len(data['npcs'])} (stron: {len(pages)})")
+
+        elif args.command == "items":
+            data = quests_file.load()
+            found, missing = items.import_images(data, client)
+            quests_file.save(data)
+            print(f"Przedmioty z obrazkiem: {found}, bez obrazka na wiki: {missing}")
 
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)

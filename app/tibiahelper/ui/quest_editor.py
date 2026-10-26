@@ -30,7 +30,9 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import author
+from ..core.mapdata import floor_label
 from ..core.models import MapPoint
+from ..core.npcs import Npc, find_npc, load_npcs
 from .map_window import KIND_NAMES, MapWindow
 
 # Gdy krok nie ma jeszcze pinezki, mapa startuje w Thais (parter).
@@ -53,6 +55,8 @@ class QuestEditor(QWidget):
         self._data_file = data_file
         self._maps_dir = maps_dir
         self._map: MapWindow | None = None
+        # NPC z pozycjami (data/npcs.json obok pliku questów) do „👤 NPC”.
+        self._npcs = load_npcs(data_file.with_name("npcs.json"))
         # Potwory z pliku (id -> nazwa) do wyboru przy „Oznacz potwora”.
         try:
             raw_monsters = author.load_data(data_file).get("monsters", [])
@@ -149,10 +153,14 @@ class QuestEditor(QWidget):
         add_pin = QPushButton("📍 Dodaj pinezkę")
         add_pin.setToolTip("Zaznacz w tekście kroku słowa, za którymi ma stać pinezka, potem kliknij")
         add_pin.clicked.connect(self._add_marker)
+        add_npc = QPushButton("👤 NPC")
+        add_npc.setToolTip("Pinezka w miejscu NPC: wpisz imię (np. Sven), mapa nie jest potrzebna")
+        add_npc.clicked.connect(self._add_npc_marker)
         remove_pin = QPushButton("Usuń pinezkę")
         remove_pin.clicked.connect(self._remove_marker)
         pin_buttons = QHBoxLayout()
         pin_buttons.addWidget(add_pin)
+        pin_buttons.addWidget(add_npc)
         pin_buttons.addWidget(remove_pin)
 
         self._step_monsters = QListWidget()
@@ -167,7 +175,8 @@ class QuestEditor(QWidget):
         monster_buttons.addWidget(remove_monster)
 
         hint = QLabel("Wskazówka: zaznacz fragment tekstu (np. „między Venore a Thais” albo „2 szkielety”), "
-                      "a potem „Dodaj pinezkę” (i kliknij miejsce na mapie) lub „Oznacz potwora”.")
+                      "a potem „Dodaj pinezkę” (i kliknij miejsce na mapie), „👤 NPC” (pinezka u NPC) "
+                      "lub „Oznacz potwora”.")
         hint.setObjectName("muted")
         hint.setWordWrap(True)
 
@@ -314,6 +323,32 @@ class QuestEditor(QWidget):
             self._map = MapWindow(self._maps_dir, self)
             self._map.point_picked.connect(self._on_point_picked)
         self._map.pick_point(existing, start)
+
+    def _add_npc_marker(self) -> None:
+        if self._current < 0:
+            return
+        if not self._npcs:
+            QMessageBox.information(
+                self, "Edytor", "Brak listy NPC (data/npcs.json). Pobierz ją generatorem:\npython -m generator npcs"
+            )
+            return
+        anchor = self._text.textCursor().selectedText().strip() or None
+        dialog = _NpcDialog(self._npcs, anchor or self._npc.text(), self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return
+        npc = dialog.npc()
+        self._store_step()
+        marker = {"x": npc.x, "y": npc.y, "z": npc.z, "label": npc.name, "kind": "npc"}
+        if anchor:
+            marker["anchor"] = anchor
+        step = self._steps[self._current]
+        step.setdefault("markers", []).append(marker)
+        # Pole „NPC” kroku uzupełniamy, jeśli autor jeszcze go nie wpisał.
+        if not step.get("npc"):
+            step["npc"] = npc.name
+            self._npc.setText(npc.name)
+        self._refresh_step_list()
+        self._refresh_markers()
 
     def _nearest_marker(self) -> MapPoint:
         """Ostatnia pinezka z wcześniejszych kroków: następne miejsce jest zwykle niedaleko."""
@@ -482,6 +517,64 @@ class _MarkerDialog(QDialog):
 
     def kind(self) -> str:
         return self._kind.currentData()
+
+
+class _NpcDialog(QDialog):
+    """Wybór NPC z listy (ok. 1200) z wyszukiwaniem po fragmencie imienia."""
+
+    def __init__(self, npcs: list[Npc], suggested: str, parent: QWidget) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Pinezka NPC")
+        self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
+        self._npcs = sorted(npcs, key=lambda n: n.title.lower())
+        self._combo = QComboBox()
+        for npc in self._npcs:
+            self._combo.addItem(npc.title)
+        self._combo.setEditable(True)
+        self._combo.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+        completer = self._combo.completer()
+        completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        self._combo.lineEdit().setPlaceholderText("wpisz imię, np. Sven")
+        # Zaznaczone imię (albo pole „NPC” kroku) od razu wybiera tego NPC.
+        found = find_npc(self._npcs, suggested)
+        if found is not None:
+            self._combo.setCurrentIndex(self._npcs.index(found))
+        else:
+            self._combo.setCurrentIndex(-1)
+            self._combo.setEditText(suggested.strip())
+        self._where = QLabel(objectName="muted")
+        self._combo.currentIndexChanged.connect(self._show_where)
+        self._show_where()
+
+        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        buttons.accepted.connect(self._accept)
+        buttons.rejected.connect(self.reject)
+
+        form = QFormLayout(self)
+        form.addRow("NPC", self._combo)
+        form.addRow("Pozycja", self._where)
+        form.addRow(buttons)
+
+    def _show_where(self) -> None:
+        index = self._combo.currentIndex()
+        if 0 <= index < len(self._npcs):
+            npc = self._npcs[index]
+            self._where.setText(f"x {npc.x}, y {npc.y}, piętro {floor_label(npc.z)}")
+        else:
+            self._where.setText("wybierz z listy podpowiedzi")
+
+    def _accept(self) -> None:
+        # Wpisany tekst musi być pozycją z listy, inaczej pinezka trafiłaby w złe miejsce.
+        index = self._combo.findText(self._combo.currentText(), Qt.MatchFlag.MatchFixedString)
+        if index < 0:
+            QMessageBox.information(self, "Pinezka NPC", "Wybierz NPC z listy podpowiedzi.")
+            return
+        self._combo.setCurrentIndex(index)
+        self.accept()
+
+    def npc(self) -> Npc:
+        return self._npcs[self._combo.currentIndex()]
 
 
 class _MonsterDialog(QDialog):

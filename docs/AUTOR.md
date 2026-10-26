@@ -30,6 +30,8 @@ Uruchamiaj z katalogu głównego repo:
 ```
 python -m generator import-all                   # wszystkie potwory + brakujące questy jako szkice
 python -m generator spawns                       # miejsca występowania potworów (TibiaRoute)
+python -m generator items                        # adresy obrazków przedmiotów z lootu (po import-all)
+python -m generator npcs                         # NPC z pozycjami do przycisku „👤 NPC” w edytorze
 python -m generator monster "Skeleton"           # dodaj/odśwież jednego potwora
 python -m generator add-draft "Katana Quest"     # pobiera stronę + /Spoiler, dodaje quest jako draft
 python -m generator fetch "Katana Quest" --refresh   # pobierz ponownie stronę i /Spoiler
@@ -47,6 +49,8 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
 - `data/quests.json`: questy i potwory (TibiaWiki, CC BY-SA 4.0). `data_version` rośnie przy każdym zapisie;
   po tym aplikacja graczy poznaje, że na GitHubie są nowsze poradniki.
 - `data/spawns.json`: miejsca występowania potworów (TibiaRoute, za zgodą, patrz [zrodla-danych.md](zrodla-danych.md)).
+- `data/npcs.json`: NPC z pozycjami z TibiaWiki, tylko dla edytora. W edytorze zaznacz imię w tekście
+  kroku i kliknij „👤 NPC”: pinezka stanie tam, gdzie stoi ten NPC.
 
 ## Sprawdzenie przed PR
 

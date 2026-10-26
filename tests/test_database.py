@@ -212,3 +212,51 @@ def test_short_number(value, text):
     from tibiahelper.ui.monster_grid import short_number
 
     assert short_number(value) == text
+
+
+# --- loot z obrazkami i NPC do pinezek --------------------------------------------
+
+
+def test_loot_amount_with_unknown_upper_limit():
+    monster = make_monster(WikiPage("X", 1, DEMON.replace("|1-200|Gold Coin", "|0-24?|Gold Coin")), IMAGE)
+    assert monster["loot"][0] == {"amount": "0-24?", "name": "Gold Coin", "rarity": "common"}
+
+
+def test_item_images_only_from_wiki(tmp_path):
+    from tibiahelper.core.repository import parse_quest_data
+
+    raw = {
+        "schema_version": 5,
+        "data_version": 1,
+        "quests": [],
+        "items": {"Gold Coin": IMAGE, "Evil": "https://evil.example/x.gif"},
+    }
+    result = parse_quest_data(raw)
+    assert result.item_images == {"Gold Coin": IMAGE}
+    assert any("Evil" in e for e in result.errors)
+
+
+def test_download_items_saves_by_key(tmp_path):
+    from tibiahelper.core.monsters import download_items, image_path, item_key
+
+    assert item_key("Dragon's Tail") == "dragon-s-tail"
+    done = download_items(tmp_path, {"Dragon's Tail": IMAGE}, fetch=lambda url: b"GIF89a....")
+    assert done == ["Dragon's Tail"]
+    assert image_path(tmp_path, "dragon-s-tail").name == "dragon-s-tail.gif"
+
+
+def test_make_npc_and_load(tmp_path):
+    from generator import npcs as gen_npcs
+    from tibiahelper.core.npcs import find_npc, load_npcs
+
+    page = WikiPage("Sven", 1, "{{Infobox NPC\n| name = Sven\n| city = [[Svargrond]]\n| posx = 125.202\n"
+                    "| posy = 121.177\n| posz = 7\n}}")
+    npc = gen_npcs.make_npc(page)
+    assert npc == {"name": "Sven", "x": 32202, "y": 31153, "z": 7, "city": "Svargrond"}
+    assert gen_npcs.make_npc(WikiPage("Ghostlands", 1, "{{Infobox Geography}}")) is None
+
+    path = tmp_path / "npcs.json"
+    gen_npcs.save(gen_npcs.build({"Sven": page}), path)
+    loaded = load_npcs(path)
+    assert find_npc(loaded, " sven ").title == "Sven (Svargrond)"
+    assert load_npcs(tmp_path / "brak.json") == []
