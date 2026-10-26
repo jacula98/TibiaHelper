@@ -1,0 +1,54 @@
+"""Przedmioty: sortowanie listy, ceny u NPC i „z jakich potworów wypada”. Bez Qt, żeby łatwo testować."""
+
+from collections.abc import Callable
+from dataclasses import dataclass
+
+from .models import Item, Monster, Rarity, Trade
+
+# Kolejność od najczęstszego dropu: tak gracz czyta „skąd najłatwiej to zdobyć”.
+RARITY_ORDER = ("always", "common", "uncommon", "semi-rare", "rare", "very rare")
+
+
+@dataclass(frozen=True)
+class Drop:
+    monster: Monster
+    rarity: Rarity | None
+
+
+def effective_price(trade: Trade, default: int | None) -> int | None:
+    """Cena u tego NPC: własna, jeśli wiki ją podaje, inaczej zwykła cena przedmiotu."""
+    return trade.price if trade.price is not None else default
+
+
+def best_sell_price(item: Item) -> int:
+    """Najwięcej, ile da za to któryś NPC (0, gdy nikt tego nie kupuje)."""
+    return max((effective_price(t, item.value) or 0 for t in item.sell_to), default=0)
+
+
+# Nazwa -> (filtr, klucz sortowania, malejąco?). Kolejność tu = kolejność w menu.
+ITEM_SORTS: dict[str, tuple[Callable[[Item], bool], Callable[[Item], object], bool]] = {
+    "A–Z": (lambda i: True, lambda i: i.name.lower(), False),
+    "Najdroższe u NPC": (lambda i: bool(i.sell_to), best_sell_price, True),
+    "Do kupienia u NPC": (lambda i: bool(i.buy_from), lambda i: i.name.lower(), False),
+    "Najlżejsze": (lambda i: i.weight is not None, lambda i: i.weight, False),
+}
+
+
+def sort_items(items: list[Item], sort: str) -> list[Item]:
+    keep, key, reverse = ITEM_SORTS[sort]
+    # Najpierw alfabetycznie, potem stabilne sortowanie po kluczu: remisy zostają w kolejności A–Z.
+    by_name = sorted((i for i in items if keep(i)), key=lambda i: i.name.lower())
+    return sorted(by_name, key=key, reverse=reverse)
+
+
+def build_drops(monsters: dict[str, Monster]) -> dict[str, list[Drop]]:
+    """Nazwa przedmiotu (małymi literami) -> potwory, z których wypada, od najczęstszego dropu."""
+    drops: dict[str, list[Drop]] = {}
+    for monster in monsters.values():
+        for loot in monster.loot:
+            drops.setdefault(loot.name.lower(), []).append(Drop(monster, loot.rarity))
+    for entries in drops.values():
+        entries.sort(
+            key=lambda d: (RARITY_ORDER.index(d.rarity) if d.rarity else len(RARITY_ORDER), d.monster.name.lower())
+        )
+    return drops

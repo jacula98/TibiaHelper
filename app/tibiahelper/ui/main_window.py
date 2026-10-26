@@ -19,13 +19,15 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import author
-from ..core.models import Monster, Quest
+from ..core.items import build_drops
+from ..core.models import Item, Monster, Npc, Quest
 from ..core.paths import items_dir, maps_dir, npcs_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
 from .home_page import HomePage
+from .item_pages import ItemListPage, ItemPage
 from .monster_pages import MonsterListPage, MonsterPage
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
@@ -61,10 +63,13 @@ class MainWindow(QMainWindow):
         self._stack.addWidget(self._quest_view)
         self._monster_list = MonsterListPage(sprites_dir())
         self._monster_page = MonsterPage(sprites_dir(), maps_dir(), items_dir())
-        self._stack.addWidget(self._monster_list)
-        self._stack.addWidget(self._monster_page)
-        # Strona, do której wraca „← Wstecz” na stronie potwora (lista potworów albo quest).
-        self._monster_return: QWidget = self._monster_list
+        self._item_list = ItemListPage(items_dir())
+        self._item_page = ItemPage(items_dir(), npcs_dir(), sprites_dir(), maps_dir())
+        for page in (self._monster_list, self._monster_page, self._item_list, self._item_page):
+            self._stack.addWidget(page)
+        # Historia stron szczegółów (potwór, przedmiot), żeby „← Wstecz” wracał krok po kroku,
+        # np. quest -> potwór -> przedmiot -> (wstecz) potwór -> (wstecz) quest.
+        self._history: list[tuple[str, object]] = []
 
         self._banner = UpdateBanner()
         self._banner.hide()
@@ -81,9 +86,15 @@ class MainWindow(QMainWindow):
         self._list_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._home.monsters_requested.connect(lambda: self._stack.setCurrentWidget(self._monster_list))
         self._monster_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
-        self._monster_list.monster_selected.connect(lambda m: self._open_monster(m, self._monster_list))
-        self._quest_view.monster_requested.connect(lambda m: self._open_monster(m, self._quest_view))
-        self._monster_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._monster_return))
+        self._home.items_requested.connect(lambda: self._stack.setCurrentWidget(self._item_list))
+        self._item_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._monster_list.monster_selected.connect(lambda m: self._open_detail("monster", m))
+        self._quest_view.monster_requested.connect(lambda m: self._open_detail("monster", m))
+        self._item_list.item_selected.connect(lambda i: self._open_detail("item", i))
+        self._monster_page.item_requested.connect(lambda i: self._open_detail("item", i))
+        self._item_page.monster_requested.connect(lambda m: self._open_detail("monster", m))
+        self._monster_page.back_requested.connect(self._back)
+        self._item_page.back_requested.connect(self._back)
         self._list_page.quest_selected.connect(self._open_quest)
         self._quest_view.edit_requested.connect(self._edit_quest)
         if author_file is not None:
@@ -103,13 +114,16 @@ class MainWindow(QMainWindow):
         quests: list[Quest],
         data_version: int,
         monsters: dict[str, Monster] | None = None,
-        item_images: dict[str, str] | None = None,
-        npc_images: dict[str, str] | None = None,
+        items: dict[str, Item] | None = None,
+        npcs: dict[str, Npc] | None = None,
     ) -> None:
-        self._quest_view.set_npc_images(npc_images or {})
+        monsters, items, npcs = monsters or {}, items or {}, npcs or {}
         self._data_version = data_version
-        self._monster_page.set_item_images(item_images or {})
+        self._quest_view.set_npcs(npcs)
+        self._monster_page.set_items(items)
         self._monster_page.set_data_version(data_version)
+        self._item_list.set_items(items)
+        self._item_page.set_data(npcs, monsters, build_drops(monsters), data_version)
         self._list_page.set_quests(quests)
         self._quest_view.set_data_version(data_version)
         self._quest_view.set_monsters(monsters or {})
@@ -181,9 +195,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Edytor", str(exc))
             return
         # W trybie autora widać też szkice.
-        self.set_quests(
-            result.quests, result.data_version, result.monsters, result.item_images, result.npc_images
-        )
+        self.set_quests(result.quests, result.data_version, result.monsters, result.items, result.npcs)
         quest = next((q for q in result.quests if q.id == quest_id), None)
         if quest is not None:
             self._open_quest(quest)
@@ -192,11 +204,43 @@ class MainWindow(QMainWindow):
         self._quest_view.show_quest(quest)
         self._stack.setCurrentWidget(self._quest_view)
 
-    def _open_monster(self, monster: Monster, came_from: QWidget) -> None:
-        self._monster_return = came_from
-        self._monster_page.set_back_text("← Quest" if came_from is self._quest_view else "← Lista")
-        self._monster_page.show_monster(monster)
-        self._stack.setCurrentWidget(self._monster_page)
+    def _open_detail(self, kind: str, target: object) -> None:
+        """Otwiera stronę potwora albo przedmiotu i zapamiętuje, skąd przyszliśmy."""
+        current = self._stack.currentWidget()
+        if current is self._monster_page and self._monster_page.monster is not None:
+            self._history.append(("monster", self._monster_page.monster))
+        elif current is self._item_page and self._item_page.item is not None:
+            self._history.append(("item", self._item_page.item))
+        else:
+            # Ze zwykłej strony (lista, quest) zaczynamy historię od nowa.
+            self._history = [("page", current)]
+        self._show_detail(kind, target)
+
+    def _show_detail(self, kind: str, target: object) -> None:
+        previous_kind, previous = self._history[-1]
+        if previous_kind == "monster":
+            back = "← Potwór"
+        elif previous_kind == "item":
+            back = "← Przedmiot"
+        else:
+            back = "← Quest" if previous is self._quest_view else "← Lista"
+        page = self._monster_page if kind == "monster" else self._item_page
+        page.set_back_text(back)
+        if kind == "monster":
+            self._monster_page.show_monster(target)
+        else:
+            self._item_page.show_item(target)
+        self._stack.setCurrentWidget(page)
+
+    def _back(self) -> None:
+        if not self._history:
+            self._stack.setCurrentWidget(self._home)
+            return
+        kind, target = self._history.pop()
+        if kind == "page":
+            self._stack.setCurrentWidget(target)
+        else:
+            self._show_detail(kind, target)
 
     def _show_list(self) -> None:
         self._stack.setCurrentWidget(self._list_page)

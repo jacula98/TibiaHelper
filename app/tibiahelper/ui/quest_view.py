@@ -37,7 +37,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.issues import issue_url
-from ..core.models import MapPoint, Monster, Quest, Step
+from ..core.models import MapPoint, Monster, Npc, Quest, Step
 from ..core.monsters import download_items, download_missing, image_path, item_key, sprite_path
 from ..core.progress import ProgressStore
 from .map_window import KIND_COLORS, KIND_NAMES, MapPanel
@@ -92,7 +92,7 @@ class QuestView(QWidget):
         self._progress = progress
         self._sprites_dir = sprites_dir
         self._npcs_dir = npcs_dir
-        self._npc_images: dict[str, str] = {}
+        self._npcs: dict[str, Npc] = {}
         self._monsters: dict[str, Monster] = {}
         self._tiles: list[_MonsterTile] = []
         self._sprite_loader = _SpriteLoader(self)
@@ -162,11 +162,15 @@ class QuestView(QWidget):
     def set_monsters(self, monsters: dict[str, Monster]) -> None:
         self._monsters = monsters
 
-    def set_npc_images(self, images: dict[str, str]) -> None:
-        self._npc_images = images
+    def set_npcs(self, npcs: dict[str, Npc]) -> None:
+        self._npcs = npcs
+
+    def _npc_url(self, name: str) -> str | None:
+        npc = self._npcs.get(name.lower())
+        return npc.image_url if npc else None
 
     def _npc_image(self, name: str) -> Path | None:
-        return image_path(self._npcs_dir, item_key(name)) if name in self._npc_images else None
+        return image_path(self._npcs_dir, item_key(name)) if self._npc_url(name) else None
 
     def show_quest(self, quest: Quest) -> None:
         self._quest = quest
@@ -264,10 +268,10 @@ class QuestView(QWidget):
             if i in self._monsters and sprite_path(self._sprites_dir, i) is None
         ]
         npcs = {
-            marker.label: self._npc_images[marker.label]
+            marker.label: self._npc_url(marker.label)
             for step in quest.steps
             for marker in step.markers
-            if marker.kind == "npc" and marker.label in self._npc_images and self._npc_image(marker.label) is None
+            if marker.kind == "npc" and self._npc_url(marker.label) and self._npc_image(marker.label) is None
         }
         if not missing and not npcs:
             return

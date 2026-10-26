@@ -72,7 +72,7 @@ def main() -> int:
         else:
             result = load_best_local(bundled_data_file(), cached_data_file())
         window.set_quests(
-            visible(result), result.data_version, result.monsters, result.item_images, result.npc_images
+            visible(result), result.data_version, result.monsters, result.items, result.npcs
         )
     except QuestFileError as exc:
         # Bez danych okno i tak się otwiera; użytkownik widzi komunikat zamiast awarii.
@@ -101,8 +101,8 @@ def main() -> int:
                 visible(update.result),
                 update.data_version,
                 update.result.monsters,
-                update.result.item_images,
-                update.result.npc_images,
+                update.result.items,
+                update.result.npcs,
             )
             if update.spawns_raw is not None:
                 window.set_spawns(load_spawns(bundled_spawns_file(), cached_spawns_file()))

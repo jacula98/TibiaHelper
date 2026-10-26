@@ -15,7 +15,7 @@ from PySide6.QtGui import QColor, QFont, QImage, QMovie, QPainter
 from PySide6.QtWidgets import QListView, QStyle, QStyledItemDelegate, QStyleOptionViewItem
 
 from ..core.models import Monster
-from ..core.monsters import describe, download_missing, sprite_path
+from ..core.monsters import describe, ensure_image, image_path
 from . import theme
 from .monster_widgets import animation_crop
 
@@ -31,33 +31,36 @@ class _Loaded(QObject):
 
 
 class SpriteAnimator(QObject):
-    """Bieżące klatki animacji potworów widocznych na ekranie."""
+    """Bieżące klatki animacji obrazków (potworów, przedmiotów) widocznych na ekranie.
 
-    def __init__(self, sprites_dir: Path, parent: QObject | None = None) -> None:
+    Obrazek to plik folder/<key>.gif; brakujący pobieramy w tle z podanego adresu.
+    """
+
+    def __init__(self, folder: Path, parent: QObject | None = None) -> None:
         super().__init__(parent)
-        self._sprites_dir = sprites_dir
+        self._folder = folder
         self._movies: dict[str, tuple[QMovie, QRect]] = {}
         self._used: dict[str, float] = {}
         # Pobieranie: kolejka i zbiór „już zlecone”, żeby nie pobierać dwa razy (ani bez końca po błędzie).
-        self._queue: deque[Monster] = deque()
+        self._queue: deque[tuple[str, str]] = deque()
         self._requested: set[str] = set()
         self._lock = threading.Lock()
         self._worker: threading.Thread | None = None
         self._signals = _Loaded(self)
         self.loaded = self._signals.loaded
 
-    def frame(self, monster: Monster) -> QImage | None:
+    def frame(self, key: str, url: str | None) -> QImage | None:
         """Bieżąca klatka (przycięta do postaci) albo None, gdy obrazka jeszcze nie ma."""
-        self._used[monster.id] = time.monotonic()
-        entry = self._movies.get(monster.id)
+        self._used[key] = time.monotonic()
+        entry = self._movies.get(key)
         if entry is None:
-            path = sprite_path(self._sprites_dir, monster.id)
+            path = image_path(self._folder, key)
             if path is None:
-                self._request(monster)
+                self._request(key, url)
                 return None
             movie = QMovie(str(path), parent=self)
             movie.start()
-            entry = self._movies[monster.id] = (movie, animation_crop(path))
+            entry = self._movies[key] = (movie, animation_crop(path))
         movie, crop = entry
         image = movie.currentImage()
         return None if image.isNull() else image.copy(crop)
@@ -72,12 +75,12 @@ class SpriteAnimator(QObject):
                 entry[0].stop()
                 entry[0].deleteLater()
 
-    def _request(self, monster: Monster) -> None:
-        if monster.image_url is None or monster.id in self._requested:
+    def _request(self, key: str, url: str | None) -> None:
+        if url is None or key in self._requested:
             return
-        self._requested.add(monster.id)
+        self._requested.add(key)
         with self._lock:
-            self._queue.append(monster)
+            self._queue.append((key, url))
             if self._worker is None or not self._worker.is_alive():
                 # daemon=True: zamknięcie programu nie czeka na pobieranie.
                 self._worker = threading.Thread(target=self._download_all, daemon=True, name="sprites")
@@ -90,9 +93,12 @@ class SpriteAnimator(QObject):
                     self._worker = None
                     return
                 # Najpierw ostatnio zlecone: to te, które użytkownik właśnie ogląda.
-                monster = self._queue.pop()
-            if download_missing(self._sprites_dir, [monster]):
-                self.loaded.emit()  # sygnał z wątku w tle trafia do okna przez kolejkę Qt
+                key, url = self._queue.pop()
+            try:
+                ensure_image(self._folder, key, url)
+            except (OSError, ValueError):
+                continue  # brak obrazka: zostaje łapka, drugi raz nie próbujemy (_requested)
+            self.loaded.emit()  # sygnał z wątku w tle trafia do okna przez kolejkę Qt
 
 
 class MonsterModel(QAbstractListModel):
@@ -155,7 +161,7 @@ class MonsterDelegate(QStyledItemDelegate):
         painter.drawRoundedRect(tile, 8, 8)
 
         sprite = QRectF(tile.center().x() - SPRITE_SIZE / 2, tile.top() + 6, SPRITE_SIZE, SPRITE_SIZE)
-        frame = self._animator.frame(monster)
+        frame = self._animator.frame(monster.id, monster.image_url)
         if frame is None:
             painter.setPen(QColor(theme.MUTED))
             painter.drawText(sprite, Qt.AlignmentFlag.AlignCenter, "🐾")

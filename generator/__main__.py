@@ -9,8 +9,8 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator monster "Skeleton"      # dodaj/odśwież potwora (HP, exp, obrazek)
     python -m generator import-all               # wszystkie potwory + brakujące questy (szkice)
     python -m generator spawns                   # miejsca występowania potworów z TibiaRoute
-    python -m generator npcs                     # NPC z pozycjami do pinezek w edytorze (data/npcs.json)
-    python -m generator items                    # obrazki przedmiotów z lootu potworów
+    python -m generator npcs                     # NPC z pozycjami i obrazkami (pinezki, „komu sprzedać”)
+    python -m generator items                    # przedmioty: ceny, kto kupuje/sprzedaje, obrazki
 """
 
 import argparse
@@ -59,10 +59,11 @@ def main(argv: list[str] | None = None) -> int:
 
     commands.add_parser("spawns", help="pobierz miejsca występowania potworów z TibiaRoute")
 
-    npcs_cmd = commands.add_parser("npcs", help="pobierz NPC z pozycjami do data/npcs.json (dla edytora)")
+    npcs_cmd = commands.add_parser("npcs", help="pobierz NPC z pozycjami i obrazkami do data/quests.json")
     npcs_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
 
-    commands.add_parser("items", help="znajdź na wiki obrazki przedmiotów z lootu potworów")
+    items_cmd = commands.add_parser("items", help="pobierz przedmioty (ceny, NPC, obrazki) do data/quests.json")
+    items_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -134,18 +135,20 @@ def main(argv: list[str] | None = None) -> int:
 
         elif args.command == "npcs":
             pages = bulk.load_pages(client, client.embedded_in("Infobox NPC"), args.refresh)
-            data = npcs.build(pages, client.image_urls(monsters.sprite_file(title) for title in pages))
-            npcs.save(data)
-            quest_data = quests_file.load()
-            quest_data["npc_images"] = npcs.images_by_name(data)
-            quests_file.save(quest_data)
-            print(f"NPC z pozycją: {len(data['npcs'])} (stron: {len(pages)}), z obrazkiem: {len(quest_data['npc_images'])}")
+            data = quests_file.load()
+            data["npcs"] = npcs.build(pages, client.image_urls(monsters.sprite_file(title) for title in pages))
+            quests_file.save(data)
+            with_image = sum("image_url" in n for n in data["npcs"])
+            print(f"NPC z pozycją: {len(data['npcs'])} (stron: {len(pages)}), z obrazkiem: {with_image}")
 
         elif args.command == "items":
+            pages = bulk.load_pages(client, client.embedded_in("Infobox Object"), args.refresh)
             data = quests_file.load()
-            found, missing = items.import_images(data, client)
+            images = client.image_urls(monsters.sprite_file(title) for title in pages)
+            data["items"] = items.build(pages, images, data)
             quests_file.save(data)
-            print(f"Przedmioty z obrazkiem: {found}, bez obrazka na wiki: {missing}")
+            traded = sum(bool(i.get("sell_to") or i.get("buy_from")) for i in data["items"])
+            print(f"Przedmioty: {len(data['items'])}, z NPC (kupno/sprzedaż): {traded}")
 
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)

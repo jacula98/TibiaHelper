@@ -6,7 +6,7 @@ przekazujemy w adresie URL, a użytkownik sam klika „Submit” na GitHubie.
 
 import urllib.parse
 
-from .models import Monster, Quest
+from .models import Item, Monster, Quest
 
 NEW_ISSUE_URL = "https://github.com/jacula98/TibiaHelper/issues/new"
 
@@ -34,6 +34,14 @@ def monster_issue_url(monster: Monster, data_version: int) -> str:
             f"Rewizja TibiaWiki: {monster.wiki_revision or 'brak'}",
             f"Źródło: {monster.source_url}",
         ],
+    )
+
+
+def item_issue_url(item: Item, data_version: int) -> str:
+    return _url(
+        f"[przedmiot: {item.name}] Błąd w danych przedmiotu",
+        "(opisz problem, np. zła cena albo NPC, który tego nie kupuje)",
+        [f"Przedmiot: {item.name}", f"Wersja danych: {data_version}", f"Źródło: {item.source_url}"],
     )
 
 
