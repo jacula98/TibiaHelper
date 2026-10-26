@@ -15,7 +15,10 @@ do przeglądarki.
   umiejętności, loot i mapę miejsc (expowisk), w których występuje. Listę można sortować po HP i expie.
 - **Zakładka „Przedmioty”.** Wyszukasz dowolny przedmiot i zobaczysz, któremu NPC go sprzedać i za ile
   (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada.
-- **Zakładka „Quality of life”.** Przycisk do mapy [tibiamaps.io](https://tibiamaps.io/) oraz „Loot filter & market”:
+- **Zakładka „Quality of life”.** „TibiaMaps”: wybierasz wersję (z markerami, tylko POI albo bez, z siatką lub bez)
+  i klikasz „Wgraj mapę”. Program sam pobiera pełną minimapę z [tibiamaps.io](https://tibiamaps.io/) i wgrywa ją
+  do Tibii (`%LOCALAPPDATA%\Tibia\packages\Tibia\minimap`, stara minimapa trafia raz do `minimap.tibiahelper-backup`).
+  Oraz „Loot filter & market”:
   jednym kliknięciem „Wgraj” każda postać na koncie dostaje listę pomijanych śmieci w loocie i ceny z Marketu
   dla itemów do delivery tasków i imbu (ustawienia od Yuukiciu). Przed wgraniem zamknij Tibię. Twoje listy
   zostają, a oryginalne pliki mają kopię z końcówką `.tibiahelper-backup` w folderze postaci
