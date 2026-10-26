@@ -5,9 +5,11 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator add-draft "The Annihilator Quest" [--id annihilator-quest]
     python -m generator review annihilator-quest
     python -m generator check-updates
+    python -m generator coords "Tom"            # współrzędne NPC/miejsca do pinezek na mapie
 """
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -15,8 +17,9 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import quests, quests_file  # noqa: E402
+from . import cache, quests, quests_file  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
+from .wikitext import infobox_position, mapper_coords  # noqa: E402
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -35,6 +38,10 @@ def main(argv: list[str] | None = None) -> int:
     review.add_argument("quest_id")
 
     commands.add_parser("check-updates", help="sprawdź, które questy zmieniły się na wiki")
+
+    coords = commands.add_parser("coords", help="pokaż współrzędne ze strony (NPC, miejsca, questa)")
+    coords.add_argument("title")
+    coords.add_argument("--refresh", action="store_true")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -74,10 +81,35 @@ def main(argv: list[str] | None = None) -> int:
                 print("Przejrzane questy ze zmianami oznaczono jako needs_review.")
             print(f"Zmienionych questów: {len(changes)}")
 
+        elif args.command == "coords":
+            print_coords(client, args.title, args.refresh)
+
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)
         return 1
     return 0
+
+
+def print_coords(client: WikiClient, title: str, refresh: bool) -> None:
+    """Wypisuje gotowe do wklejenia punkty "markers" (label i kind autor poprawia ręcznie)."""
+    pages = [title, title + quests.SPOILER_SUFFIX]
+    cached = {t: cache.load(t) for t in pages}
+    if refresh or cached[title] is None:
+        cached = client.get_pages(pages)
+        for requested, page in cached.items():
+            if page is not None:
+                cache.save(requested, page)
+    if cached[title] is None:
+        raise LookupError(f"Na TibiaWiki nie ma strony {title!r}")
+
+    position = infobox_position(cached[title].wikitext)
+    if position:
+        print(f"Infobox ({title}):")
+        print(json.dumps({**position, "label": title, "kind": "npc"}, ensure_ascii=False))
+    for requested, page in cached.items():
+        for found in mapper_coords(page.wikitext) if page else []:
+            print(f"\n{requested}: …{found.pop('context')[-80:]}")
+            print(json.dumps({**found, "label": "TODO", "kind": "place"}, ensure_ascii=False))
 
 
 if __name__ == "__main__":

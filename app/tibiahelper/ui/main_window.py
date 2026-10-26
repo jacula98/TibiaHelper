@@ -17,9 +17,12 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..core.models import Quest
+from ..core.models import MapPoint, Quest
+from ..core.paths import maps_dir
 from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
+from .home_page import HomePage
+from .map_window import MapWindow
 from .quest_list import QuestListPage
 from .quest_view import QuestView
 from .settings_dialog import SettingsDialog
@@ -36,10 +39,13 @@ class MainWindow(QMainWindow):
         self.resize(380, 560)
         self._data_version = 0
 
-        # Dwie "strony" w jednym oknie zamiast dwóch okien: mniej miejsca obok gry.
+        # Kilka "stron" w jednym oknie zamiast wielu okien: mniej miejsca obok gry.
+        self._home = HomePage()
         self._list_page = QuestListPage(progress)
         self._quest_view = QuestView(progress)
+        self._map: MapWindow | None = None
         self._stack = QStackedWidget()
+        self._stack.addWidget(self._home)
         self._stack.addWidget(self._list_page)
         self._stack.addWidget(self._quest_view)
 
@@ -54,7 +60,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(self._stack, 1)
         self.setCentralWidget(central)
 
+        self._home.quests_requested.connect(self._show_list)
+        self._list_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._list_page.quest_selected.connect(self._open_quest)
+        self._quest_view.map_requested.connect(self._show_map)
         self._quest_view.back_requested.connect(self._show_list)
         self._quest_view.progress_changed.connect(self._list_page.refresh_progress)
 
@@ -106,6 +115,8 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802 (nazwa z Qt)
         self._save_settings()
+        if self._map is not None:
+            self._map.close()
         super().closeEvent(event)
 
     def _open_quest(self, quest: Quest) -> None:
@@ -114,6 +125,12 @@ class MainWindow(QMainWindow):
 
     def _show_list(self) -> None:
         self._stack.setCurrentWidget(self._list_page)
+
+    def _show_map(self, points: list[MapPoint], focus: MapPoint) -> None:
+        # Okno mapy tworzymy przy pierwszym użyciu i potem tylko pokazujemy ponownie.
+        if self._map is None:
+            self._map = MapWindow(maps_dir(), self)
+        self._map.show_points(points, focus)
 
 
 class UpdateBanner(QFrame):

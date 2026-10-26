@@ -39,3 +39,8 @@ def cached_data_file() -> Path:
 
 def settings_file() -> Path:
     return user_data_dir() / "settings.json"
+
+
+def maps_dir() -> Path:
+    """Pobrane mapy pięter (tibiamaps)."""
+    return user_data_dir() / "maps"

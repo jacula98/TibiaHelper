@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QListWidget,
     QListWidgetItem,
+    QPushButton,
     QSpinBox,
     QVBoxLayout,
     QWidget,
@@ -22,6 +23,7 @@ MAX_LEVEL = 5000
 class QuestListPage(QWidget):
     # object, a nie Quest: Qt nie zna typów pydantic, a object przekazuje referencję bez kopiowania.
     quest_selected = Signal(object)
+    back_requested = Signal()
 
     def __init__(self, progress: ProgressStore, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -38,12 +40,19 @@ class QuestListPage(QWidget):
         self._list = QListWidget()
         self._empty = QLabel(alignment=Qt.AlignmentFlag.AlignCenter, wordWrap=True)
 
+        back = QPushButton("← Menu")
+        back.clicked.connect(self.back_requested)
+        top = QHBoxLayout()
+        top.addWidget(back)
+        top.addStretch(1)
+
         filters = QHBoxLayout()
         filters.addWidget(self._search, 1)
         filters.addWidget(self._level)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)  # odstępy daje już główne okno
+        layout.addLayout(top)
         layout.addLayout(filters)
         layout.addWidget(self._list, 1)
         layout.addWidget(self._empty, 1)

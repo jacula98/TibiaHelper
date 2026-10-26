@@ -11,11 +11,18 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 # Najnowsza wersja formatu pliku, którą ta wersja aplikacji rozumie.
 # Podbijamy ją tylko przy zmianach niekompatybilnych wstecz.
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2  # 2: punkty na mapie w krokach (Step.markers)
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
 QuestStatus = Literal["draft", "reviewed"]
+
+# Zasięg mapy Tibii (zgodny z mapami tibiamaps: 2560 x 2048 kratek, piętra 0-15).
+MAP_X_MIN, MAP_X_MAX = 31744, 31744 + 2560 - 1
+MAP_Y_MIN, MAP_Y_MAX = 30976, 30976 + 2048 - 1
+GROUND_FLOOR = 7  # w Tibii z=7 to parter, mniejsze z są wyżej, większe pod ziemią
+
+MarkerKind = Literal["npc", "place", "passage", "use"]
 
 
 class _Model(BaseModel):
@@ -24,11 +31,33 @@ class _Model(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, str_strip_whitespace=True)
 
 
+class MapPoint(_Model):
+    """Punkt na mapie Tibii, pokazywany po kliknięciu pinezki przy kroku."""
+
+    x: int = Field(ge=MAP_X_MIN, le=MAP_X_MAX)
+    y: int = Field(ge=MAP_Y_MIN, le=MAP_Y_MAX)
+    z: int = Field(ge=0, le=15)
+    label: str = Field(min_length=1)
+    # npc / place (miejsce) / passage (przejście, np. dziura, drabina) / use (coś do użycia)
+    kind: MarkerKind = "place"
+    # Fragment tekstu kroku, za którym stoi pinezka. Brak = pinezka na końcu tekstu.
+    anchor: str | None = None
+
+
 class Step(_Model):
     text: str = Field(min_length=1)
     location: str | None = None
     npc: str | None = None
     items: list[str] = Field(default_factory=list)
+    markers: list[MapPoint] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _check_anchors(self) -> "Step":
+        # Literówka w anchor schowałaby pinezkę, więc łapiemy ją już przy walidacji.
+        for marker in self.markers:
+            if marker.anchor is not None and marker.anchor not in self.text:
+                raise ValueError(f"anchor {marker.anchor!r} nie występuje w tekście kroku")
+        return self
 
 
 class Quest(_Model):

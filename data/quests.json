@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "data_version": 4,
+  "schema_version": 2,
+  "data_version": 5,
   "quests": [
     {
       "id": "annihilator-quest",
@@ -18,7 +18,17 @@
         },
         {
           "text": "Wejdź do Hero Cave na północy Edronu i zejdź na 6. poziom. Po drodze: Hunters, Wild Warriors, Demon Skeletons, Priestesses, Dragons, Monks, Heroes i Minotaur Guards.",
-          "location": "Edron, Hero Cave"
+          "location": "Edron, Hero Cave",
+          "markers": [
+            {
+              "x": 33164,
+              "y": 31638,
+              "z": 7,
+              "label": "Wejście do Hero Cave",
+              "kind": "passage",
+              "anchor": "Wejdź do Hero Cave"
+            }
+          ]
         },
         {
           "text": "Na dole idź w prawo, potem korytarzem na południe naprzeciw pokoju z Fire Elementalami, aż do bramki lvl-owej (level 100) i drzwi questowych."
@@ -64,6 +74,16 @@
           "location": "Jakundaf Desert",
           "items": [
             "Shovel"
+          ],
+          "markers": [
+            {
+              "x": 32649,
+              "y": 32093,
+              "z": 7,
+              "label": "Stos kamieni (Loose Stone Pile), wejście do lochu",
+              "kind": "passage",
+              "anchor": "między Venore a Thais"
+            }
           ]
         },
         {
@@ -113,6 +133,16 @@
           "location": "Rookgaard",
           "items": [
             "Shovel"
+          ],
+          "markers": [
+            {
+              "x": 32151,
+              "y": 32151,
+              "z": 7,
+              "label": "Groby (wejście do questa)",
+              "kind": "place",
+              "anchor": "na północnym wschodzie Rookgaardu"
+            }
           ]
         },
         {

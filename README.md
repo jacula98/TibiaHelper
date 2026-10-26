@@ -28,6 +28,11 @@ kopii lokalnej. Autor może to wyłączyć: `python -m tibiahelper --no-update`
 Przycisk „Zgłoś błąd” (z logo GitHuba) otwiera w przeglądarce nowe zgłoszenie (Issue)
 z wypełnioną nazwą questa i wersją danych. Do wysłania potrzebne jest darmowe konto GitHub.
 
+Po starcie widać menu: Questy (Expowiska i Bossy dojdą później). Przy miejscach w krokach jest
+pinezka: kliknięcie otwiera okno z mapą Tibii i kropką w tym miejscu. Mapy pięter pochodzą
+z projektu [tibiamaps](https://github.com/tibiamaps/tibia-map-data) i pobierają się przy pierwszym
+użyciu do `%APPDATA%\TibiaHelper\maps`.
+
 ## Generator danych (dla autora)
 
 Generator pobiera strony questów z [TibiaWiki](https://tibia.fandom.com/) przez MediaWiki API
@@ -38,6 +43,7 @@ python -m generator add-draft "Katana Quest"     # pobiera stronę + /Spoiler, d
 python -m generator review katana-quest          # po uzupełnieniu kroków: status reviewed
 python -m generator check-updates                # które questy zmieniły się na wiki
 python -m generator fetch "Katana Quest" --refresh   # pobierz ponownie (np. przed ponownym przeglądem)
+python -m generator coords "Tom"                 # współrzędne NPC/miejsca do pinezek (pole "markers")
 ```
 
 Kroki questa piszemy ręcznie (razem z Claude) na podstawie strony `/Spoiler` z cache.

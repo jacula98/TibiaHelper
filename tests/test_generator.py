@@ -220,3 +220,25 @@ def test_repo_data_uses_polish_terms():
     data_file = Path(__file__).parents[1] / "data" / "quests.json"
     text = json.dumps(json.loads(data_file.read_text(encoding="utf-8")), ensure_ascii=False)
     assert find_forbidden(text) == []
+
+
+# --- współrzędne do mapy -------------------------------------------------------
+
+
+def test_wiki_coord():
+    from generator.wikitext import wiki_coord
+
+    assert wiki_coord("125.151") == 32151
+    assert wiki_coord("127") == 127 * 256
+
+
+def test_mapper_coords_and_infobox_position():
+    from generator.wikitext import infobox_position, mapper_coords
+
+    text = "Open the [[Loose Stone Pile]] ({{Mapper Coords|127.137|125.93|7|4|text=here}})"
+    assert mapper_coords(text) == [
+        {"x": 32649, "y": 32093, "z": 7, "context": "Open the Loose Stone Pile ("}
+    ]
+    npc = "{{Infobox NPC\n| name = Tom\n| posx = 125.85\n| posy = 125.199\n| posz = 7\n}}"
+    assert infobox_position(npc) == {"x": 32085, "y": 32199, "z": 7}
+    assert infobox_position("{{Infobox NPC\n| name = X\n}}") is None
