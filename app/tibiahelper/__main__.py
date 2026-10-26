@@ -6,7 +6,8 @@ import sys
 
 from PySide6.QtWidgets import QApplication, QMessageBox
 
-from .core.paths import bundled_data_file
+from .core.paths import bundled_data_file, progress_file
+from .core.progress import ProgressStore
 from .core.repository import QuestFileError, load_quest_file
 from .ui.main_window import MainWindow
 
@@ -30,7 +31,7 @@ def main() -> int:
         logging.error("%s", exc)
         error = str(exc)
 
-    window = MainWindow(quests)
+    window = MainWindow(quests, ProgressStore(progress_file()))
     window.show()
     if error:
         QMessageBox.warning(window, "TibiaHelper", f"Nie udało się wczytać questów.\n\n{error}")

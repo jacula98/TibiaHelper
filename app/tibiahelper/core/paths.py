@@ -1,5 +1,6 @@
 """Ścieżki do plików aplikacji."""
 
+import os
 import sys
 from pathlib import Path
 
@@ -14,3 +15,18 @@ def bundled_data_file() -> Path:
     if bundle_dir:
         return Path(bundle_dir) / "data" / "quests.json"
     return Path(__file__).resolve().parents[3] / "data" / "quests.json"
+
+
+def user_data_dir() -> Path:
+    """Katalog na dane użytkownika: %APPDATA%/TibiaHelper na Windowsie.
+
+    Poza Windowsem (np. testy na Linuksie) używamy ~/.tibiahelper.
+    """
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        return Path(appdata) / "TibiaHelper"
+    return Path.home() / ".tibiahelper"
+
+
+def progress_file() -> Path:
+    return user_data_dir() / "progress.json"

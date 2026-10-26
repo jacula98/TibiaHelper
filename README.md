@@ -14,3 +14,5 @@ python -m tibiahelper
 
 Domyślnie aplikacja pokazuje tylko questy ze statusem `reviewed`.
 Autor może podejrzeć szkice: `python -m tibiahelper --show-drafts`.
+
+Postęp (odhaczone kroki) zapisuje się w `%APPDATA%\TibiaHelper\progress.json`.
