@@ -10,6 +10,7 @@ from tibiahelper.core.models import WIKI_URL_PREFIX
 
 from . import cache
 from .wiki_api import WikiClient, WikiPage
+from .terminology import apply_terms
 from .wikitext import parse_infobox
 
 SPOILER_SUFFIX = "/Spoiler"
@@ -62,7 +63,7 @@ def title_from_url(url: str) -> str:
 
 def make_draft(pages: QuestPages, quest_id: str | None = None) -> dict:
     """Szkic questa z danych infoboxu. Kroki uzupełnia autor razem z Claude."""
-    info = parse_infobox(pages.main.wikitext)
+    info = {key: apply_terms(value) for key, value in parse_infobox(pages.main.wikitext).items()}
     name = info.get("name") or pages.main.title
     level = info.get("lvl", "")
     return {

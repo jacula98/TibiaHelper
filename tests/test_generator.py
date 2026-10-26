@@ -4,7 +4,11 @@ from datetime import UTC, datetime
 
 import pytest
 
+import json
+from pathlib import Path
+
 from generator import quests
+from generator.terminology import apply_terms, find_forbidden
 from generator.wiki_api import WikiClient, WikiPage
 from generator.wikitext import parse_infobox, strip_markup
 from tibiahelper.core.models import Quest
@@ -191,3 +195,28 @@ def test_check_updates_flags_only_changed_reviewed_quests():
 def test_title_and_url_round_trip():
     title = "The Desert Dungeon Quest"
     assert quests.title_from_url(quests.source_url(title)) == title
+
+
+# --- nazewnictwo --------------------------------------------------------------
+
+
+def test_apply_terms_replaces_gate_of_expertise():
+    assert apply_terms("Enter the gate of expertise (lvl 20)") == "Enter the bramka lvl-owa (lvl 20)"
+    assert apply_terms("Two Gates of Expertise") == "Two bramki lvl-owe"
+
+
+def test_find_forbidden_reports_matched_text():
+    assert find_forbidden("przez Gate of Expertise") == ["Gate of Expertise"]
+
+
+def test_make_draft_applies_terms():
+    page = WikiPage("Q", 1, "{{Infobox Quest\n| reward = Access to [[Gate of Expertise]]\n}}")
+    draft = quests.make_draft(quests.QuestPages(main=page, spoiler=None))
+    assert draft["rewards"] == ["Access to bramka lvl-owa"]
+
+
+def test_repo_data_uses_polish_terms():
+    """Reguła autora: w danych aplikacji nie ma angielskiej nazwy "Gate of Expertise"."""
+    data_file = Path(__file__).parents[1] / "data" / "quests.json"
+    text = json.dumps(json.loads(data_file.read_text(encoding="utf-8")), ensure_ascii=False)
+    assert find_forbidden(text) == []
