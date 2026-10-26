@@ -84,7 +84,12 @@ def import_quests(data: dict, client: WikiClient, refresh: bool = False) -> tupl
     Podstrony (np. „…/Spoiler”) też mają ramkę questa na wiki, ale to nie są osobne questy.
     """
     titles = [t for t in client.embedded_in("Infobox Quest") if "/" not in t]
-    data["quests"] = [q for q in data["quests"] if "/" not in quests.title_from_url(q["source_url"])]
+    # Usuwamy tylko nieruszone szkice podstron: pracy autora nie kasujemy.
+    data["quests"] = [
+        q
+        for q in data["quests"]
+        if "/" not in quests.title_from_url(q["source_url"]) or not _is_untouched_draft(q)
+    ]
     existing = {quests.title_from_url(q["source_url"]): q for q in data["quests"]}
     todo = [t for t in titles if t not in existing or _is_untouched_draft(existing[t])]
     pages = load_pages(client, [t for title in todo for t in (title, title + quests.SPOILER_SUFFIX)], refresh)
