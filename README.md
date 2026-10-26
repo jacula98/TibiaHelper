@@ -15,6 +15,11 @@ do przeglądarki.
   umiejętności, loot i mapę miejsc (expowisk), w których występuje. Listę można sortować po HP i expie.
 - **Zakładka „Przedmioty”.** Wyszukasz dowolny przedmiot i zobaczysz, któremu NPC go sprzedać i za ile
   (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada.
+- **Zakładka „Quality of life”.** Przycisk do mapy [tibiamaps.io](https://tibiamaps.io/) oraz „Loot filter & market”:
+  jednym kliknięciem „Wgraj” każda postać na koncie dostaje listę pomijanych śmieci w loocie i ceny z Marketu
+  dla itemów do delivery tasków i imbu (ustawienia od Yuukiciu). Przed wgraniem zamknij Tibię. Twoje listy
+  zostają, a oryginalne pliki mają kopię z końcówką `.tibiahelper-backup` w folderze postaci
+  (`%LOCALAPPDATA%\Tibia\packages\Tibia\characterdata`).
 - **Zgłoś błąd** przy queście, potworze i przedmiocie otwiera gotowe zgłoszenie na GitHubie.
 - **Przezroczystość okna** (10–100%) ustawiasz trybikiem ⚙ w prawym górnym rogu.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
@@ -46,9 +51,10 @@ mapy pięter i obrazki potworów. Usunięcie tego folderu przywraca program do s
 - Questy i potwory: [TibiaWiki](https://tibia.fandom.com/), licencja CC BY-SA 4.0.
 - Mapy: [tibiamaps](https://github.com/tibiamaps/tibia-map-data).
 - Miejsca występowania potworów: Źródło danych: [tibiaroute.com](https://tibiaroute.com/) (za zgodą TibiaRoute).
+- Ustawienia loot filtra i cen (`data/qol/`): [Yuukiciu](https://www.youtube.com/watch?v=4fIlbgTtXMg).
 - Tibia, obrazki potworów i nazwy z gry: © CipSoft GmbH. Projekt nie jest powiązany z CipSoft ani z Fandom.
 
-Kod programu jest na licencji MIT, a dane w `data/` na CC BY-SA 4.0.
+Kod programu jest na licencji MIT, a dane w `data/` na CC BY-SA 4.0 (poza `data/qol/`, których autorem jest Yuukiciu).
 Szczegóły: [docs/zrodla-danych.md](docs/zrodla-danych.md).
 
 ---

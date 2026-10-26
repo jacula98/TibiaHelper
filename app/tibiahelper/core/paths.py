@@ -69,3 +69,8 @@ def bundled_spawns_file() -> Path:
 def cached_spawns_file() -> Path:
     """spawns.json pobrany z GitHuba razem z aktualizacją poradników."""
     return user_data_dir() / "spawns.json"
+
+
+def bundled_qol_dir() -> Path:
+    """Gotowe ustawienia lootu i cen (Quality of life), dołączone obok quests.json."""
+    return bundled_data_file().with_name("qol")

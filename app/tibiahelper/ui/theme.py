@@ -69,6 +69,13 @@ QPushButton#menu {{
 }}
 QPushButton#menu:hover {{ border-color: {ACCENT}; }}
 QPushButton#menu:disabled {{ color: {MUTED}; background: transparent; }}
+QPushButton#submenu {{
+    text-align: left;
+    padding: 9px 12px;
+    font-size: 13px;
+    border-radius: 10px;
+}}
+QPushButton#submenu:hover {{ border-color: {ACCENT}; }}
 QToolButton#icon {{ border: none; background: transparent; font-size: 18px; padding: 2px 6px; }}
 QToolButton#icon:hover {{ background: {SURFACE_HOVER}; }}
 

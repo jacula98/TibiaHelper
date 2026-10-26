@@ -1,4 +1,4 @@
-"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Potwory, Przedmioty, Expowiska, Bossy)."""
+"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Potwory, Przedmioty, Expowiska, Bossy, Quality of life)."""
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
@@ -8,6 +8,7 @@ class HomePage(QWidget):
     quests_requested = Signal()
     monsters_requested = Signal()
     items_requested = Signal()
+    qol_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -32,6 +33,10 @@ class HomePage(QWidget):
             button = _menu_button(text, "Wkrótce")
             button.setEnabled(False)
             layout.addWidget(button)
+
+        qol = _menu_button("✨  Quality of life", "Mapa Tibii, loot filter i ceny z Marketu")
+        qol.clicked.connect(self.qol_requested)
+        layout.addWidget(qol)
 
         layout.addStretch(1)
 

@@ -49,6 +49,7 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
 - `data/quests.json`: questy i potwory (TibiaWiki, CC BY-SA 4.0). `data_version` rośnie przy każdym zapisie;
   po tym aplikacja graczy poznaje, że na GitHubie są nowsze poradniki.
 - `data/spawns.json`: miejsca występowania potworów (TibiaRoute, za zgodą, patrz [zrodla-danych.md](zrodla-danych.md)).
+- `data/qol/`: gotowe ustawienia „Loot filter & market” (Yuukiciu). Aplikacja dopisuje je do `lootBlackWhitelist.json` i `itemprices.json` każdej postaci. Przy wydaniu .exe ten folder musi być dołączony obok `quests.json`.
 - Listy `items` (przedmioty) i `npcs` (NPC z pozycjami) są w `data/quests.json`. W edytorze zaznacz imię
   NPC w tekście kroku i kliknij „👤 NPC”: pinezka stanie tam, gdzie stoi ten NPC.
 
