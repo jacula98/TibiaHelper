@@ -4,7 +4,9 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
 
 - **Stack:** Python 3.12, PySide6, pydantic. Testy: pytest.
 - **Kod:** `app/tibiahelper/` (aplikacja), `generator/` (narzędzie autora, pobiera dane z TibiaWiki), `tests/`.
-- **Dane:** `data/quests.json` (licencja CC BY-SA 4.0, kod na MIT). Aplikacja pokazuje tylko questy ze statusem `reviewed`.
+- **Dane:** `data/quests.json` (questy i potwory z TibiaWiki, CC BY-SA 4.0, kod na MIT) i `data/spawns.json`
+  (miejsca potworów z TibiaRoute, za zgodą). Aplikacja pokazuje tylko questy ze statusem `reviewed`.
+  Źródła i zgody: `docs/zrodla-danych.md`. Instrukcje dla autora: `docs/AUTOR.md` (README jest dla graczy).
 
 ## Zasady pracy
 
@@ -20,7 +22,7 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
 
 ## Czego nie robimy
 
-- Aplikacja nie łączy się z TibiaWiki. Robi to tylko generator, uruchamiany przez autora.
+- Aplikacja nie łączy się z TibiaWiki ani TibiaRoute. Robi to tylko generator, uruchamiany przez autora.
   Jedyny wyjątek: obrazki potworów (© CipSoft, nie trzymamy ich w repo). Aplikacja pobiera je
   przy pierwszym użyciu z `static.wikia.nocookie.net/tibia/images/`, pod adresami zapisanymi w danych.
 - Brak automatyzacji gry i czytania jej pamięci: to tylko poradnik.

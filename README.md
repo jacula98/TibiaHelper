@@ -1,10 +1,25 @@
 # TibiaHelper
 
-Poradniki questów Tibii w małym oknie obok gry. Szczegóły wkrótce.
+Małe okno obok gry z poradnikami do Tibii. Zawsze jest na wierzchu, więc nie trzeba przełączać się
+do przeglądarki.
 
-## Uruchomienie ze źródeł
+## Co potrafi
 
-Wymaga Pythona 3.12+ (Windows).
+- **Questy krok po kroku.** Odhaczasz kroki, a aktualny krok sam przewija się na górę.
+  Postęp zapisuje się na Twoim komputerze.
+- **Mapa przy krokach.** Kliknij pinezkę 📍 w tekście, a na dole okna wysunie się mapa z zaznaczonym miejscem.
+- **Potwory w poradnikach.** Przy nazwie potwora jest jego obrazek. Po najechaniu myszką widać HP, exp
+  i słabości, a po kliknięciu otwiera się pełna strona potwora.
+- **Zakładka „Potwory”.** Ponad 2000 potworów z wyszukiwarką. Każdy ma HP, exp, obrażenia od żywiołów,
+  umiejętności, loot i mapę miejsc, w których występuje.
+- **Przezroczystość okna** (10–100%) ustawiasz trybikiem ⚙ w prawym górnym rogu.
+- **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
+
+Wkrótce: expowiska i bossy.
+
+## Jak uruchomić
+
+Gotowy plik `.exe` pojawi się przy pierwszym wydaniu. Na razie potrzebny jest Python 3.12+ (Windows):
 
 ```
 pip install -r requirements.txt
@@ -12,63 +27,26 @@ cd app
 python -m tibiahelper
 ```
 
-Domyślnie aplikacja pokazuje tylko questy ze statusem `reviewed`.
-Autor może podejrzeć szkice: `python -m tibiahelper --show-drafts`.
+## Znalazłeś błąd w poradniku?
 
-Postęp (odhaczone kroki) zapisuje się w `%APPDATA%\TibiaHelper\progress.json`,
-a widoczność (przezroczystość), pozycja i rozmiar okna w `settings.json` w tym samym katalogu.
-Widoczność ustawia się trybikiem ⚙ w prawym górnym rogu (10–100%).
+Kliknij „Zgłoś błąd” (z logo GitHuba) pod questem. Otworzy się zgłoszenie z nazwą questa
+i wersją danych, wystarczy dopisać, co jest nie tak. Potrzebne jest darmowe konto GitHub.
 
-Przy starcie aplikacja w tle sprawdza `data/quests.json` na GitHubie. Jeśli jest nowsza wersja
-(wyższe `data_version`), pokazuje pasek „Są nowsze poradniki” i dopiero po kliknięciu
-„Zaktualizuj” zapisuje ją w `%APPDATA%\TibiaHelper\quests.json`. Bez internetu działa na
-kopii lokalnej. Autor może to wyłączyć: `python -m tibiahelper --no-update`
-(wtedy używany jest tylko `data/quests.json` z repo).
+## Gdzie program zapisuje dane
 
-Przycisk „Zgłoś błąd” (z logo GitHuba) otwiera w przeglądarce nowe zgłoszenie (Issue)
-z wypełnioną nazwą questa i wersją danych. Do wysłania potrzebne jest darmowe konto GitHub.
+Wszystko jest w `%APPDATA%\TibiaHelper`: postęp questów, ustawienia okna, pobrane poradniki,
+mapy pięter i obrazki potworów. Usunięcie tego folderu przywraca program do stanu początkowego.
 
-Po starcie widać menu: Questy (Expowiska i Bossy dojdą później). Przy miejscach w krokach jest
-pinezka: kliknięcie wysuwa na dole okna mapę Tibii z kropką w tym miejscu (kolejna pinezka tylko przełącza mapę, „✕” ją chowa). Mapy pięter pochodzą
-z projektu [tibiamaps](https://github.com/tibiamaps/tibia-map-data) i pobierają się przy pierwszym
-użyciu do `%APPDATA%\TibiaHelper\maps`.
+## Źródła danych
 
-Potwory: w tekście kroku przy nazwie potwora jest jego obrazek, a nad questem sekcja „Potwory”
-(obrazek, ile ich jest i nazwa). Po najechaniu myszką widać HP, exp, słabości i odporności.
-Dane potworów są z TibiaWiki, a obrazki (grafiki © CipSoft) pobierają się przy pierwszym
-użyciu z serwera plików TibiaWiki do `%APPDATA%\TibiaHelper\monsters`. Zanim się pobiorą,
-w tekście jest łapka 🐾.
+- Questy i potwory: [TibiaWiki](https://tibia.fandom.com/), licencja CC BY-SA 4.0.
+- Mapy: [tibiamaps](https://github.com/tibiamaps/tibia-map-data).
+- Miejsca występowania potworów: Źródło danych: [tibiaroute.com](https://tibiaroute.com/) (za zgodą TibiaRoute).
+- Tibia, obrazki potworów i nazwy z gry: © CipSoft GmbH. Projekt nie jest powiązany z CipSoft ani z Fandom.
 
-## Tryb autora (edycja questów)
+Kod programu jest na licencji MIT, a dane w `data/` na CC BY-SA 4.0.
+Szczegóły: [docs/zrodla-danych.md](docs/zrodla-danych.md).
 
-```
-cd app
-python -m tibiahelper --author
-```
+---
 
-W widoku questa pojawia się przycisk „✎ Edytuj”. W edytorze można zmieniać nazwę, level,
-przedmioty, nagrody i kroki (dodawać, usuwać, przesuwać). Pinezkę dodaje się tak: zaznacz w tekście
-kroku fragment, za którym ma stać, kliknij „📍 Dodaj pinezkę” i wskaż miejsce na mapie.
-Potwora oznacza się podobnie: zaznacz w tekście np. „2 szkielety”, kliknij „🐾 Oznacz potwora”,
-wybierz potwora i liczbę. Lista potworów do wyboru pochodzi z pliku danych (dodaje je generator).
-„Oznacz jako przejrzany” zmienia szkic w quest widoczny dla graczy. „Zapisz” sprawdza dane
-(także nazewnictwo, np. „bramka lvl-owa”) i zapisuje `data/quests.json`.
-Publikacja: wyślij ten plik Claude w czacie projektu.
-
-## Generator danych (dla autora)
-
-Generator pobiera strony questów z [TibiaWiki](https://tibia.fandom.com/) przez MediaWiki API
-i zapisuje je w `generator/raw/` (cache, nie trafia do repo). Uruchamiaj z katalogu głównego repo:
-
-```
-python -m generator add-draft "Katana Quest"     # pobiera stronę + /Spoiler, dodaje quest jako draft
-python -m generator review katana-quest          # po uzupełnieniu kroków: status reviewed
-python -m generator check-updates                # które questy zmieniły się na wiki
-python -m generator fetch "Katana Quest" --refresh   # pobierz ponownie (np. przed ponownym przeglądem)
-python -m generator coords "Tom"                 # współrzędne NPC/miejsca do pinezek (pole "markers")
-python -m generator monster "Skeleton"           # dodaj/odśwież potwora: HP, exp, słabości, adres obrazka
-```
-
-Kroki questa piszemy ręcznie (razem z Claude) na podstawie strony `/Spoiler` z cache.
-Jeśli przejrzany quest zmieni się na wiki, `check-updates` ustawia mu `needs_review`.
-Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
+Przygotowujesz poradniki? Instrukcje są w [docs/AUTOR.md](docs/AUTOR.md).

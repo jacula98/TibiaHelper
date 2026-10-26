@@ -50,6 +50,27 @@ class WikiClient:
         pages = self._query(titles, with_content=False)
         return {title: page.revid if page else None for title, page in pages.items()}
 
+    def embedded_in(self, template: str) -> list[str]:
+        """Tytuły artykułów używających szablonu, np. wszystkie strony z {{Infobox Creature}}."""
+        titles: list[str] = []
+        params = {
+            "action": "query",
+            "list": "embeddedin",
+            "eititle": f"Template:{template}",
+            "einamespace": "0",  # tylko artykuły, bez stron użytkowników i szablonów
+            "eilimit": "500",
+            "format": "json",
+            "formatversion": "2",
+            "maxlag": "5",
+        }
+        while True:
+            data = self._request(params)
+            titles += [page["title"] for page in data.get("query", {}).get("embeddedin", [])]
+            # API oddaje wyniki porcjami; "continue" mówi, skąd wziąć następną.
+            if "continue" not in data:
+                return titles
+            params = {**params, **data["continue"]}
+
     def image_urls(self, files: Iterable[str]) -> dict[str, str | None]:
         """Adresy plików z wiki, np. "Skeleton.gif" -> https://static.wikia.nocookie.net/...
 

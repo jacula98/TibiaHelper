@@ -7,6 +7,8 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator check-updates
     python -m generator coords "Tom"            # współrzędne NPC/miejsca do pinezek na mapie
     python -m generator monster "Skeleton"      # dodaj/odśwież potwora (HP, exp, obrazek)
+    python -m generator import-all               # wszystkie potwory + brakujące questy (szkice)
+    python -m generator spawns                   # miejsca występowania potworów z TibiaRoute
 """
 
 import argparse
@@ -18,7 +20,7 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import cache, monsters, quests, quests_file  # noqa: E402
+from . import bulk, cache, monsters, quests, quests_file, spawns  # noqa: E402
 from tibiahelper.core import author  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
 from .wikitext import infobox_position, mapper_coords  # noqa: E402
@@ -49,6 +51,11 @@ def main(argv: list[str] | None = None) -> int:
     monster.add_argument("title", help='tytuł strony potwora na TibiaWiki, np. "Skeleton"')
     monster.add_argument("--id", help="własne id (domyślnie z nazwy, np. poison-spider)")
     monster.add_argument("--refresh", action="store_true", help="pobierz stronę ponownie mimo cache")
+
+    import_all = commands.add_parser("import-all", help="pobierz wszystkie potwory i questy z TibiaWiki")
+    import_all.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
+
+    commands.add_parser("spawns", help="pobierz miejsca występowania potworów z TibiaRoute")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -97,6 +104,26 @@ def main(argv: list[str] | None = None) -> int:
             author.upsert_monster(data, entry)
             quests_file.save(data)
             print(f"{entry['id']}: {entry['name']}, HP {entry['hp']}, exp {entry['exp']}, {entry['elements']}")
+
+        elif args.command == "import-all":
+            data = quests_file.load()
+            count, skipped = bulk.import_monsters(data, client, args.refresh)
+            added = bulk.import_quests(data, client, args.refresh)
+            quests_file.save(data)
+            for line in skipped:
+                print(f"Pominięto {line}")
+            print(f"Potwory: {count}, nowe questy (szkice): {added}")
+
+        elif args.command == "spawns":
+            quest_data = quests_file.load()
+            data, unmatched = spawns.build(spawns.download(), quest_data.get("monsters", []))
+            spawns.save(data)
+            # Aplikacja szuka aktualizacji po data_version w quests.json, więc podbijamy ją też tutaj.
+            quests_file.save(quest_data)
+            total = sum(len(points) for points in data["monsters"].values())
+            print(f"Potwory z miejscami: {len(data['monsters'])}, punktów: {total}")
+            if unmatched:
+                print("Bez pary w data/quests.json:", ", ".join(unmatched))
 
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)

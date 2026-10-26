@@ -16,19 +16,25 @@ import http.client
 import json
 import logging
 import urllib.request
+import zlib
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
 from .repository import LoadResult, QuestFileError, load_quest_file, parse_quest_data
+from .spawns import parse_spawns
 from .storage import write_json_atomic
 
 log = logging.getLogger(__name__)
 
 DATA_URL = "https://raw.githubusercontent.com/jacula98/TibiaHelper/main/data/quests.json"
+# Miejsca występowania potworów (TibiaRoute): pobierane razem z nowymi poradnikami.
+SPAWNS_URL = "https://raw.githubusercontent.com/jacula98/TibiaHelper/main/data/spawns.json"
 TIMEOUT_SECONDS = 10
-# Obecny plik ma kilkanaście KB. Limit chroni przed pobieraniem czegoś ogromnego.
-MAX_BYTES = 5 * 1024 * 1024
+# Plik z bazą potworów ma ok. 3,5 MB (spakowany gzipem ok. 0,5 MB).
+# Limity chronią przed pobieraniem albo rozpakowaniem czegoś ogromnego.
+MAX_BYTES = 5 * 1024 * 1024  # tyle pobieramy z sieci
+MAX_UNPACKED = 30 * 1024 * 1024  # tyle może mieć plik po rozpakowaniu
 
 # Funkcja pobierająca: url -> bajty. W testach podmieniamy ją na sztuczną.
 Fetch = Callable[[str], bytes]
@@ -61,12 +67,26 @@ def load_best_local(bundled: Path, cached: Path) -> LoadResult:
 def download(url: str = DATA_URL) -> bytes:
     if not url.startswith("https://"):
         raise ValueError("Dane pobieramy tylko przez HTTPS")
-    request = urllib.request.Request(url, headers={"User-Agent": "TibiaHelper"})
+    # gzip: GitHub wysyła wtedy ok. 7x mniej danych przy każdym sprawdzeniu aktualizacji.
+    request = urllib.request.Request(url, headers={"User-Agent": "TibiaHelper", "Accept-Encoding": "gzip"})
     with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:  # noqa: S310
         data = response.read(MAX_BYTES + 1)
+        packed = response.headers.get("Content-Encoding", "").lower() == "gzip"
     if len(data) > MAX_BYTES:
         raise ValueError("Plik z danymi jest za duży")
-    return data
+    return gunzip(data) if packed else data
+
+
+def gunzip(data: bytes) -> bytes:
+    """Rozpakowuje gzip z limitem rozmiaru (mały plik może się rozpakować do ogromnego)."""
+    unpacker = zlib.decompressobj(16 + zlib.MAX_WBITS)  # 16+: format gzip, nie goły zlib
+    try:
+        result = unpacker.decompress(data, MAX_UNPACKED + 1)
+    except zlib.error as exc:
+        raise ValueError(f"Uszkodzony gzip: {exc}") from exc
+    if len(result) > MAX_UNPACKED or unpacker.unconsumed_tail:
+        raise ValueError("Plik z danymi po rozpakowaniu jest za duży")
+    return result
 
 
 @dataclass(frozen=True)
@@ -75,13 +95,15 @@ class Update:
 
     result: LoadResult
     raw: dict
+    # Nowsze spawns.json albo None (brak zmian lub nie udało się pobrać).
+    spawns_raw: dict | None = None
 
     @property
     def data_version(self) -> int:
         return self.result.data_version
 
 
-def check_for_update(current_version: int, fetch: Fetch = download) -> Update | None:
+def check_for_update(current_version: int, fetch: Fetch = download, spawns_version: int = 0) -> Update | None:
     """Sprawdza, czy na GitHubie są nowsze dane. Niczego nie zapisuje.
 
     Zapis robi dopiero apply_update(), gdy użytkownik się zgodzi.
@@ -98,12 +120,27 @@ def check_for_update(current_version: int, fetch: Fetch = download) -> Update | 
         return None
     if result.data_version <= current_version:
         return None
-    return Update(result, raw)
+    return Update(result, raw, _check_spawns(spawns_version, fetch))
 
 
-def apply_update(update: Update, cached: Path) -> bool:
+def _check_spawns(current_version: int, fetch: Fetch) -> dict | None:
+    """spawns.json, jeśli na GitHubie jest nowszy. Błąd tu nie blokuje aktualizacji poradników."""
+    try:
+        raw = json.loads(fetch(SPAWNS_URL).decode("utf-8"))
+        version = parse_spawns(raw).version
+    except (OSError, http.client.HTTPException, ValueError) as exc:
+        log.info("Pominięto aktualizację miejsc potworów: %s", exc)
+        return None
+    return raw if version > current_version else None
+
+
+def apply_update(update: Update, cached: Path, cached_spawns: Path | None = None) -> bool:
     """Zapisuje pobrane dane jako lokalną kopię. False, gdy zapis się nie udał."""
     try:
+        # Najpierw spawny: gdy ten zapis się nie uda, poradniki zostają stare
+        # i przy następnym starcie aktualizacja (razem ze spawnami) będzie zaproponowana znowu.
+        if update.spawns_raw is not None and cached_spawns is not None:
+            write_json_atomic(cached_spawns, update.spawns_raw)
         write_json_atomic(cached, update.raw)
     except OSError as exc:
         log.error("Nie można zapisać pobranych danych do %s: %s", cached, exc)

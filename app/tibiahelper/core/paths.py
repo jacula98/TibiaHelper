@@ -49,3 +49,13 @@ def maps_dir() -> Path:
 def sprites_dir() -> Path:
     """Pobrane obrazki potworów (TibiaWiki, © CipSoft)."""
     return user_data_dir() / "monsters"
+
+
+def bundled_spawns_file() -> Path:
+    """spawns.json dołączony do aplikacji (obok quests.json)."""
+    return bundled_data_file().with_name("spawns.json")
+
+
+def cached_spawns_file() -> Path:
+    """spawns.json pobrany z GitHuba razem z aktualizacją poradników."""
+    return user_data_dir() / "spawns.json"

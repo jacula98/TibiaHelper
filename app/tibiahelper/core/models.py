@@ -11,8 +11,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 # Najnowsza wersja formatu pliku, którą ta wersja aplikacji rozumie.
 # Podbijamy ją tylko przy zmianach niekompatybilnych wstecz.
-# 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters)
-SCHEMA_VERSION = 3
+# 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters),
+# 4: szczegóły potworów (loot, umiejętności, miejsca) do zakładki „Potwory”
+SCHEMA_VERSION = 4
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -31,6 +32,9 @@ ELEMENTS: tuple[str, ...] = get_args(Element)
 # Obrazki potworów to pliki z TibiaWiki (grafiki © CipSoft). Aplikacja pobiera je
 # tylko z tego serwera, żeby adres w danych nie mógł prowadzić gdziekolwiek.
 SPRITE_URL_PREFIX = "https://static.wikia.nocookie.net/tibia/images/"
+
+# Rzadkość dropu tak, jak zapisuje ją TibiaWiki.
+Rarity = Literal["always", "common", "uncommon", "semi-rare", "rare", "very rare"]
 
 
 class _Model(BaseModel):
@@ -52,8 +56,14 @@ class MapPoint(_Model):
     anchor: str | None = None
 
 
+class LootItem(_Model):
+    name: str = Field(min_length=1)
+    amount: str | None = None  # np. "0-10"; None = 1 sztuka
+    rarity: Rarity | None = None
+
+
 class Monster(_Model):
-    """Potwór z TibiaWiki: obrazek i dymek z HP, expem i słabościami."""
+    """Potwór z TibiaWiki: obrazek, dymek (HP, exp, słabości) i strona w zakładce „Potwory”."""
 
     id: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
     name: str = Field(min_length=1)
@@ -61,13 +71,23 @@ class Monster(_Model):
     exp: int = Field(ge=0)
     # Obrażenia w % względem normalnych, tylko te różne od 100% (np. holy 125 = słaby na holy).
     elements: dict[Element, int] = Field(default_factory=dict)
-    image_url: str
+    # None = na wiki nie ma obrazka.
+    image_url: str | None = None
     source_url: str
     wiki_revision: int | None = Field(default=None, ge=1)
+    # Szczegóły do strony potwora. Teksty są z wiki, po angielsku.
+    armor: int | None = Field(default=None, ge=0)
+    speed: int | None = Field(default=None, ge=0)
+    boss: bool = False
+    bestiary_class: str | None = None
+    bestiary_level: str | None = None
+    abilities: list[str] = Field(default_factory=list)
+    loot: list[LootItem] = Field(default_factory=list)
+    location: str | None = None
 
     @model_validator(mode="after")
     def _check_urls(self) -> "Monster":
-        if not self.image_url.startswith(SPRITE_URL_PREFIX):
+        if self.image_url is not None and not self.image_url.startswith(SPRITE_URL_PREFIX):
             raise ValueError(f"image_url musi zaczynać się od {SPRITE_URL_PREFIX}")
         if not self.source_url.startswith(WIKI_URL_PREFIX):
             raise ValueError(f"source_url musi zaczynać się od {WIKI_URL_PREFIX}")

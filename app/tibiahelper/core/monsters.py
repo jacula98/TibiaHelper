@@ -6,6 +6,8 @@ serwera plików TibiaWiki) i trzyma w %APPDATA%/TibiaHelper/monsters.
 """
 
 import logging
+import time
+import urllib.error
 import urllib.request
 from collections.abc import Callable
 from pathlib import Path
@@ -17,6 +19,8 @@ log = logging.getLogger(__name__)
 
 TIMEOUT_SECONDS = 15
 MAX_BYTES = 512 * 1024  # obrazek potwora ma zwykle kilka KB
+RETRIES = 2
+RETRY_DELAY = 1.0  # sekundy
 # Rozpoznajemy obrazek po pierwszych bajtach, żeby nie zapisać np. strony błędu z HTML.
 SIGNATURES = {b"GIF87a": ".gif", b"GIF89a": ".gif", b"\x89PNG\r\n\x1a\n": ".png"}
 
@@ -44,11 +48,27 @@ def sprite_path(sprites_dir: Path, monster_id: str) -> Path | None:
 
 def _download(url: str) -> bytes:
     request = urllib.request.Request(url, headers={"User-Agent": "TibiaHelper"})
-    with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:  # noqa: S310
-        data = response.read(MAX_BYTES + 1)
+    for attempt in range(RETRIES + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS) as response:  # noqa: S310
+                data = response.read(MAX_BYTES + 1)
+            break
+        except urllib.error.HTTPError as exc:
+            # Serwer obrazków wiki czasem odpowiada 503; po chwili ten sam adres działa.
+            if exc.code < 500 or attempt == RETRIES:
+                raise
+            time.sleep(RETRY_DELAY)
     if len(data) > MAX_BYTES:
         raise ValueError("Obrazek potwora jest za duży")
     return data
+
+
+def original_url(url: str) -> str:
+    """Adres pliku w oryginalnym formacie (GIF/PNG).
+
+    Bez tego serwer Fandomu często oddaje WebP, którego nie zapisujemy.
+    """
+    return url + ("&" if "?" in url else "?") + "format=original"
 
 
 def ensure_sprite(sprites_dir: Path, monster: Monster, fetch: Fetch = _download) -> Path:
@@ -60,9 +80,9 @@ def ensure_sprite(sprites_dir: Path, monster: Monster, fetch: Fetch = _download)
     if existing is not None:
         return existing
     # Model już to sprawdza; tu drugi raz, bo od tego zależy, z kim łączy się aplikacja.
-    if not monster.image_url.startswith(SPRITE_URL_PREFIX):
+    if monster.image_url is None or not monster.image_url.startswith(SPRITE_URL_PREFIX):
         raise ValueError(f"Niedozwolony adres obrazka: {monster.image_url}")
-    data = fetch(monster.image_url)
+    data = fetch(original_url(monster.image_url))
     ext = next((ext for sig, ext in SIGNATURES.items() if data.startswith(sig)), None)
     if ext is None:
         raise ValueError(f"{monster.image_url} nie zwrócił obrazka GIF/PNG")
@@ -75,7 +95,7 @@ def download_missing(sprites_dir: Path, monsters: list[Monster], fetch: Fetch = 
     """Pobiera brakujące obrazki; zwraca id tych, które się udały. Błędy tylko loguje."""
     done = []
     for monster in monsters:
-        if sprite_path(sprites_dir, monster.id) is not None:
+        if monster.image_url is None or sprite_path(sprites_dir, monster.id) is not None:
             continue
         try:
             ensure_sprite(sprites_dir, monster, fetch)

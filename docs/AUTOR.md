@@ -1,0 +1,55 @@
+# Dla autora: tryb autora i generator danych
+
+Instrukcje dla osoby, która przygotowuje poradniki. Gracze nie muszą tego czytać.
+
+## Tryb autora (edycja questów)
+
+```
+cd app
+python -m tibiahelper --author
+```
+
+W trybie autora widać też szkice (`draft`), a w widoku questa jest przycisk „✎ Edytuj”.
+W edytorze można zmieniać nazwę, level, przedmioty, nagrody i kroki (dodawać, usuwać, przesuwać).
+
+- **Pinezka:** zaznacz w tekście kroku fragment, za którym ma stać, kliknij „📍 Dodaj pinezkę” i wskaż miejsce na mapie.
+- **Potwór:** zaznacz np. „2 szkielety”, kliknij „🐾 Oznacz potwora”, wpisz kawałek nazwy (np. „skel”) i wybierz z listy, podaj liczbę.
+- **„Oznacz jako przejrzany”** zmienia szkic w quest widoczny dla graczy.
+- **„Zapisz”** sprawdza dane (także nazewnictwo, np. „bramka lvl-owa”) i zapisuje `data/quests.json`.
+
+Publikacja: wyślij ten plik Claude w czacie projektu.
+
+Inne opcje: `--show-drafts` (podgląd szkiców bez edycji), `--no-update` (tylko pliki z repo, bez kopii z GitHuba).
+
+## Generator danych
+
+Generator pobiera dane z [TibiaWiki](https://tibia.fandom.com/) przez MediaWiki API (strony trafiają
+do cache `generator/raw/`, który nie jest w repo) oraz miejsca potworów z TibiaRoute.
+Uruchamiaj z katalogu głównego repo:
+
+```
+python -m generator import-all                   # wszystkie potwory + brakujące questy jako szkice
+python -m generator spawns                       # miejsca występowania potworów (TibiaRoute)
+python -m generator monster "Skeleton"           # dodaj/odśwież jednego potwora
+python -m generator add-draft "Katana Quest"     # pobiera stronę + /Spoiler, dodaje quest jako draft
+python -m generator fetch "Katana Quest" --refresh   # pobierz ponownie stronę i /Spoiler
+python -m generator review katana-quest          # po uzupełnieniu kroków: status reviewed
+python -m generator check-updates                # które questy zmieniły się na wiki
+python -m generator coords "Tom"                 # współrzędne NPC/miejsca do pinezek (pole "markers")
+```
+
+Kroki questa piszemy ręcznie (razem z Claude) na podstawie strony `/Spoiler` z cache.
+Jeśli przejrzany quest zmieni się na wiki, `check-updates` ustawia mu `needs_review`.
+Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
+
+## Pliki danych
+
+- `data/quests.json`: questy i potwory (TibiaWiki, CC BY-SA 4.0). `data_version` rośnie przy każdym zapisie;
+  po tym aplikacja graczy poznaje, że na GitHubie są nowsze poradniki.
+- `data/spawns.json`: miejsca występowania potworów (TibiaRoute, za zgodą, patrz [zrodla-danych.md](zrodla-danych.md)).
+
+## Sprawdzenie przed PR
+
+```
+python scripts/check.py
+```
