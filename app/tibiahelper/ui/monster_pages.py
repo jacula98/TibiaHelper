@@ -9,12 +9,12 @@ from html import escape
 from pathlib import Path
 
 from PySide6.QtCore import QObject, Qt, Signal
+from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import (
     QHBoxLayout,
+    QComboBox,
     QLabel,
     QLineEdit,
-    QListWidget,
-    QListWidgetItem,
     QPushButton,
     QScrollArea,
     QVBoxLayout,
@@ -22,10 +22,13 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.models import Monster
-from ..core.monsters import download_missing, sprite_path
-from ..core.spawns import SOURCE_NOTE, Spawns
-from .map_window import MapPanel
+from ..core.monsters import SORTS, download_missing, sort_monsters, sprite_path
+from ..core.mapdata import floor_label
+from ..core.spawns import SOURCE_NOTE, Place, Spawns, places
+from .map_window import MapPanel, spawn_icon
+from .monster_grid import MonsterGrid
 from .monster_widgets import AnimatedSprite, ElementBars
+from .sprites import display_sprite
 
 PAGE_SPRITE = 64
 SPAWN_MAP_HEIGHT = 320
@@ -47,11 +50,14 @@ class MonsterListPage(QWidget):
     monster_selected = Signal(object)
     back_requested = Signal()
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(self, sprites_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._monsters: list[Monster] = []
         self._search = QLineEdit(placeholderText="Szukaj potwora…", clearButtonEnabled=True)
-        self._list = QListWidget()
+        self._sort = QComboBox()
+        self._sort.addItems(list(SORTS))
+        self._sort.setToolTip("Sortowanie")
+        self._grid = MonsterGrid(sprites_dir)
         self._empty = QLabel(alignment=Qt.AlignmentFlag.AlignCenter, wordWrap=True)
 
         back = QPushButton("← Menu")
@@ -59,37 +65,31 @@ class MonsterListPage(QWidget):
         top = QHBoxLayout()
         top.addWidget(back)
         top.addStretch(1)
+        filters = QHBoxLayout()
+        filters.addWidget(self._search, 1)
+        filters.addWidget(self._sort)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(top)
-        layout.addWidget(self._search)
-        layout.addWidget(self._list, 1)
+        layout.addLayout(filters)
+        layout.addWidget(self._grid, 1)
         layout.addWidget(self._empty, 1)
 
         self._search.textChanged.connect(self._refresh)
-        self._list.itemClicked.connect(
-            lambda item: self.monster_selected.emit(item.data(Qt.ItemDataRole.UserRole))
-        )
+        self._sort.currentTextChanged.connect(self._refresh)
+        self._grid.monster_clicked.connect(self.monster_selected)
 
     def set_monsters(self, monsters: dict[str, Monster]) -> None:
-        self._monsters = sorted(monsters.values(), key=lambda m: m.name.lower())
+        self._monsters = list(monsters.values())
         self._refresh()
 
     def _refresh(self) -> None:
         text = self._search.text().strip().lower()
-        shown = [m for m in self._monsters if text in m.name.lower()]
-        # Przy ~2800 potworach przebudowa listy przy każdej literze jest szybsza bez odświeżania ekranu.
-        self._list.setUpdatesEnabled(False)
-        self._list.clear()
-        for monster in shown:
-            boss = " · boss" if monster.boss else ""
-            item = QListWidgetItem(f"{monster.name}  (HP {_thousands(monster.hp)}, exp {_thousands(monster.exp)}{boss})")
-            item.setData(Qt.ItemDataRole.UserRole, monster)
-            self._list.addItem(item)
-        self._list.setUpdatesEnabled(True)
+        shown = sort_monsters([m for m in self._monsters if text in m.name.lower()], self._sort.currentText())
+        self._grid.set_monsters(shown)
         self._empty.setText("Brak potworów w danych." if not self._monsters else "Nic nie pasuje do wyszukiwania.")
-        self._list.setVisible(bool(shown))
+        self._grid.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 
 
@@ -128,6 +128,11 @@ class MonsterPage(QWidget):
         self._top = _html_label()
         self._map_title = QLabel("MAPA WYSTĘPOWANIA")
         self._map_title.setObjectName("sectionTitle")
+        # Wybór expowiska: potwór bywa w wielu miejscach, mapa pokazuje to wybrane.
+        self._places = QComboBox()
+        self._places.setToolTip("Miejsca od tego, gdzie jest najwięcej tych potworów")
+        self._places.currentIndexChanged.connect(self._on_place_selected)
+        self._place_list: list[Place] = []
         self._map = MapPanel(maps_dir)
         self._map.setFixedHeight(SPAWN_MAP_HEIGHT)
         self._bottom = _html_label()
@@ -140,6 +145,7 @@ class MonsterPage(QWidget):
         self._elements_at = column.count()  # tu wstawiamy paski żywiołów konkretnego potwora
         column.addWidget(self._top)
         column.addWidget(self._map_title)
+        column.addWidget(self._places)
         column.addWidget(self._map)
         column.addWidget(self._bottom)
         column.addStretch(1)
@@ -171,10 +177,18 @@ class MonsterPage(QWidget):
         self._render()
         self._scroll.verticalScrollBar().setValue(0)
         points = self._spawns.of(monster.id)
-        self._map_title.setVisible(bool(points))
-        self._map.setVisible(bool(points))
+        for widget in (self._map_title, self._places, self._map):
+            widget.setVisible(bool(points))
         if points:
-            self._map.show_spawns(monster.name, points, SOURCE_NOTE)
+            self._map.show_spawns(monster.name, points, SOURCE_NOTE, self._spawn_icon())
+            self._place_list = places(points)
+            # blockSignals: wypełnianie listy nie ma przesuwać mapy przy każdym dodanym miejscu.
+            self._places.blockSignals(True)
+            self._places.clear()
+            for number, place in enumerate(self._place_list, start=1):
+                self._places.addItem(f"{number}. okolice {place.city} · {place.count} miejsc · piętro {floor_label(place.z)}")
+            self._places.blockSignals(False)
+            self._on_place_selected(0)
         if monster.image_url and sprite_path(self._sprites_dir, monster.id) is None:
 
             def run() -> None:
@@ -186,6 +200,18 @@ class MonsterPage(QWidget):
     def _on_sprite_loaded(self, monster_id: str) -> None:
         if self._monster is not None and self._monster.id == monster_id:
             self._render()
+            self._map.set_spawn_icon(self._spawn_icon())
+
+    def _on_place_selected(self, index: int) -> None:
+        if 0 <= index < len(self._place_list):
+            place = self._place_list[index]
+            self._map.focus_on(place.x, place.y, place.z)
+
+    def _spawn_icon(self) -> QPixmap | None:
+        """Obrazek potwora do mapy albo None (wtedy mapa ma same kropki)."""
+        path = display_sprite(self._sprites_dir, self._monster.id) if self._monster else None
+        image = QImage(str(path)) if path else QImage()
+        return None if image.isNull() else spawn_icon(image)
 
     def _render(self) -> None:
         if self._monster is not None:

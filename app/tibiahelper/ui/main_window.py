@@ -59,7 +59,7 @@ class MainWindow(QMainWindow):
         self._stack.addWidget(self._home)
         self._stack.addWidget(self._list_page)
         self._stack.addWidget(self._quest_view)
-        self._monster_list = MonsterListPage()
+        self._monster_list = MonsterListPage(sprites_dir())
         self._monster_page = MonsterPage(sprites_dir(), maps_dir())
         self._stack.addWidget(self._monster_list)
         self._stack.addWidget(self._monster_page)

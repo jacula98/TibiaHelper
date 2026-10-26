@@ -10,8 +10,9 @@ import threading
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QPointF, QRectF, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QPainter, QPainterPath, QPen, QPixmap, QWheelEvent
+from PySide6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPainterPath, QPen, QPixmap, QWheelEvent
 from PySide6.QtWidgets import (
+    QGraphicsItem,
     QGraphicsScene,
     QGraphicsView,
     QHBoxLayout,
@@ -45,6 +46,24 @@ RING_RADIUS = 3.5  # obwódka wokół kropki, żeby od razu rzucała się w oczy
 # Fiolet prawie nie występuje na mapie Tibii, więc punkty nie giną na lawie czy trawie.
 SPAWN_COLOR = "#e040fb"
 SPAWN_HALO = 2.5  # półprzezroczysta poświata: pojedyncza kratka byłaby niewidoczna przy oddaleniu
+SPAWN_ICON = 22  # px na ekranie: obrazek potwora na mapie ma stały rozmiar przy każdym przybliżeniu
+SPAWN_ICON_CELL = 12  # kratki: jeden obrazek na taki kwadrat, żeby setki obrazków nie zlały się w plamę
+
+
+def spawn_icon(sprite: QImage) -> QPixmap:
+    """Znacznik na mapie: obrazek potwora w kółku z fioletową obwódką (widać go na każdym tle)."""
+    pixmap = QPixmap(SPAWN_ICON, SPAWN_ICON)
+    pixmap.fill(Qt.GlobalColor.transparent)
+    painter = QPainter(pixmap)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.setPen(QPen(QColor(SPAWN_COLOR), 1.5))
+    painter.setBrush(QColor(0, 0, 0, 150))
+    painter.drawEllipse(QRectF(1, 1, SPAWN_ICON - 2, SPAWN_ICON - 2))
+    inner = SPAWN_ICON - 6
+    scaled = sprite.scaled(inner, inner, Qt.AspectRatioMode.KeepAspectRatio)
+    painter.drawImage(int((SPAWN_ICON - scaled.width()) / 2), int((SPAWN_ICON - scaled.height()) / 2), scaled)
+    painter.end()
+    return pixmap
 
 
 def _circle(center: QPointF, radius: float) -> QRectF:
@@ -112,6 +131,7 @@ class MapPanel(QWidget):
         # Tryb „gdzie występuje potwór”: setki punktów bez podpisów.
         self._spawns: list[Point] = []
         self._spawn_note = ""
+        self._spawn_icon: QPixmap | None = None
         self._floor = 7
         self._loading: set[int] = set()
 
@@ -164,8 +184,9 @@ class MapPanel(QWidget):
         layout.addWidget(self._view, 1)
         layout.addWidget(self._status)
 
-    def show_spawns(self, title: str, spawns: list[Point], note: str) -> None:
+    def show_spawns(self, title: str, spawns: list[Point], note: str, icon: QPixmap | None = None) -> None:
         """Wszystkie miejsca występowania potwora; start na piętrze i w miejscu, gdzie jest ich najwięcej."""
+        self._spawn_icon = icon
         self._picking = False
         self._points = []
         self._spawns = spawns
@@ -175,6 +196,18 @@ class MapPanel(QWidget):
         z = floors(spawns)[0][0] if spawns else 7
         spot = busiest_spot(spawns, z)
         self._focus = MapPoint(x=spot[0], y=spot[1], z=z, label=title) if spot else None
+        self._set_floor(z)
+
+    def set_spawn_icon(self, icon: QPixmap | None) -> None:
+        """Obrazek potwora doszedł później (pobrał się w tle): rysujemy mapę jeszcze raz, w tym samym miejscu."""
+        self._spawn_icon = icon
+        path = floor_path(self._maps_dir, self._floor)
+        if self._spawns and path.exists():
+            self._draw(self._floor, path, keep_view=True)
+
+    def focus_on(self, x: int, y: int, z: int) -> None:
+        """Przenosi mapę na wskazane miejsce (np. wybrane expowisko) i jego piętro."""
+        self._focus = MapPoint(x=x, y=y, z=z, label=self._title.text() or "miejsce")
         self._set_floor(z)
 
     def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
@@ -332,6 +365,23 @@ class MapPanel(QWidget):
         scene.addPath(halo, QPen(Qt.PenStyle.NoPen), QBrush(halo_color)).setZValue(1)
         dots.setFillRule(Qt.FillRule.WindingFill)
         scene.addPath(dots, QPen(QColor("#000000"), 0.25), QBrush(color)).setZValue(2)
+        if self._spawn_icon is not None:
+            self._draw_spawn_icons(scene, z)
+
+    def _draw_spawn_icons(self, scene: QGraphicsScene, z: int) -> None:
+        # Jeden obrazek na kwadrat SPAWN_ICON_CELL kratek, w środku punktów z tego kwadratu.
+        cells: dict[tuple[int, int], list[tuple[int, int]]] = {}
+        for x, y, pz in self._spawns:
+            if pz == z:
+                cells.setdefault((x // SPAWN_ICON_CELL, y // SPAWN_ICON_CELL), []).append((x, y))
+        for points in cells.values():
+            px, py = to_pixel(sum(x for x, _ in points) // len(points), sum(y for _, y in points) // len(points))
+            item = scene.addPixmap(self._spawn_icon)
+            # Stały rozmiar na ekranie: obrazek nie rośnie razem z przybliżeniem mapy.
+            item.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+            item.setOffset(-SPAWN_ICON / 2, -SPAWN_ICON / 2)
+            item.setPos(px + 0.5, py + 0.5)
+            item.setZValue(3)
 
 
 class MapWindow(QWidget):

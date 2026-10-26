@@ -115,3 +115,23 @@ def describe(monster: Monster) -> list[str]:
     if strong:
         lines.append("Odporny na: " + ", ".join(f"{ELEMENT_NAMES[e]} {p}%" for e, p in strong))
     return lines
+
+
+# Sortowanie listy potworów: nazwa -> (klucz, malejąco?). Kolejność tu = kolejność w menu.
+SORTS: dict[str, tuple[Callable[[Monster], object], bool]] = {
+    "A–Z": (lambda m: m.name.lower(), False),
+    "HP rosnąco": (lambda m: m.hp, False),
+    "HP malejąco": (lambda m: m.hp, True),
+    "Exp rosnąco": (lambda m: m.exp, False),
+    "Exp malejąco": (lambda m: m.exp, True),
+    # Exp za każdy punkt HP: im więcej, tym bardziej opłaca się bić (max(hp, 1), bo bywa HP 0).
+    "Exp / HP (najlepsze)": (lambda m: m.exp / max(m.hp, 1), True),
+}
+
+
+def sort_monsters(monsters: list[Monster], sort: str) -> list[Monster]:
+    """Potwory posortowane wybranym sposobem; przy remisie alfabetycznie."""
+    key, reverse = SORTS[sort]
+    by_name = sorted(monsters, key=lambda m: m.name.lower())
+    # sorted jest stabilne: remisy zostają w kolejności alfabetycznej.
+    return sorted(by_name, key=key, reverse=reverse)
