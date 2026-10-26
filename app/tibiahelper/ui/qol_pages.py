@@ -6,7 +6,6 @@ from pathlib import Path
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
-    QComboBox,
     QHBoxLayout,
     QLabel,
     QMessageBox,
@@ -54,22 +53,13 @@ class _InstallWorker(QObject):
 class MinimapPage(QWidget):
     back_requested = Signal()
 
-    # (tekst w liście, wartość dla minimap.package_url)
-    MARKER_CHOICES = (
-        ("Z markerami", "all"),
-        ("Tylko ciekawe miejsca (POI)", "poi"),
-        ("Bez markerów", "none"),
-    )
-
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         title = QLabel("TibiaMaps")
         title.setObjectName("title")
 
-        self._markers = QComboBox()
-        for text, value in self.MARKER_CHOICES:
-            self._markers.addItem(text, value)
-        self._markers.currentIndexChanged.connect(self._sync_grid)
+        self._markers = QCheckBox("Markery")
+        self._markers.setChecked(True)
         self._grid = QCheckBox("Siatka (grid overlay)")
         self._upload = QPushButton("Wgraj mapę")
         self._upload.setObjectName("primary")
@@ -81,7 +71,7 @@ class MinimapPage(QWidget):
             "Na minimapie w grze zobaczysz od razu całą mapę świata.<br><br>"
             "Przed wgraniem zamknij Tibię. Przy pierwszym wgraniu stara minimapa (razem z Twoimi "
             f"markerami) trafia do kopii w folderze „{minimap.BACKUP_NAME}”. "
-            "Wersja „Bez markerów” zostawia Twoje markery, pozostałe je podmieniają.",
+            "Bez zaznaczonych „Markerów” Twoje markery zostają, z nimi są podmieniane.",
             wordWrap=True,
         )
         info.setObjectName("muted")
@@ -95,7 +85,6 @@ class MinimapPage(QWidget):
         layout.setSpacing(10)
         layout.addLayout(_top_bar("← Quality of life", self.back_requested))
         layout.addWidget(title)
-        layout.addWidget(QLabel("Markery:"))
         layout.addWidget(self._markers)
         layout.addWidget(self._grid)
         layout.addWidget(self._upload)
@@ -108,13 +97,6 @@ class MinimapPage(QWidget):
         self._worker.finished.connect(self._on_finished)
         self._worker.failed.connect(self._on_failed)
 
-    def _sync_grid(self) -> None:
-        # Wersja „tylko POI” jest w tibiamaps wyłącznie z siatką.
-        poi = self._markers.currentData() == "poi"
-        if poi:
-            self._grid.setChecked(True)
-        self._grid.setEnabled(not poi)
-
     def _start(self) -> None:
         target = minimap.minimap_dir()
         if target is None or not target.parent.is_dir():
@@ -124,7 +106,7 @@ class MinimapPage(QWidget):
         answer = QMessageBox.question(self, "Wgraj mapę", "Czy Tibia jest zamknięta? Pobrać i wgrać minimapę?")
         if answer != QMessageBox.StandardButton.Yes:
             return
-        url = minimap.package_url(self._markers.currentData(), self._grid.isChecked())
+        url = minimap.package_url(self._markers.isChecked(), self._grid.isChecked())
         self._upload.setEnabled(False)
         self._status.setText("Pobieram i wgrywam minimapę…")
         # daemon=True: zamknięcie programu nie czeka na pobieranie.
