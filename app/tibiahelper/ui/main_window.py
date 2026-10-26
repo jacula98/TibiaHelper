@@ -21,7 +21,7 @@ from PySide6.QtWidgets import (
 from ..core import author
 from ..core.items import build_drops
 from ..core.models import Item, Monster, Npc, Quest
-from ..core.paths import items_dir, maps_dir, npcs_dir, sprites_dir
+from ..core.paths import bundled_qol_dir, items_dir, maps_dir, npcs_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
@@ -29,6 +29,7 @@ from ..core.settings import load_settings, save_settings
 from .home_page import HomePage
 from .item_pages import ItemListPage, ItemPage
 from .monster_pages import MonsterListPage, MonsterPage
+from .qol_pages import LootSettingsPage, QolPage
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
@@ -65,7 +66,10 @@ class MainWindow(QMainWindow):
         self._monster_page = MonsterPage(sprites_dir(), maps_dir(), items_dir())
         self._item_list = ItemListPage(items_dir())
         self._item_page = ItemPage(items_dir(), npcs_dir(), sprites_dir(), maps_dir())
-        for page in (self._monster_list, self._monster_page, self._item_list, self._item_page):
+        self._qol = QolPage()
+        self._loot_settings = LootSettingsPage(bundled_qol_dir())
+        pages = (self._monster_list, self._monster_page, self._item_list, self._item_page, self._qol, self._loot_settings)
+        for page in pages:
             self._stack.addWidget(page)
         # Historia stron szczegółów (potwór, przedmiot), żeby „← Wstecz” wracał krok po kroku,
         # np. quest -> potwór -> przedmiot -> (wstecz) potwór -> (wstecz) quest.
@@ -88,6 +92,10 @@ class MainWindow(QMainWindow):
         self._monster_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._home.items_requested.connect(lambda: self._stack.setCurrentWidget(self._item_list))
         self._item_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._home.qol_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
+        self._qol.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._qol.loot_requested.connect(lambda: self._stack.setCurrentWidget(self._loot_settings))
+        self._loot_settings.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._monster_list.monster_selected.connect(lambda m: self._open_detail("monster", m))
         self._quest_view.monster_requested.connect(lambda m: self._open_detail("monster", m))
         self._item_list.item_selected.connect(lambda i: self._open_detail("item", i))

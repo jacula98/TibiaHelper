@@ -6,6 +6,7 @@
 | TibiaWiki, pliki obrazków | obrazki potworów, przedmiotów i NPC | grafiki © CipSoft GmbH; nie są w repo, aplikacja pobiera je przy pierwszym użyciu |
 | [tibiamaps](https://github.com/tibiamaps/tibia-map-data) | mapy pięter | „Feel free to use”, kod MIT |
 | [tibiaroute.com](https://tibiaroute.com/) | miejsca występowania potworów | pisemna zgoda (niżej) |
+| [Yuukiciu](https://www.youtube.com/watch?v=4fIlbgTtXMg) | `data/qol/`: loot filter (pomijane śmieci) i ceny z Marketu dla itemów do delivery tasków i imbu | pliki dostarczył autor projektu; w aplikacji podpis „Źródło: Yuukiciu” z linkiem |
 
 Nie korzystamy z Tibiopedii (brak licencji pozwalającej na użycie).
 
