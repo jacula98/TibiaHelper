@@ -1,4 +1,4 @@
-"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Potwory, Przedmioty, Expowiska, Bossy, Quality of life)."""
+"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Hunt/Bestiary zones, Bossy, Przedmioty, Potwory, Quality of life)."""
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
@@ -22,19 +22,20 @@ class HomePage(QWidget):
         quests.clicked.connect(self.quests_requested)
         layout.addWidget(quests)
 
-        monsters = _menu_button("🐉  " + tr("Potwory"), tr("HP, exp, słabości, loot i gdzie występują"))
-        monsters.clicked.connect(self.monsters_requested)
-        layout.addWidget(monsters)
+        # Strefy huntów i bossy dojdą w kolejnych etapach; do tego czasu przyciski są nieaktywne.
+        # „Hunt/Bestiary zones” bez tłumaczenia: to nazwa, której gracze używają w każdym języku.
+        for text in ("⚔  Hunt/Bestiary zones", "💀  " + tr("Bossy")):
+            button = _menu_button(text, tr("Wkrótce"))
+            button.setEnabled(False)
+            layout.addWidget(button)
 
         items = _menu_button("🎒  " + tr("Przedmioty"), tr("Komu sprzedać, gdzie kupić, z czego wypada"))
         items.clicked.connect(self.items_requested)
         layout.addWidget(items)
 
-        # Expowiska i bossy dojdą w kolejnych etapach; do tego czasu przyciski są nieaktywne.
-        for text in ("⚔  " + tr("Expowiska"), "💀  " + tr("Bossy")):
-            button = _menu_button(text, tr("Wkrótce"))
-            button.setEnabled(False)
-            layout.addWidget(button)
+        monsters = _menu_button("🐉  " + tr("Potwory"), tr("HP, exp, słabości, loot i gdzie występują"))
+        monsters.clicked.connect(self.monsters_requested)
+        layout.addWidget(monsters)
 
         qol = _menu_button("✨  Quality of life", tr("Minimapa, loot filter, UI i hotkeye"))
         qol.clicked.connect(self.qol_requested)
