@@ -35,7 +35,7 @@ do przeglądarki.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
   Gdy na GitHubie pojawi się nowa wersja programu (Release), pokaże pasek z przyciskiem „Pobierz”.
 
-Wkrótce: expowiska i bossy.
+Wkrótce: Hunt/Bestiary zones (strefy huntów) i bossy.
 
 ## Jak uruchomić
 
