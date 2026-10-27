@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ..core.i18n import N_, tr
 from ..core.mapdata import ensure_floor, floor_label, floor_path, to_pixel
 from ..core.models import MAP_X_MIN, MAP_Y_MIN, MapPoint
 from ..core.spawns import Point, busiest_spot, floors
@@ -37,7 +38,8 @@ KIND_COLORS = {
     "passage": "#81c784",
     "use": "#ef5350",
 }
-KIND_NAMES = {"npc": "NPC", "place": "miejsce", "passage": "przejście", "use": "użyj"}
+# N_: tłumaczymy przy pokazaniu, tr(KIND_NAMES[...]) (zob. core/i18n.py).
+KIND_NAMES = {"npc": "NPC", "place": N_("miejsce"), "passage": N_("przejście"), "use": N_("użyj")}
 START_ZOOM = 4.0  # 1 kratka = 4 piksele na ekranie: widać okolicę, ale nie całą mapę
 SPAWN_ZOOM = 2.0  # mapa miejsc potwora: oddalona, żeby od razu widać było całe skupisko
 MIN_ZOOM, MAX_ZOOM = 0.5, 16.0
@@ -149,17 +151,17 @@ class MapPanel(QWidget):
         self._legend.setWordWrap(True)
 
         up = QToolButton(text="▲")
-        up.setToolTip("Piętro wyżej")
+        up.setToolTip(tr("Piętro wyżej"))
         up.clicked.connect(lambda: self._change_floor(-1))
         down = QToolButton(text="▼")
-        down.setToolTip("Piętro niżej")
+        down.setToolTip(tr("Piętro niżej"))
         down.clicked.connect(lambda: self._change_floor(+1))
         self._floor_label = QLabel()
 
         self._view = MapView()
         self._view.clicked.connect(self._on_map_clicked)
         self._picking = False
-        self._view.setToolTip("Kółko myszy: przybliżenie · przeciągnij: przesuwanie")
+        self._view.setToolTip(tr("Kółko myszy: przybliżenie · przeciągnij: przesuwanie"))
         self._status = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
         self._status.setObjectName("muted")
         self._status.setWordWrap(True)
@@ -172,7 +174,7 @@ class MapPanel(QWidget):
         header.addWidget(down)
         if closable:
             close = QToolButton(text="✕")
-            close.setToolTip("Schowaj mapę")
+            close.setToolTip(tr("Schowaj mapę"))
             close.clicked.connect(self.close_requested)
             header.addWidget(close)
 
@@ -207,7 +209,7 @@ class MapPanel(QWidget):
 
     def focus_on(self, x: int, y: int, z: int) -> None:
         """Przenosi mapę na wskazane miejsce (np. wybrane expowisko) i jego piętro."""
-        self._focus = MapPoint(x=x, y=y, z=z, label=self._title.text() or "miejsce")
+        self._focus = MapPoint(x=x, y=y, z=z, label=self._title.text() or tr("miejsce"))
         self._set_floor(z)
 
     def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
@@ -242,7 +244,7 @@ class MapPanel(QWidget):
         self._focus = focus
         self._title.setText(focus.label)
         self._title.setToolTip(focus.label)
-        self._legend.setText(f"{focus.label} · {KIND_NAMES[focus.kind]} · x {focus.x}, y {focus.y}")
+        self._legend.setText(f"{focus.label} · {tr(KIND_NAMES[focus.kind])} · x {focus.x}, y {focus.y}")
         self._set_floor(focus.z)
 
     def recenter(self) -> None:
@@ -255,7 +257,7 @@ class MapPanel(QWidget):
 
     def _set_floor(self, z: int) -> None:
         self._floor = z
-        self._floor_label.setText(f"piętro: {floor_label(z)}")
+        self._floor_label.setText(tr("piętro: {floor}", floor=floor_label(z)))
         if self._spawns:
             self._legend.setText(self._spawn_legend(z))
         self._view.scene().clear()
@@ -263,7 +265,7 @@ class MapPanel(QWidget):
         if path.exists():
             self._draw(z, path)
             return
-        self._status.setText("Pobieram mapę tego piętra (tylko za pierwszym razem)…")
+        self._status.setText(tr("Pobieram mapę tego piętra (tylko za pierwszym razem)…"))
         self._status.show()
         if z not in self._loading:
             self._loading.add(z)
@@ -273,9 +275,9 @@ class MapPanel(QWidget):
     def _spawn_legend(self, z: int) -> str:
         counts = dict(floors(self._spawns))
         others = ", ".join(f"{floor_label(f)}: {n}" for f, n in sorted(counts.items()) if f != z)
-        text = f"Na tym piętrze: {counts.get(z, 0)} miejsc"
+        text = tr("Na tym piętrze: {n} miejsc", n=counts.get(z, 0))
         if others:
-            text += f" · inne piętra ({others})"
+            text += " · " + tr("inne piętra ({floors})", floors=others)
         return f"{text}\n{self._spawn_note}"
 
     def _load_floor(self, z: int) -> None:
@@ -295,14 +297,14 @@ class MapPanel(QWidget):
         self._loading.discard(z)
         log.warning("Nie udało się pobrać mapy piętra %s: %s", z, error)
         if z == self._floor:
-            self._status.setText("Nie udało się pobrać mapy. Sprawdź internet i otwórz mapę ponownie.")
+            self._status.setText(tr("Nie udało się pobrać mapy. Sprawdź internet i otwórz mapę ponownie."))
 
     def _draw(self, z: int, path: Path, keep_view: bool = False) -> None:
         pixmap = QPixmap(str(path))
         if pixmap.isNull():
             # Uszkodzony plik: kasujemy, żeby przy następnym otwarciu pobrać go od nowa.
             path.unlink(missing_ok=True)
-            self._status.setText("Plik mapy był uszkodzony. Otwórz mapę ponownie, żeby go pobrać.")
+            self._status.setText(tr("Plik mapy był uszkodzony. Otwórz mapę ponownie, żeby go pobrać."))
             self._status.show()
             return
         self._status.hide()

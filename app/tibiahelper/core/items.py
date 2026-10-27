@@ -3,6 +3,7 @@
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from .i18n import N_
 from .models import Item, Monster, Rarity, Trade
 
 # Kolejność od najczęstszego dropu: tak gracz czyta „skąd najłatwiej to zdobyć”.
@@ -26,21 +27,22 @@ def best_sell_price(item: Item) -> int:
 
 
 # Nazwa -> (filtr, klucz sortowania, malejąco?). Kolejność tu = kolejność w menu.
+# Polska nazwa jest kluczem; w menu pokazujemy tr(nazwa).
 ITEM_SORTS: dict[str, tuple[Callable[[Item], bool], Callable[[Item], object], bool]] = {
     "A–Z": (lambda i: True, lambda i: i.name.lower(), False),
-    "Najdroższe u NPC": (lambda i: bool(i.sell_to), best_sell_price, True),
-    "Do kupienia u NPC": (lambda i: bool(i.buy_from), lambda i: i.name.lower(), False),
-    "Najlżejsze": (lambda i: i.weight is not None, lambda i: i.weight, False),
+    N_("Najdroższe u NPC"): (lambda i: bool(i.sell_to), best_sell_price, True),
+    N_("Do kupienia u NPC"): (lambda i: bool(i.buy_from), lambda i: i.name.lower(), False),
+    N_("Najlżejsze"): (lambda i: i.weight is not None, lambda i: i.weight, False),
 }
 
 
 # Filtry listy: nazwa -> „czy przedmiot należy do tej grupy”. Grupy są domyślnie ukryte,
 # a gracz może je pokazać w menu „Filtry”. Kolejność tu = kolejność w menu.
 ITEM_FILTERS: dict[str, Callable[[Item], bool]] = {
-    "Quest itemy": lambda i: i.category == "Quest Items",
-    "Soul core": lambda i: i.category == "Soul Cores",
-    "Pojemniki": lambda i: i.category == "Containers",
-    "Bez handlu z NPC": lambda i: not i.sell_to and not i.buy_from,
+    N_("Quest itemy"): lambda i: i.category == "Quest Items",
+    N_("Soul core"): lambda i: i.category == "Soul Cores",
+    N_("Pojemniki"): lambda i: i.category == "Containers",
+    N_("Bez handlu z NPC"): lambda i: not i.sell_to and not i.buy_from,
 }
 
 

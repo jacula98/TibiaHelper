@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ..core.i18n import N_, tr
 from ..core.models import Item, Monster
 from ..core.filters import hide_groups
 from ..core.monsters import MONSTER_FILTERS, SORTS, download_items, download_missing, image_path, item_key, sort_monsters, sprite_path
@@ -40,13 +41,14 @@ PAGE_SPRITE = 64
 ITEM_LINK_PREFIX = "item:"
 LOOT_ICON = 32  # obrazki przedmiotów z wiki mają 32x32 px
 SPAWN_MAP_HEIGHT = 320
+# N_: tłumaczymy dopiero przy pokazaniu, tr(RARITY_NAMES[...]) (zob. core/i18n.py).
 RARITY_NAMES = {
-    "always": "zawsze",
-    "common": "częsty",
-    "uncommon": "nieczęsty",
-    "semi-rare": "półrzadki",
-    "rare": "rzadki",
-    "very rare": "bardzo rzadki",
+    "always": N_("zawsze"),
+    "common": N_("częsty"),
+    "uncommon": N_("nieczęsty"),
+    "semi-rare": N_("półrzadki"),
+    "rare": N_("rzadki"),
+    "very rare": N_("bardzo rzadki"),
 }
 
 
@@ -61,14 +63,16 @@ class MonsterListPage(QWidget):
     def __init__(self, sprites_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.monsters: list[Monster] = []
-        self._search = QLineEdit(placeholderText="Szukaj potwora…", clearButtonEnabled=True)
+        self._search = QLineEdit(placeholderText=tr("Szukaj potwora…"), clearButtonEnabled=True)
         self._sort = QComboBox()
-        self._sort.addItems(list(SORTS))
-        self._sort.setToolTip("Sortowanie")
+        # Na liście tłumaczenie, a w danych pozycji polska nazwa, po której szuka sort_monsters.
+        for name in SORTS:
+            self._sort.addItem(tr(name), name)
+        self._sort.setToolTip(tr("Sortowanie"))
         self._grid = MonsterGrid(sprites_dir)
         self._empty = QLabel(alignment=Qt.AlignmentFlag.AlignCenter, wordWrap=True)
 
-        back = QPushButton("← Menu")
+        back = QPushButton(tr("← Menu"))
         back.clicked.connect(self.back_requested)
         top = QHBoxLayout()
         top.addWidget(back)
@@ -88,7 +92,7 @@ class MonsterListPage(QWidget):
         layout.addWidget(self._empty, 1)
 
         self._search.textChanged.connect(self._refresh)
-        self._sort.currentTextChanged.connect(self._refresh)
+        self._sort.currentIndexChanged.connect(self._refresh)
         self._grid.monster_clicked.connect(self.monster_selected)
 
     def set_monsters(self, monsters: dict[str, Monster]) -> None:
@@ -98,9 +102,11 @@ class MonsterListPage(QWidget):
     def _refresh(self) -> None:
         text = self._search.text().strip().lower()
         found = [m for m in self.monsters if text in m.name.lower()]
-        shown = sort_monsters(hide_groups(found, MONSTER_FILTERS, self._filters.shown()), self._sort.currentText())
+        shown = sort_monsters(hide_groups(found, MONSTER_FILTERS, self._filters.shown()), self._sort.currentData())
         self._grid.set_monsters(shown)
-        self._empty.setText("Brak potworów w danych." if not self.monsters else "Nic nie pasuje do wyszukiwania i filtrów.")
+        self._empty.setText(
+            tr("Brak potworów w danych.") if not self.monsters else tr("Nic nie pasuje do wyszukiwania i filtrów.")
+        )
         self._grid.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 
@@ -126,7 +132,7 @@ class MonsterPage(QWidget):
         self._loader = _SpriteLoader(self)
         self._loader.loaded.connect(self._on_sprite_loaded)
 
-        self._back = QPushButton("← Wstecz")
+        self._back = QPushButton(tr("← Wstecz"))
         self._back.clicked.connect(self.back_requested)
         top = QHBoxLayout()
         top.addWidget(self._back)
@@ -138,15 +144,15 @@ class MonsterPage(QWidget):
         header = QHBoxLayout()
         header.addWidget(self._sprite)
         header.addWidget(self._header, 1)
-        self._elements_title = QLabel("CZYM BIĆ (OBRAŻENIA OD ŻYWIOŁÓW)")
+        self._elements_title = QLabel(tr("CZYM BIĆ (OBRAŻENIA OD ŻYWIOŁÓW)"))
         self._elements_title.setObjectName("sectionTitle")
         self._elements: QWidget | None = None
         self._top = _html_label()
-        self._map_title = QLabel("MAPA WYSTĘPOWANIA")
+        self._map_title = QLabel(tr("MAPA WYSTĘPOWANIA"))
         self._map_title.setObjectName("sectionTitle")
         # Wybór expowiska: potwór bywa w wielu miejscach, mapa pokazuje to wybrane.
         self._places = QComboBox()
-        self._places.setToolTip("Miejsca od tego, gdzie jest najwięcej tych potworów")
+        self._places.setToolTip(tr("Miejsca od tego, gdzie jest najwięcej tych potworów"))
         self._places.currentIndexChanged.connect(self._on_place_selected)
         self._place_list: list[Place] = []
         self._map = MapPanel(maps_dir)
@@ -213,13 +219,21 @@ class MonsterPage(QWidget):
         for widget in (self._map_title, self._places, self._map):
             widget.setVisible(bool(points))
         if points:
-            self._map.show_spawns(monster.name, points, SOURCE_NOTE, self._spawn_icon())
+            self._map.show_spawns(monster.name, points, tr(SOURCE_NOTE), self._spawn_icon())
             self._place_list = places(points)
             # blockSignals: wypełnianie listy nie ma przesuwać mapy przy każdym dodanym miejscu.
             self._places.blockSignals(True)
             self._places.clear()
             for number, place in enumerate(self._place_list, start=1):
-                self._places.addItem(f"{number}. okolice {place.city} · {place.count} miejsc · piętro {floor_label(place.z)}")
+                self._places.addItem(
+                    tr(
+                        "{number}. okolice {city} · {count} miejsc · piętro {floor}",
+                        number=number,
+                        city=place.city,
+                        count=place.count,
+                        floor=floor_label(place.z),
+                    )
+                )
             self._places.blockSignals(False)
             self._on_place_selected(0)
         need_sprite = monster.image_url is not None and sprite_path(self._sprites_dir, monster.id) is None
@@ -294,11 +308,11 @@ def header_html(monster: Monster) -> str:
     """Nazwa, rodzaj i statystyki obok animacji. Każdy tekst z danych przechodzi przez escape."""
     tags = []
     if monster.boss:
-        tags.append("boss")
+        tags.append(escape(tr("boss")))
     if monster.bestiary_class:
         tags.append(escape(monster.bestiary_class))
     if monster.bestiary_level:
-        tags.append(f"bestiariusz: {escape(monster.bestiary_level)}")
+        tags.append(escape(tr("bestiariusz: {level}", level=monster.bestiary_level)))
     stats = [f"HP <b>{_thousands(monster.hp)}</b>", f"exp <b>{_thousands(monster.exp)}</b>"]
     if monster.armor is not None:
         stats.append(f"armor <b>{monster.armor}</b>")
@@ -306,7 +320,7 @@ def header_html(monster: Monster) -> str:
         stats.append(f"speed <b>{monster.speed}</b>")
     return (
         f'<span style="font-size: 18px; font-weight: 600;">{escape(monster.name)}</span><br>'
-        f'<span style="color: #9aa0a6;">{" · ".join(tags)}</span><br>{" · ".join(stats)}'
+        f'<span style="color: {theme.MUTED};">{" · ".join(tags)}</span><br>{" · ".join(stats)}'
     )
 
 
@@ -314,10 +328,10 @@ def monster_html(monster: Monster) -> str:
     """Umiejętności i opis miejsc (pod paskami żywiołów)."""
     parts = []
     if monster.abilities:
-        parts.append(_section("UMIEJĘTNOŚCI"))
+        parts.append(_section(tr("UMIEJĘTNOŚCI")))
         parts.append("<br>".join(f"• {escape(a)}" for a in monster.abilities))
     if monster.location:
-        parts.append(_section("GDZIE WYSTĘPUJE"))
+        parts.append(_section(tr("GDZIE WYSTĘPUJE")))
         parts.append(escape(monster.location))
     return "<br>".join(parts)
 
@@ -341,7 +355,7 @@ def loot_html(
             name = escape(item.name)
             if known(item.name):
                 name = f'<a href="{ITEM_LINK_PREFIX}{index}" style="color: {theme.TEXT};">{name}</a>'
-            rarity = f' <span style="color: #9aa0a6;">({RARITY_NAMES[item.rarity]})</span>' if item.rarity else ""
+            rarity = f' <span style="color: {theme.MUTED};">({escape(tr(RARITY_NAMES[item.rarity]))})</span>' if item.rarity else ""
             path = icon(item.name)
             image = f'<img src="{path.as_uri()}" width="{LOOT_ICON}" height="{LOOT_ICON}">' if path else ""
             rows.append(
@@ -351,11 +365,12 @@ def loot_html(
         parts.append(f'<table cellspacing="0" cellpadding="1">{"".join(rows)}</table>')
 
     parts.append(
-        f'<span style="color: #9aa0a6;">Źródło: <a href="{escape(monster.source_url, quote=True)}">'
-        "TibiaWiki</a> (CC BY-SA 4.0) · obrazki © CipSoft</span>"
+        f'<span style="color: {theme.MUTED};">{escape(tr("Źródło:"))} '
+        f'<a href="{escape(monster.source_url, quote=True)}">TibiaWiki</a> (CC BY-SA 4.0) · '
+        f'{escape(tr("obrazki © CipSoft"))}</span>'
     )
     return "<br>".join(parts)
 
 
 def _section(title: str) -> str:
-    return f'<br><span style="color: #9aa0a6; font-size: 11px; font-weight: 600;">{title}</span>'
+    return f'<br><span style="color: {theme.MUTED}; font-size: 11px; font-weight: 600;">{escape(title)}</span>'

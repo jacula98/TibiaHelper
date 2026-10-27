@@ -5,7 +5,7 @@ import logging
 import sys
 import threading
 
-from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QLibraryInfo, QObject, QTranslator, Signal
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from .core.paths import (
@@ -16,8 +16,10 @@ from .core.paths import (
     progress_file,
     settings_file,
 )
+from .core.i18n import set_language, tr
 from .core.progress import ProgressStore
 from .core.repository import LoadResult, QuestFileError, load_quest_file
+from .core.settings import load_settings
 from .core.spawns import load_spawns
 from . import __version__
 from .core.releases import check_for_release
@@ -55,7 +57,10 @@ def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     _set_windows_app_id()
     app = QApplication(sys.argv)
-    apply_theme(app)
+    # Język przed budową okien: teksty są wstawiane przy ich tworzeniu.
+    language = set_language(load_settings(settings_file()).language)
+    _install_qt_translator(app, language)
+    apply_theme(app, load_settings(settings_file()).theme)
     # Ikona okna i paska zadań. SVG skaluje się do każdego rozmiaru (16 px, 32 px...).
     app.setWindowIcon(icon("logo.svg"))
 
@@ -66,7 +71,7 @@ def main() -> int:
     if args.author:
         if getattr(sys, "frozen", False):
             # W .exe plik danych jest w katalogu tymczasowym i ginie po zamknięciu.
-            QMessageBox.warning(None, "TibiaHelper", "Tryb autora działa tylko przy uruchomieniu ze źródeł.")
+            QMessageBox.warning(None, "TibiaHelper", tr("Tryb autora działa tylko przy uruchomieniu ze źródeł."))
             return 1
         author_file = bundled_data_file()
     window = MainWindow(ProgressStore(progress_file()), settings_file(), author_file)
@@ -93,7 +98,7 @@ def main() -> int:
 
     window.show()
     if error:
-        QMessageBox.warning(window, "TibiaHelper", f"Nie udało się wczytać questów.\n\n{error}")
+        QMessageBox.warning(window, "TibiaHelper", tr("Nie udało się wczytać questów.") + f"\n\n{error}")
 
     if not args.no_update:
         notifier = _UpdateNotifier()
@@ -101,7 +106,7 @@ def main() -> int:
         def install(update: Update) -> None:
             # Wywoływane dopiero po kliknięciu „Zaktualizuj”.
             if not apply_update(update, cached_data_file(), cached_spawns_file()):
-                QMessageBox.warning(window, "TibiaHelper", "Nie udało się zapisać nowych poradników.")
+                QMessageBox.warning(window, "TibiaHelper", tr("Nie udało się zapisać nowych poradników."))
             # Nawet gdy zapis się nie udał, pokazujemy nowe dane do końca tej sesji.
             window.set_quests(
                 visible(update.result),
@@ -136,6 +141,15 @@ def _set_windows_app_id() -> None:
         import ctypes
 
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("TibiaHelper")
+
+
+def _install_qt_translator(app: QApplication, language: str) -> None:
+    """Tłumaczenia z samego Qt, np. przyciski „Yes/No” w okienkach z pytaniem."""
+    translator = QTranslator(app)  # rodzic app: tłumacz żyje tak długo jak program
+    folder = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
+    # Brak pliku (np. okrojona instalacja) nie jest błędem: przyciski zostaną po angielsku.
+    if translator.load(f"qtbase_{language}", folder):
+        app.installTranslator(translator)
 
 
 def _run_update(notifier: _UpdateNotifier, current_version: int, spawns_version: int) -> None:

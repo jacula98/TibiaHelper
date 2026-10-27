@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.filters import filter_quests
+from ..core.i18n import tr
 from ..core.models import Quest
 from ..core.progress import ProgressStore
 
@@ -30,18 +31,18 @@ class QuestListPage(QWidget):
         self._progress = progress
         self._quests: list[Quest] = []
 
-        self._search = QLineEdit(placeholderText="Szukaj questa…", clearButtonEnabled=True)
+        self._search = QLineEdit(placeholderText=tr("Szukaj questa…"), clearButtonEnabled=True)
         # Pole tekstowe zamiast QSpinBox: puste pokazuje szarą podpowiedź „min lvl.”,
         # a walidator pozwala wpisać tylko liczbę.
-        self._level = QLineEdit(placeholderText="min lvl.", clearButtonEnabled=True)
+        self._level = QLineEdit(placeholderText=tr("min lvl."), clearButtonEnabled=True)
         self._level.setValidator(QIntValidator(0, MAX_LEVEL, self._level))
         self._level.setFixedWidth(90)
-        self._level.setToolTip("Twój level: pokażę tylko questy, które możesz już zrobić")
+        self._level.setToolTip(tr("Twój level: pokażę tylko questy, które możesz już zrobić"))
 
         self._list = QListWidget()
         self._empty = QLabel(alignment=Qt.AlignmentFlag.AlignCenter, wordWrap=True)
 
-        back = QPushButton("← Menu")
+        back = QPushButton(tr("← Menu"))
         back.clicked.connect(self.back_requested)
         top = QHBoxLayout()
         top.addWidget(back)
@@ -85,9 +86,9 @@ class QuestListPage(QWidget):
             self._list.addItem(item)
 
         if not self._quests:
-            self._empty.setText("Brak przejrzanych questów do pokazania.")
+            self._empty.setText(tr("Brak przejrzanych questów do pokazania."))
         elif not shown:
-            self._empty.setText("Nic nie pasuje do wyszukiwania.")
+            self._empty.setText(tr("Nic nie pasuje do wyszukiwania."))
         self._list.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 

@@ -30,6 +30,8 @@ do przeglądarki.
   ma kopię `.tibiahelper-backup`. Przed wgraniem zamknij Tibię.
 - **Zgłoś błąd** przy queście, potworze i przedmiocie otwiera gotowe zgłoszenie na GitHubie.
 - **Przezroczystość okna** (10–100%) ustawiasz trybikiem ⚙ w prawym górnym rogu.
+- **Język programu** też zmienisz trybikiem ⚙: polski, English, Português (Brasil), Deutsch, Svenska.
+  Działa po ponownym uruchomieniu. Tłumaczony jest interfejs; treść poradników questów jest po polsku.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
   Gdy na GitHubie pojawi się nowa wersja programu (Release), pokaże pasek z przyciskiem „Pobierz”.
 

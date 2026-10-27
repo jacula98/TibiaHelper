@@ -36,6 +36,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ..core.i18n import tr
 from ..core.issues import issue_url
 from ..core.models import MapPoint, Monster, Npc, Quest, Step
 from ..core.monsters import download_items, download_missing, image_path, item_key, sprite_path
@@ -103,13 +104,13 @@ class QuestView(QWidget):
         self._tail: QWidget | None = None
         self._data_version = 0
 
-        back = QPushButton("← Lista")
+        back = QPushButton(tr("← Lista"))
         back.clicked.connect(self.back_requested)
 
         self._counter = QLabel()
         self._counter.setObjectName("muted")
-        reset = QPushButton("Resetuj")
-        reset.setToolTip("Odznacz wszystkie kroki tego questa")
+        reset = QPushButton(tr("Resetuj"))
+        reset.setToolTip(tr("Odznacz wszystkie kroki tego questa"))
         reset.clicked.connect(self._reset)
 
         top = QHBoxLayout()
@@ -118,7 +119,7 @@ class QuestView(QWidget):
         top.addWidget(self._counter)
         top.addWidget(reset)
         if editable:
-            edit = QPushButton("✎ Edytuj")
+            edit = QPushButton("✎ " + tr("Edytuj"))
             edit.setObjectName("primary")
             edit.clicked.connect(self._request_edit)
             top.addWidget(edit)
@@ -191,18 +192,20 @@ class QuestView(QWidget):
         )
 
         if quest.status == "draft":
-            layout.addWidget(_label("Szkic (draft): ten poradnik nie został jeszcze przejrzany.", "warning"))
+            layout.addWidget(_label(tr("Szkic (draft): ten poradnik nie został jeszcze przejrzany."), "warning"))
         if quest.needs_review:
-            layout.addWidget(_label("Strona na TibiaWiki zmieniła się. Poradnik może być nieaktualny.", "warning"))
+            layout.addWidget(
+                _label(tr("Strona na TibiaWiki zmieniła się. Poradnik może być nieaktualny."), "warning")
+            )
 
         if quest.required_items:
-            layout.addWidget(_label("POTRZEBNE", "sectionTitle"))
+            layout.addWidget(_label(tr("POTRZEBNE"), "sectionTitle"))
             layout.addWidget(_label(", ".join(quest.required_items)))
 
         self._tiles = []
         counts = [(self._monsters[i], n) for i, n in quest.monster_counts() if i in self._monsters]
         if counts:
-            layout.addWidget(_label("POTWORY", "sectionTitle"))
+            layout.addWidget(_label(tr("POTWORY"), "sectionTitle"))
             grid = QGridLayout()
             grid.setSpacing(4)
             # Równe kolumny: jeden potwór zajmuje 1/4 szerokości, a nie cały wiersz.
@@ -215,7 +218,7 @@ class QuestView(QWidget):
                 grid.addWidget(tile, position // TILE_COLUMNS, position % TILE_COLUMNS)
             layout.addLayout(grid)
 
-        layout.addWidget(_label("KROKI", "sectionTitle"))
+        layout.addWidget(_label(tr("KROKI"), "sectionTitle"))
         for index, step in enumerate(quest.steps):
             row = _StepRow(index, step, index in done, self._monsters, self._sprites_dir, self._npc_image)
             row.toggled.connect(self._on_step_toggled)
@@ -225,19 +228,19 @@ class QuestView(QWidget):
             self._step_rows.append(row)
             layout.addWidget(row)
 
-        self._finished = _label("✓ Quest ukończony!", "title")
+        self._finished = _label("✓ " + tr("Quest ukończony!"), "title")
         layout.addWidget(self._finished)
 
         if quest.rewards:
-            layout.addWidget(_label("NAGRODY", "sectionTitle"))
+            layout.addWidget(_label(tr("NAGRODY"), "sectionTitle"))
             layout.addWidget(_label(", ".join(quest.rewards)))
 
         # Link do źródła jest wymagany przez licencję CC BY-SA.
         credits = " (CC BY-SA 4.0)"
         if counts:
-            credits += " · obrazki potworów © CipSoft"
+            credits += " · " + tr("obrazki potworów © CipSoft")
         source = QLabel(
-            f'Źródło: <a href="{escape(quest.source_url, quote=True)}">TibiaWiki</a>{credits}'
+            escape(tr("Źródło:")) + f' <a href="{escape(quest.source_url, quote=True)}">TibiaWiki</a>{escape(credits)}'
         )
         source.setObjectName("muted")
         source.setWordWrap(True)
@@ -613,13 +616,15 @@ class _MarkerTile(QFrame):
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setFixedWidth(MARKER_TILE_WIDTH)
         self.setMinimumHeight(MARKER_TILE_HEIGHT)
-        self.setToolTip(f"{marker.label} ({KIND_NAMES[marker.kind]}): kliknij, żeby zobaczyć na mapie")
+        self.setToolTip(
+            tr("{name} ({kind}): kliknij, żeby zobaczyć na mapie", name=marker.label, kind=tr(KIND_NAMES[marker.kind]))
+        )
         # Kolorowy pasek u góry: ten sam kolor co kropka tego rodzaju na mapie.
         self.setStyleSheet(f"QFrame#markerTile {{ border-top: 3px solid {KIND_COLORS[marker.kind]}; }}")
 
         self._sprite = AnimatedSprite(MARKER_SPRITE)
         self._icon = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
-        self._icon.setPixmap(icon("pin.svg").pixmap(QSize(18, 24)))
+        self._icon.setPixmap(icon("pin").pixmap(QSize(18, 24)))
         caption = QLabel(marker.label, wordWrap=True, alignment=Qt.AlignmentFlag.AlignCenter)
         caption.setTextFormat(Qt.TextFormat.PlainText)
         layout = QVBoxLayout(self)
@@ -647,9 +652,9 @@ def _step_details(step: Step) -> str:
     details = []
     if step.location:
         # Bez ikony pinezki: ta jest tylko w tekście i oznacza klikalną mapę.
-        details.append(f"miejsce: {step.location}")
+        details.append(tr("miejsce: {place}", place=step.location))
     if step.npc:
         details.append(f"NPC: {step.npc}")
     if step.items:
-        details.append("przedmioty: " + ", ".join(step.items))
+        details.append(tr("przedmioty: {items}", items=", ".join(step.items)))
     return " · ".join(details)

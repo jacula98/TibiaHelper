@@ -11,6 +11,7 @@ import urllib.request
 from collections.abc import Callable
 from pathlib import Path
 
+from .i18n import tr
 from .models import GROUND_FLOOR, MAP_X_MIN, MAP_Y_MIN
 from .storage import write_bytes_atomic
 
@@ -36,7 +37,7 @@ def to_pixel(x: int, y: int) -> tuple[int, int]:
 def floor_label(z: int) -> str:
     """Opis piętra tak, jak mówią gracze: parter, +1 (w górę), -2 (pod ziemią)."""
     if z == GROUND_FLOOR:
-        return "parter"
+        return tr("parter")
     return f"{GROUND_FLOOR - z:+d}"
 
 

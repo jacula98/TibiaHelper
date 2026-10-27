@@ -6,6 +6,7 @@ from PySide6.QtCore import QRect, QRectF, QSize, Qt
 from PySide6.QtGui import QColor, QImage, QMovie, QPainter
 from PySide6.QtWidgets import QGridLayout, QLabel, QSizePolicy, QWidget
 
+from ..core.i18n import tr
 from ..core.models import ELEMENTS, Monster
 from ..core.monsters import ELEMENT_NAMES
 from . import theme
@@ -20,8 +21,6 @@ ELEMENT_ICONS = {
     "holy": "✨",
     "death": "💀",
 }
-WEAK_COLOR = "#81c784"  # potwór słaby na żywioł: tym warto bić
-STRONG_COLOR = "#ef5350"  # odporny: tym nie bić
 BAR_MAX = 200  # pasek pokazuje 0-200%; 100% to zwykłe obrażenia
 
 # Prostokąt postaci (bez przezroczystych brzegów) dla każdego pliku, liczony raz.
@@ -116,9 +115,9 @@ class _Bar(QWidget):
 def element_verdict(percent: int) -> tuple[str, str]:
     """(procent, kolor) dla obrażeń od żywiołu: o ile więcej albo mniej niż zwykle."""
     if percent > 100:
-        return f"+{percent - 100}%", WEAK_COLOR
+        return f"+{percent - 100}%", theme.GOOD  # potwór słaby na żywioł: tym warto bić
     if percent < 100:
-        return f"−{100 - percent}%", STRONG_COLOR
+        return f"−{100 - percent}%", theme.BAD  # odporny: tym nie bić
     return "0%", theme.MUTED
 
 
@@ -134,13 +133,13 @@ class ElementBars(QWidget):
         rows = sorted(ELEMENTS, key=lambda e: -monster.elements.get(e, 100))
         best = rows[0]
         if monster.elements.get(best, 100) > 100:
-            hint = QLabel(f"Najlepiej bić: {ELEMENT_ICONS[best]} {ELEMENT_NAMES[best]}")
-            hint.setStyleSheet(f"color: {WEAK_COLOR}; font-weight: 600;")
+            hint = QLabel(tr("Najlepiej bić: {element}", element=f"{ELEMENT_ICONS[best]} {tr(ELEMENT_NAMES[best])}"))
+            hint.setStyleSheet(f"color: {theme.GOOD}; font-weight: 600;")
             grid.addWidget(hint, 0, 0, 1, 3)
         for row, element in enumerate(rows, start=1):
             percent = monster.elements.get(element, 100)
             text, color = element_verdict(percent)
-            name = QLabel(f"{ELEMENT_ICONS[element]} {ELEMENT_NAMES[element]}")
+            name = QLabel(f"{ELEMENT_ICONS[element]} {tr(ELEMENT_NAMES[element])}")
             verdict = QLabel(text)
             verdict.setStyleSheet(f"color: {color}; font-weight: 600;")
             verdict.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)

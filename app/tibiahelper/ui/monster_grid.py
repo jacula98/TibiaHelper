@@ -5,8 +5,10 @@ tylko widoczne kafelki (delegat), a SpriteAnimator trzyma animacje (QMovie)
 tylko dla tych, które są teraz na ekranie. Brakujące obrazki pobiera w tle.
 """
 
+import logging
 import threading
 import time
+import urllib.error
 from collections import deque
 from pathlib import Path
 
@@ -15,7 +17,7 @@ from PySide6.QtGui import QColor, QFont, QImage, QMovie, QPainter
 from PySide6.QtWidgets import QListView, QStyle, QStyledItemDelegate, QStyleOptionViewItem
 
 from ..core.models import Monster
-from ..core.monsters import describe, ensure_image, image_path
+from ..core.monsters import Fetch, _download, describe, ensure_image, image_path
 from . import theme
 from .monster_widgets import animation_crop
 
@@ -24,6 +26,11 @@ TILE_HEIGHT = 122
 SPRITE_SIZE = 56
 FRAME_MS = 100  # co tyle odświeżamy widoczne kafelki (GIF-y z wiki mają klatki co 100-200 ms)
 FORGET_AFTER = 3.0  # sekundy: animacja kafelka, którego nie widać, jest zwalniana
+WORKERS = 4  # tyle obrazków pobieramy naraz
+STALE_AFTER = 1.0  # sekundy: obrazka, którego tyle nie rysowaliśmy, nie pobieramy (przewinięty)
+RETRY_AFTER = 30.0  # sekundy: po chwilowym błędzie sieci próbujemy znowu najwcześniej po tym czasie
+
+log = logging.getLogger(__name__)
 
 
 class _Loaded(QObject):
@@ -36,16 +43,19 @@ class SpriteAnimator(QObject):
     Obrazek to plik folder/<key>.gif; brakujący pobieramy w tle z podanego adresu.
     """
 
-    def __init__(self, folder: Path, parent: QObject | None = None) -> None:
+    def __init__(self, folder: Path, parent: QObject | None = None, fetch: Fetch = _download) -> None:
         super().__init__(parent)
         self._folder = folder
+        self._fetch = fetch
         self._movies: dict[str, tuple[QMovie, QRect]] = {}
         self._used: dict[str, float] = {}
         # Pobieranie: kolejka i zbiór „już zlecone”, żeby nie pobierać dwa razy (ani bez końca po błędzie).
+        # Wszystko poniżej zmieniamy tylko pod _lock, bo korzystają z tego też wątki pobierające.
         self._queue: deque[tuple[str, str]] = deque()
         self._requested: set[str] = set()
+        self._retry_at: dict[str, float] = {}
+        self._workers = 0
         self._lock = threading.Lock()
-        self._worker: threading.Thread | None = None
         self._signals = _Loaded(self)
         self.loaded = self._signals.loaded
 
@@ -76,29 +86,50 @@ class SpriteAnimator(QObject):
                 entry[0].deleteLater()
 
     def _request(self, key: str, url: str | None) -> None:
-        if url is None or key in self._requested:
+        if url is None:
             return
-        self._requested.add(key)
         with self._lock:
+            if key in self._requested or time.monotonic() < self._retry_at.get(key, 0.0):
+                return
+            self._requested.add(key)
             self._queue.append((key, url))
-            if self._worker is None or not self._worker.is_alive():
+            # Kilka wątków naraz: jeden obrazek to ok. 0,5 s czekania na serwer, a na ekranie jest ich kilkanaście.
+            if self._workers < WORKERS:
+                self._workers += 1
                 # daemon=True: zamknięcie programu nie czeka na pobieranie.
-                self._worker = threading.Thread(target=self._download_all, daemon=True, name="sprites")
-                self._worker.start()
+                threading.Thread(target=self._download_all, daemon=True, name="sprites").start()
 
     def _download_all(self) -> None:
         while True:
             with self._lock:
                 if not self._queue:
-                    self._worker = None
+                    self._workers -= 1
                     return
                 # Najpierw ostatnio zlecone: to te, które użytkownik właśnie ogląda.
                 key, url = self._queue.pop()
+                if time.monotonic() - self._used.get(key, 0.0) > STALE_AFTER:
+                    # Przewinięty poza ekran, zanim przyszła jego kolej: nie blokujemy widocznych.
+                    # Zlecimy go znowu, gdy wróci na ekran.
+                    self._requested.discard(key)
+                    continue
             try:
-                ensure_image(self._folder, key, url)
-            except (OSError, ValueError):
-                continue  # brak obrazka: zostaje łapka, drugi raz nie próbujemy (_requested)
+                ensure_image(self._folder, key, url, self._fetch)
+            except Exception as exc:  # noqa: BLE001 (wątek nie może zginąć, bo reszta kolejki by utknęła)
+                log.info("Nie udało się pobrać obrazka %s: %s", key, exc)
+                if not _permanent(exc):
+                    # Chwilowy błąd (sieć, 503): spróbujemy znowu, ale nie częściej niż co RETRY_AFTER.
+                    with self._lock:
+                        self._requested.discard(key)
+                        self._retry_at[key] = time.monotonic() + RETRY_AFTER
+                continue  # brak obrazka: na razie zostaje łapka
             self.loaded.emit()  # sygnał z wątku w tle trafia do okna przez kolejkę Qt
+
+
+def _permanent(exc: Exception) -> bool:
+    """Błąd, którego ponowna próba nie naprawi: zły adres/plik albo 404 (4xx)."""
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code < 500
+    return isinstance(exc, ValueError)
 
 
 class MonsterModel(QAbstractListModel):
