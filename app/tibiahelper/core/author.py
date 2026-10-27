@@ -11,7 +11,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .models import SCHEMA_VERSION, Monster, Quest
+from .models import SCHEMA_VERSION, Boss, Monster, Quest
 from .storage import write_bytes_atomic
 from .terminology import find_forbidden
 
@@ -60,6 +60,36 @@ def check_quest(quest: dict, monster_ids: set[str] | None = None) -> Quest:
     return model
 
 
+def check_boss(boss: dict, monster_ids: set[str], quest_ids: set[str]) -> Boss:
+    """Walidacja bossa: poprawne pola, istniejący potwór i questy, bez angielskich nazw."""
+    try:
+        model = Boss.model_validate(boss)
+    except ValidationError as exc:
+        raise AuthorError(f"Boss {boss.get('monster', '?')!r} ma błędy: {_problems(exc)}") from exc
+    if model.monster not in monster_ids:
+        raise AuthorError(f"Boss {model.monster!r}: nie ma takiego potwora w pliku.")
+    unknown = sorted(set(model.quests) - quest_ids)
+    if unknown:
+        raise AuthorError(f"Boss {model.monster!r}: nieznane questy {unknown}.")
+    forbidden = find_forbidden(json.dumps(boss, ensure_ascii=False))
+    if forbidden:
+        raise AuthorError(
+            f"Zamień {forbidden[0]!r} na „bramka lvl-owa” (odmienione w zdaniu, np. „przez bramkę lvl-ową”)."
+        )
+    return model
+
+
+def upsert_boss(data: dict, boss: dict) -> None:
+    """Dodaje bossa albo podmienia tego z tym samym potworem. Lista posortowana po id potwora."""
+    bosses = data.setdefault("bosses", [])
+    for index, old in enumerate(bosses):
+        if old.get("monster") == boss["monster"]:
+            bosses[index] = boss
+            return
+    bosses.append(boss)
+    bosses.sort(key=lambda b: b["monster"])
+
+
 def save_data(data: dict, path: Path) -> None:
     """Sprawdza wszystkie questy, podbija data_version i zapisuje plik.
 
@@ -78,6 +108,13 @@ def save_data(data: dict, path: Path) -> None:
         monster_ids.add(monster.id)
     for quest in data["quests"]:
         check_quest(quest, monster_ids)
+    quest_ids = {quest["id"] for quest in data["quests"]}
+    boss_ids: set[str] = set()
+    for boss in data.get("bosses", []):
+        model = check_boss(boss, monster_ids, quest_ids)
+        if model.monster in boss_ids:
+            raise AuthorError(f"Boss {model.monster!r} jest w pliku dwa razy.")
+        boss_ids.add(model.monster)
     # Plik z potworami wymaga nowszej aplikacji: starsza dostanie jasny komunikat.
     data["schema_version"] = max(data["schema_version"], SCHEMA_VERSION)
     data["data_version"] += 1

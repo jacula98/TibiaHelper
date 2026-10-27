@@ -67,6 +67,10 @@ def main() -> int:
     def visible(result: LoadResult) -> list:
         return result.quests if args.show_drafts else result.visible_quests
 
+    def visible_bosses(result: LoadResult) -> list:
+        # Bossy-szkice widzi tylko autor (lista bossów i tak pokazuje je tylko w trybie autora).
+        return result.bosses if args.show_drafts else result.visible_bosses
+
     author_file = None
     if args.author:
         if getattr(sys, "frozen", False):
@@ -83,7 +87,7 @@ def main() -> int:
         else:
             result = load_best_local(bundled_data_file(), cached_data_file())
         window.set_quests(
-            visible(result), result.data_version, result.monsters, result.items, result.npcs
+            visible(result), result.data_version, result.monsters, result.items, result.npcs, visible_bosses(result)
         )
     except QuestFileError as exc:
         # Bez danych okno i tak się otwiera; użytkownik widzi komunikat zamiast awarii.
@@ -114,6 +118,7 @@ def main() -> int:
                 update.result.monsters,
                 update.result.items,
                 update.result.npcs,
+                visible_bosses(update.result),
             )
             if update.spawns_raw is not None:
                 window.set_spawns(load_spawns(bundled_spawns_file(), cached_spawns_file()))

@@ -112,6 +112,27 @@ def _is_event(info: dict[str, str]) -> bool:
     return "event" in spawns and spawns <= _NON_REGULAR_SPAWNS
 
 
+def _bosstiary_class(info: dict[str, str]) -> str | None:
+    # Na wiki bywa „archfoe” albo z dopiskiem; bierzemy tylko trzy znane kategorie.
+    value = _text(info.get("bosstiaryclass", "")).strip().lower()
+    return next((name for name in ("Bane", "Archfoe", "Nemesis") if value.startswith(name.lower())), None)
+
+
+_COOLDOWN = re.compile(r"^(\d+(?:\.\d+)?)\s*(seconds?|minutes?|hours?|days?)?$")
+_UNIT_HOURS = {"second": 1 / 3600, "minute": 1 / 60, "hour": 1, "day": 24}
+
+
+def cooldown_hours(value: str) -> float | None:
+    """Cooldown bossa w godzinach. Wiki pisze zwykle samą liczbę godzin („20”), czasem „10 minutes”."""
+    match = _COOLDOWN.match(_text(value).strip().lower())
+    if match is None:
+        return None
+    number, unit = float(match.group(1)), (match.group(2) or "hour").rstrip("s")
+    hours = round(number * _UNIT_HOURS[unit], 3)
+    # 0 na wiki to brak cooldownu albo brak danych; i tak nic graczowi nie mówi.
+    return hours or None
+
+
 def make_monster(page: WikiPage, image_url: str | None, monster_id: str | None = None) -> dict:
     """Wpis potwora z wikitekstu strony. Rzuca ValueError, gdy strona nie jest potworem."""
     infobox = templates.find(page.wikitext, "Infobox Creature")
@@ -143,6 +164,8 @@ def make_monster(page: WikiPage, image_url: str | None, monster_id: str | None =
         "unavailable": info.get("status", "").strip().lower() in UNAVAILABLE_STATUSES,
         "bestiary_class": _text(info.get("bestiaryclass", "")) or None,
         "bestiary_level": _text(info.get("bestiarylevel", "")) or None,
+        "bosstiary_class": _bosstiary_class(info),
+        "cooldown_hours": cooldown_hours(info.get("cooldown", "")),
         "abilities": _abilities(info.get("abilities", "")),
         "loot": _loot(info.get("loot", "")),
         "location": location or None,

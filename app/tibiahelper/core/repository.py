@@ -13,7 +13,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .models import SCHEMA_VERSION, Item, Monster, Npc, Quest, QuestFileHeader
+from .models import SCHEMA_VERSION, Boss, Item, Monster, Npc, Quest, QuestFileHeader
 
 log = logging.getLogger(__name__)
 
@@ -32,6 +32,12 @@ class LoadResult:
     # Przedmioty i NPC po nazwie zapisanej małymi literami (loot na wiki bywa pisany różnie).
     items: dict[str, Item] = field(default_factory=dict)
     npcs: dict[str, Npc] = field(default_factory=dict)
+    # Bossy dodane przez autora (też szkice; graczom pokazujemy tylko visible_bosses).
+    bosses: list[Boss] = field(default_factory=list)
+
+    @property
+    def visible_bosses(self) -> list[Boss]:
+        return [b for b in self.bosses if b.is_visible]
 
     @property
     def visible_quests(self) -> list[Quest]:
@@ -81,6 +87,7 @@ def parse_quest_data(raw: object) -> LoadResult:
 
     items = _parse_named(header.items, Item, "przedmiot", errors)
     npcs = _parse_named(header.npcs, Npc, "NPC", errors)
+    bosses = _parse_bosses(header.bosses, monsters, errors)
 
     for message in errors:
         log.warning(message)
@@ -92,7 +99,29 @@ def parse_quest_data(raw: object) -> LoadResult:
         monsters=monsters,
         items=items,
         npcs=npcs,
+        bosses=bosses,
     )
+
+
+def _parse_bosses(raw_bosses: list, monsters: dict[str, Monster], errors: list[str]) -> list[Boss]:
+    bosses: list[Boss] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(raw_bosses):
+        try:
+            boss = Boss.model_validate(raw)
+        except ValidationError as exc:
+            errors.append(f"boss #{index}: {exc}")
+            continue
+        # Bez potwora nie ma czego pokazać (HP, obrazek, loot są w potworze).
+        if boss.monster not in monsters:
+            errors.append(f"boss #{index} ({boss.monster}): nieznany potwór, pominięto")
+            continue
+        if boss.monster in seen:
+            errors.append(f"boss #{index} ({boss.monster}): zduplikowany, pominięto")
+            continue
+        seen.add(boss.monster)
+        bosses.append(boss)
+    return bosses
 
 
 def _parse_named(raw_list: list, model: type, what: str, errors: list[str]) -> dict:

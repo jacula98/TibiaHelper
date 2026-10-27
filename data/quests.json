@@ -1,6 +1,6 @@
 {
-  "schema_version": 8,
-  "data_version": 26,
+  "schema_version": 9,
+  "data_version": 27,
   "quests": [
     {
       "id": "20-years-a-cook-quest",
@@ -36910,6 +36910,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Abomination",
       "wiki_revision": 1181299,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-6000?",
         "Feared: 4seconds~ rare",
@@ -37064,6 +37065,8 @@
       "wiki_revision": 1181356,
       "speed": 230,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1400+",
         "Invisible: invisible",
@@ -37433,6 +37436,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Adlerauge",
       "wiki_revision": 1195821,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "amount": "10-50",
@@ -37698,6 +37702,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Adventurer_Group",
       "wiki_revision": 1188550,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "location": "Greenshore ()"
     },
     {
@@ -37922,6 +37928,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ahau",
       "wiki_revision": 1205501,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-456",
         "Earth Strike: 354-422 (earth)",
@@ -38160,6 +38168,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Alptramun",
       "wiki_revision": 1116547,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1000",
         "Death Beam: 700-2000 (death)",
@@ -38399,6 +38408,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Amenef_the_Burning",
       "wiki_revision": 1140862,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-925"
       ],
@@ -38804,6 +38815,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Ancient_Spawn_of_Morgathla",
       "wiki_revision": 1116481,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "loot": [
         {
           "amount": "4",
@@ -40032,6 +40044,7 @@
       "speed": 100,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 100-170",
         "Fire Wave: 100-250 (fire)",
@@ -40062,6 +40075,7 @@
       "wiki_revision": 1181514,
       "speed": 66,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-2000+?",
         "Groundshaker Ball: 171-300+ (physical)",
@@ -40268,6 +40282,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Anomaly",
       "wiki_revision": 1140863,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1300?"
       ],
@@ -40532,6 +40548,7 @@
       "wiki_revision": 1154865,
       "speed": 143,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300",
         "Sudden Death Berserk: 0 (death)",
@@ -40747,6 +40764,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Arbaziloth",
       "wiki_revision": 1181346,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Inflict Powerless"
       ],
@@ -41196,6 +41214,7 @@
       "wiki_revision": 1204273,
       "speed": 135,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-560",
         "Summons 3 Vampires at once (summon)",
@@ -41247,6 +41266,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Arthom_the_Hunter",
       "wiki_revision": 1124158,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?",
         "Shoots Arrows: 0-150 (physical)",
@@ -41315,6 +41335,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Ascending_Ferumbras",
       "wiki_revision": 1108777,
       "boss": true,
+      "cooldown_hours": 332.0,
       "location": "Ferumbras' Ascension Quest area."
     },
     {
@@ -41355,6 +41376,7 @@
       "wiki_revision": 1113861,
       "speed": 215,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-1001+",
         "Death Hit: 0-693+ (death)",
@@ -41782,6 +41804,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Atab",
       "wiki_revision": 1153599,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Healing: 450-550",
         "&nbsp;Melee: 150-735",
@@ -41890,6 +41913,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Ayana_the_Crimson_Curse",
       "wiki_revision": 1156381,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Melee: 185-550",
         "Healing: 1000-1652",
@@ -42135,6 +42159,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Bakragore",
       "wiki_revision": 1119058,
       "boss": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 68.0,
       "abilities": [
         "Melee: ?",
         "Self-Healing by Darkfield: 500",
@@ -42438,6 +42464,7 @@
       "wiki_revision": 1124159,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-50",
         "Healing: 100-270",
@@ -42636,6 +42663,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Barbaria",
       "wiki_revision": 991453,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-120+",
         "Summon War Wolf: 2",
@@ -43113,6 +43141,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Baron_from_Below",
       "wiki_revision": 1179618,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 4.0,
       "abilities": [
         "Melee: 0-2000",
         "life drain Wrath of Nature: 500-2000 (life drain)",
@@ -43439,6 +43469,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Battlemaster_Zunzu",
       "wiki_revision": 1083586,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300",
         "Poison attack: 300-350 (earth)",
@@ -43982,6 +44013,8 @@
       "armor": 58,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 24.0,
       "abilities": [
         "Melee: 0-200 (physical)",
         "Scratch Wave [ energy wave's size; 5 SQM long; 3 SQM wide; looks like yellow spark - same as Mutated Tiger]: 0-200",
@@ -44068,6 +44101,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Big_Bad_One",
       "wiki_revision": 995587,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-100?",
         "Summon Wolf: 2",
@@ -44101,6 +44135,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Big_Boss_Trolliver",
       "wiki_revision": 1171903,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-40?",
         "Summon Troll: 2"
@@ -44257,6 +44292,7 @@
       "wiki_revision": 963732,
       "armor": 42,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-300",
         "Throws Spears: 0-200 (physical)"
@@ -44469,6 +44505,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Black_Vixen",
       "wiki_revision": 1181544,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Stalagmite: 100-200+ paralyzes you",
         "Death Beam: 150-300 (death)",
@@ -44658,6 +44696,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Blazing_Rose",
       "wiki_revision": 1140932,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Perfume Flacon"
@@ -44723,6 +44763,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Blazing_Time_Guardian",
       "wiki_revision": 1106204,
       "boss": true,
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -44996,6 +45037,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Blight_Mariner",
       "wiki_revision": 1206296,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Proficiency Catalyst"
@@ -45098,6 +45141,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Blightfather",
       "wiki_revision": 1181440,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?",
         "Invisibility (invisible)",
@@ -45845,6 +45889,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Bloodback",
       "wiki_revision": 1140867,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-400",
         "Music Berserk: 0-200? (?)",
@@ -46745,6 +46791,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Bone_Overlord",
       "wiki_revision": 1195313,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "location": "Below Draconia, in the Forgotten Crypt, ."
     },
     {
@@ -47243,6 +47291,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Boogey",
       "wiki_revision": 1068595,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-120 (physical)",
         "Blood Bomb: 12-20 (death)",
@@ -47414,6 +47463,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Boreth",
       "wiki_revision": 938774,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-200",
         "Life Drain: 100-200",
@@ -47679,6 +47729,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Bragrumol",
       "wiki_revision": 1119930,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-600?",
         "Death Strike: 300-600? (death)",
@@ -47744,6 +47795,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Brain_Head",
       "wiki_revision": 1140869,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -48101,6 +48154,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Brainstealer",
       "wiki_revision": 1140933,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500",
         "Death Ball: 1000-1500 (life drain)",
@@ -49121,6 +49176,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Brokul",
       "wiki_revision": 1208471,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500?",
         "Death Beam: 300-500+ (death)",
@@ -49253,6 +49310,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Brother_Chill",
       "wiki_revision": 1106181,
       "boss": true,
+      "cooldown_hours": 20.0,
       "location": "Secret Library."
     },
     {
@@ -49264,6 +49322,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Brother_Freeze",
       "wiki_revision": 1106182,
       "boss": true,
+      "cooldown_hours": 20.0,
       "location": "Secret Library."
     },
     {
@@ -49764,6 +49823,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Bullwark",
       "wiki_revision": 1106244,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 0.28,
       "abilities": [
         "Melee: 0-1000",
         "Berserk: 0-? (?)",
@@ -50071,6 +50132,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Burster",
       "wiki_revision": 1143406,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-800+",
         "Energy Beam: 0-300+ (energy)"
@@ -50666,6 +50728,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Captain_Jones",
       "wiki_revision": 1129710,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-100?",
         "Healing",
@@ -51400,6 +51463,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Chagorz",
       "wiki_revision": 1204942,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee",
         "Summon Pillar of Dark Energy: 8",
@@ -52055,6 +52120,7 @@
       "wiki_revision": 1126270,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1130+",
         "Throws boulders: 0-500+ (physical)",
@@ -52078,6 +52144,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Chizzoron_the_Distorter",
       "wiki_revision": 1150566,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-759+",
         "Smoke Bomb: 300-686 (earth)",
@@ -52322,6 +52389,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Chopper",
       "wiki_revision": 1123374,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-200",
         "Healing: 5-20",
@@ -52462,6 +52530,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Clavius",
       "wiki_revision": 1195820,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "amount": "10-50",
@@ -54396,6 +54465,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Count_of_the_Core",
       "wiki_revision": 1103760,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 4.0,
       "abilities": [
         "Melee: 323+"
       ],
@@ -54582,6 +54653,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Count_Vlarkorth",
       "wiki_revision": 1140872,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-325",
         "Healing: 0-200 (healing)",
@@ -54730,6 +54803,7 @@
       "wiki_revision": 1181316,
       "speed": 200,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-828+",
         "Life Drain: 423-976+ (life drain)",
@@ -54884,6 +54958,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Court_Warlock",
       "wiki_revision": 1195816,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "loot": [
         {
           "amount": "1-2",
@@ -56835,6 +56910,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Cublarc_the_Plunderer",
       "wiki_revision": 1181414,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0? (physical)",
         "Arrow: 85+",
@@ -57493,6 +57569,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Custodian",
       "wiki_revision": 1107956,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-500+"
       ],
@@ -58636,6 +58713,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Darkfang",
       "wiki_revision": 1140874,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-300?",
         "Summon Gloom Wolf: 2",
@@ -59297,6 +59376,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/0/00/Dazed_Leaf_Golem.gif/revision/latest?cb=20220822144752&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Dazed_Leaf_Golem",
       "wiki_revision": 1181438,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-146",
         "Red Sparkles Exori (?)",
@@ -59541,6 +59621,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Death_Priest_Shargon",
       "wiki_revision": 1186615,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-800",
         "Healing: 0-699+",
@@ -59977,6 +60058,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Deathstrike",
       "wiki_revision": 1181511,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-2000",
         "Mana Drain Wave: 200-500 (mana drain)",
@@ -60046,6 +60129,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Deep_Terror",
       "wiki_revision": 1101123,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-945+",
         "Healing: 0-921+"
@@ -61859,6 +61943,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Despor",
       "wiki_revision": 1054221,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "location": "Nimmersatt's Breeding Ground"
     },
     {
@@ -61870,6 +61955,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Destabilized_Ferumbras",
       "wiki_revision": 1108776,
       "boss": true,
+      "cooldown_hours": 332.0,
       "location": "Ferumbras' Ascension Quest area."
     },
     {
@@ -62293,6 +62379,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Devourer_of_Secrets",
       "wiki_revision": 1106173,
       "boss": true,
+      "cooldown_hours": 20.0,
       "location": "Secret Library."
     },
     {
@@ -62305,6 +62392,7 @@
       "wiki_revision": 1116358,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-3000?",
         "Great Life Drain Beam: 0-1000? (life drain)",
@@ -62351,6 +62439,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Dharalion",
       "wiki_revision": 1179207,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-30",
         "Summon Demon Skeleton: 2",
@@ -62548,6 +62637,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Diamond_Blossom",
       "wiki_revision": 1140934,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Platinum Coin"
@@ -62800,6 +62891,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Diblis_the_Fair",
       "wiki_revision": 1154866,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300",
         "Summon Banshee: 4",
@@ -62879,6 +62971,7 @@
       "wiki_revision": 1181597,
       "speed": 240,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-260",
         "Life Drain Strike: 400-800 (life drain)",
@@ -63086,6 +63179,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Dirtbeard",
       "wiki_revision": 1179252,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-125+",
         "Throwing Knifes: 0-100 (?)",
@@ -63126,6 +63220,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Diseased_Bill",
       "wiki_revision": 1181471,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-240+",
         "Distance Life Drain: 250-276+ (life drain)",
@@ -63159,6 +63254,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Diseased_Dan",
       "wiki_revision": 1181472,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-103+",
         "Poison Storm on you: poisons you up to 31 hp/turn (earth)",
@@ -63192,6 +63288,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Diseased_Fred",
       "wiki_revision": 1181473,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-150+",
         "Distance Life Drain: 65-80+ (life drain)",
@@ -63405,6 +63502,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Doctor_Perhaps",
       "wiki_revision": 1181282,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-43",
         "Drown Bomb: 17-55 (drowning)",
@@ -63560,6 +63658,7 @@
       "wiki_revision": 1206116,
       "speed": 185,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-700+ (physical)",
         "Life Drain Wave: 1000+ (life drain)",
@@ -64893,6 +64992,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Dread_Maiden",
       "wiki_revision": 1140935,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -65090,6 +65191,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Dreadful_Disruptor",
       "wiki_revision": 1055702,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?",
         "Healing"
@@ -65192,6 +65294,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Dreadmaw",
       "wiki_revision": 1065864,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-200?"
       ],
@@ -65509,6 +65612,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Drume",
       "wiki_revision": 1152307,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-600+",
         "Throwing Knife 3sqm ball: 670-700 (earth)",
@@ -65743,6 +65848,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Duke_Krule",
       "wiki_revision": 1140878,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "amount": "0-5",
@@ -65882,6 +65989,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Duke_of_the_Depths",
       "wiki_revision": 1116480,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 4.0,
       "abilities": [
         "Melee",
         "Fireball Beam: ? (?)",
@@ -66760,6 +66869,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Earl_Osam",
       "wiki_revision": 1140879,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1000",
         "Ice Beam: 500-1000 (ice)",
@@ -67314,6 +67425,8 @@
       "wiki_revision": 1187610,
       "armor": 10,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Fireball: 30-60 (fire)",
         "Fire Field (fire field)"
@@ -67775,6 +67888,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Eldritch_Dragon_Lord",
       "wiki_revision": 1188545,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "amount": "32-60",
@@ -68261,6 +68376,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Elvira_Hammerthrust",
       "wiki_revision": 995810,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "loot": [
         {
           "amount": "0-100",
@@ -69335,6 +69451,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Enraged_Thorn_Knight",
       "wiki_revision": 1140936,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -69692,6 +69810,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Enusat_the_Onyx_Wing",
       "wiki_revision": 1119107,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-650"
       ],
@@ -69792,6 +69911,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Eradicator",
       "wiki_revision": 1140882,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 300-1800",
         "Great Energy Wave: 0-? (energy)",
@@ -70069,6 +70190,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Essence_of_Malice",
       "wiki_revision": 1205818,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-450",
         "Death Missile: 200-747 (death)",
@@ -70404,6 +70527,7 @@
       "wiki_revision": 1192420,
       "speed": 175,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-91",
         "Mana Drain Wave: 150-250 (mana drain)",
@@ -70489,6 +70613,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Evil_Mastermind",
       "wiki_revision": 1181480,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-77+",
         "Fireball: 66-72+ (fire)",
@@ -71033,6 +71158,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Faceless_Bane",
       "wiki_revision": 1209262,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500",
         "Energy Strike: 300-600 (energy)",
@@ -71578,6 +71705,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_False_God",
       "wiki_revision": 1140937,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1000+ (physical)",
         "physical damage Stone Shower Wave: 100-200?"
@@ -72040,6 +72169,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Fear_Feaster",
       "wiki_revision": 1140938,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -72447,6 +72578,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Feroxa",
       "wiki_revision": 988016,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1500?",
         "Shoots Arrow: ? (?)"
@@ -72729,6 +72861,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Ferumbras",
       "wiki_revision": 1181227,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1357",
         "Burning Bomb: up to 70 turns (fire)",
@@ -73012,6 +73145,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ferumbras_Mortal_Shell",
       "wiki_revision": 1136462,
       "boss": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 332.0,
       "abilities": [
         "Great Death Beam: 1700-2000? (death)",
         "Healing: 450-5500?"
@@ -73812,6 +73947,8 @@
       "wiki_revision": 1054200,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Fire Wave: ? (fire)"
       ],
@@ -73984,6 +74121,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Flamecaller_Zazrak",
       "wiki_revision": 1181415,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-100+",
         "Stalagmite: poisons you (earth)",
@@ -74065,6 +74203,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Flaming_Orchid",
       "wiki_revision": 1181532,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 229-411",
         "Mana Drain Spark Beam: 291-381 (mana drain)",
@@ -74185,6 +74325,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Fleabringer",
       "wiki_revision": 1003093,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?"
       ],
@@ -74301,6 +74442,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Fleshslicer",
       "wiki_revision": 1116399,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-300?",
         "Healing",
@@ -74861,6 +75003,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Foreman_Kneebiter",
       "wiki_revision": 1165513,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-250",
         "Distance Fighting: 0-67? (?)",
@@ -75311,6 +75454,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Freezing_Time_Guardian",
       "wiki_revision": 1106205,
       "boss": true,
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -75477,6 +75621,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Frog_Prince",
       "wiki_revision": 1160734,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1"
       ],
@@ -76474,6 +76619,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Furyosa",
       "wiki_revision": 1181674,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-625",
         "Armageddon when saying Back in black!: 260-310 (death)",
@@ -76605,6 +76751,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Gaffir",
       "wiki_revision": 1116558,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-500+",
         "Fire Beam: 300-600? (fire)",
@@ -76834,6 +76981,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Gaz'haragoth",
       "wiki_revision": 1181615,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-7,200",
         "Summon Minion of Gaz'haragoth: 7",
@@ -77222,6 +77370,8 @@
       "wiki_revision": 1181540,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-380?",
         "Healing: 180-240?",
@@ -77314,6 +77464,7 @@
       "source_url": "https://tibia.fandom.com/wiki/General_Murius",
       "wiki_revision": 1194032,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-170? (physical)",
         "Summon Minotaur Guard: ? (Minotaur Archer)",
@@ -77564,6 +77715,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Ghazbaran",
       "wiki_revision": 1106290,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-3000",
         "Mana Drain: 525-1000 (mana drain)",
@@ -78169,6 +78321,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ghulosh",
       "wiki_revision": 1140884,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1000",
         "Death Beam: 500-600 (death)",
@@ -78957,6 +79111,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Glitterscale",
       "wiki_revision": 1051283,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-120",
         "Fire Wave: 90-180 (fire)",
@@ -79681,6 +79836,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Glooth_Fairy",
       "wiki_revision": 1181529,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 0.28,
       "abilities": [
         "Melee: 0-1900",
         "Blue Energy Ultimate Explosion: 300-400 (energy)",
@@ -80080,6 +80237,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Gnomevil",
       "wiki_revision": 1179417,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1639+?",
         "Ice Strike: 400-750 (ice)",
@@ -80877,6 +81036,7 @@
       "wiki_revision": 1202237,
       "speed": 195,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-500",
         "Fire Missile: 0-200 (fire)",
@@ -81181,6 +81341,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Gorga",
       "wiki_revision": 1197193,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "amount": "1-6",
@@ -81375,6 +81536,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Gorzindel",
       "wiki_revision": 1175294,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Knowledgeable Book"
@@ -81497,6 +81660,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Cruelty",
       "wiki_revision": 1140887,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee",
         "Life Drain Wave: ?-1280 (Life Drain)",
@@ -81594,6 +81759,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Greed",
       "wiki_revision": 1140888,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Ultimate Mana Potion"
@@ -81676,6 +81843,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Hatred",
       "wiki_revision": 1140889,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Figurine of Hatred"
@@ -81769,6 +81938,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Malice",
       "wiki_revision": 1207458,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee",
         "Ice Wave: 1200+ (Ice)",
@@ -81867,6 +82038,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Megalomania",
       "wiki_revision": 1106201,
       "boss": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 68.0,
       "abilities": [
         "Melee: 117+",
         "Swarm Beam (?)",
@@ -81971,6 +82144,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Megalomania_(Annihilation)",
       "wiki_revision": 1172402,
       "boss": true,
+      "cooldown_hours": 68.0,
       "abilities": [
         "Ghost Wave (?)",
         "Green Chain (death)",
@@ -81987,6 +82161,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Megalomania_(Vulnerable)",
       "wiki_revision": 1172403,
       "boss": true,
+      "cooldown_hours": 68.0,
       "abilities": [
         "Melee: 117+",
         "Swarm Beam (?)",
@@ -82005,6 +82180,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Goshnar's_Spite",
       "wiki_revision": 1208632,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee",
         "Energy Wave: 1000+ (energy)",
@@ -82155,6 +82332,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Gralvalon",
       "wiki_revision": 1178767,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "name": "Platinum Coin",
@@ -82222,6 +82400,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Grand_Canon_Dominus",
       "wiki_revision": 1191547,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-600+",
         "Energy Beam: 400-600 (energy)",
@@ -82331,6 +82510,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Grand_Chaplain_Gaunder",
       "wiki_revision": 1181547,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-500+",
         "Holy Beam: 0-850+ (holy)",
@@ -82464,6 +82644,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Grand_Commander_Soeren",
       "wiki_revision": 1181546,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-1200+",
         "Divine Ball: 0-900+ (holy)",
@@ -82577,6 +82758,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Grand_Master_Oberon",
       "wiki_revision": 1154644,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1200+",
         "Holy Beam: 500-650+ (holy)",
@@ -82675,6 +82858,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Grand_Mother_Foulscale",
       "wiki_revision": 999103,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?",
         "Fire Wave: 0-152? (fire)",
@@ -82759,6 +82943,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Grandfather_Tridian",
       "wiki_revision": 1181322,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-100",
         "Summon Crypt Shambler: 2 (Ghost)",
@@ -83056,6 +83241,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Gravedigger",
       "wiki_revision": 1188547,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee",
         "Fire Ball (fire)",
@@ -83194,6 +83381,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Gravelord_Oshuran",
       "wiki_revision": 1181475,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-250",
         "Paralyze: very often",
@@ -84022,6 +84210,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Groam",
       "wiki_revision": 1116377,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-120",
         "Water Spear: 0-140 (?)"
@@ -84077,6 +84266,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Grorlam",
       "wiki_revision": 1175631,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300+",
         "Throws boulders: 0-200+",
@@ -84427,6 +84617,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Guard_Captain_Quaid",
       "wiki_revision": 1206560,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-500+"
       ],
@@ -84917,6 +85108,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Hairman_the_Huge",
       "wiki_revision": 1082409,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-110",
         "Throws small stones: 30-100 (physical)",
@@ -85161,6 +85353,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Handmaiden",
       "wiki_revision": 1181315,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-750+",
         "Life Drain: 0-1270+ (life drain)",
@@ -85393,6 +85586,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Hatebreeder",
       "wiki_revision": 1181423,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-850",
         "Poisons: up to 110hp/turn (earth)",
@@ -86419,6 +86613,7 @@
       "wiki_revision": 1179233,
       "speed": 165,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-800",
         "Great Energy Beam: 323-850 (energy)",
@@ -87073,6 +87268,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Heoni",
       "wiki_revision": 1181373,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: ?",
         "Poison Wave",
@@ -87105,6 +87301,8 @@
       "wiki_revision": 1205609,
       "armor": 5,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 1.0,
       "abilities": [
         "Melee: 0-25",
         "Healing: 0-20",
@@ -87560,6 +87758,7 @@
       "source_url": "https://tibia.fandom.com/wiki/High_Templar_Cobrass",
       "wiki_revision": 1168146,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-80?",
         "Healing: 20-30"
@@ -87710,6 +87909,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Hirintror",
       "wiki_revision": 1181524,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300?",
         "throws Snowball: 75-150? (ice)",
@@ -88222,6 +88422,7 @@
       "speed": 170,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-450?",
         "Death Strike: 200-750? (death)",
@@ -88899,6 +89100,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Hungerer",
       "wiki_revision": 1163295,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "loot": [
         {
           "amount": "1-190",
@@ -89450,6 +89652,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ice_Horror",
       "wiki_revision": 1197567,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 400+",
         "Small Bluish Explosion (?)",
@@ -89851,6 +90055,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ichgahal",
       "wiki_revision": 1208394,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 1600+",
         "Self-Healing by Volatile Funghi: 13500",
@@ -90609,6 +90815,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Imperor",
       "wiki_revision": 1179522,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-500",
         "Summon Diabolic Imp: 2",
@@ -91569,6 +91776,8 @@
       "wiki_revision": 1205615,
       "armor": 52,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 2.0,
       "abilities": [
         "Summon Vicious Ink Splash: 2"
       ],
@@ -92113,6 +92322,7 @@
       "wiki_revision": 1181508,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-600",
         "Musical Notes attack: 0-100; causes Paralysis",
@@ -92143,6 +92353,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Irgix_the_Flimsy",
       "wiki_revision": 1140895,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -92526,6 +92738,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Izcandar_Champion_of_Summer",
       "wiki_revision": 1116550,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-500?",
         "Fire Beam: 500-1000? (fire)",
@@ -92663,6 +92876,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Izcandar_Champion_of_Winter",
       "wiki_revision": 1116549,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-500?",
         "Ice Beam: 500-1000? (ice)",
@@ -92805,6 +93019,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Izcandar_the_Banished",
       "wiki_revision": 1116548,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-500?"
       ],
@@ -93027,6 +93242,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Jailer",
       "wiki_revision": 935331,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "name": "Bone"
@@ -93110,6 +93326,7 @@
       "wiki_revision": 1181534,
       "speed": 220,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-2000",
         "Paralyze",
@@ -93196,6 +93413,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Jesse_the_Wicked",
       "wiki_revision": 1098639,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Healing: 1-56"
       ],
@@ -93659,6 +93877,8 @@
       "wiki_revision": 1090227,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500?",
         "Fire Wave: 300-550? (fire)",
@@ -93739,6 +93959,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Katex_Blood_Tongue",
       "wiki_revision": 1140896,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-300",
         "Death Bomb: 300-400 (death)",
@@ -94079,6 +94301,7 @@
       "source_url": "https://tibia.fandom.com/wiki/King_Chuck",
       "wiki_revision": 1116573,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "location": "Orcsoberfest Island."
     },
     {
@@ -94090,6 +94313,8 @@
       "source_url": "https://tibia.fandom.com/wiki/King_Zelos",
       "wiki_revision": 1181364,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 900-2700",
         "Great Hex beam",
@@ -94827,6 +95052,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Kroazur",
       "wiki_revision": 1116456,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 2.0,
       "loot": [
         {
           "amount": "31-365",
@@ -94911,6 +95138,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Kusuma",
       "wiki_revision": 1205522,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 100-365",
         "Healing: 200-430"
@@ -95067,6 +95296,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lady_Tenebris",
       "wiki_revision": 1208280,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1800+",
         "Death Beam: 0-269 (death)",
@@ -95484,6 +95715,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Last_Lore_Keeper",
       "wiki_revision": 1135993,
       "boss": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 332.0,
       "abilities": [
         "Melee: 0-1000+",
         "Small Poison UE: 0-700 (earth)",
@@ -95698,6 +95931,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Last_Planegazer",
       "wiki_revision": 1176225,
       "boss": true,
+      "cooldown_hours": 164.0,
       "loot": [
         {
           "name": "The Cube",
@@ -95729,6 +95963,7 @@
       "wiki_revision": 1202238,
       "speed": 195,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-1+",
         "Fire Wave: 0-850 (fire)",
@@ -96454,6 +96689,7 @@
       "wiki_revision": 1084069,
       "speed": 135,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-392+",
         "Sniper Arrow: 0-258+ (?)",
@@ -96873,6 +97109,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Lily_of_Night",
       "wiki_revision": 1140941,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Small Amethyst"
@@ -97207,6 +97445,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lisa",
       "wiki_revision": 1107900,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 0.28,
       "abilities": [
         "Melee: 0-1200+",
         "Earth Ball (earth)",
@@ -97653,6 +97893,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lizard_Gate_Guardian",
       "wiki_revision": 992139,
       "boss": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 164.0,
       "abilities": [
         "Melee: ?",
         "Summons 2 Lizard Chosens at once (summon)"
@@ -98490,6 +98732,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lloyd",
       "wiki_revision": 1186449,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1200+",
         "Chain Energy: 300-550 (energy)"
@@ -98656,6 +98900,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lokathmor",
       "wiki_revision": 1140901,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Sturdy Book"
@@ -98906,6 +99152,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lord_Azaram",
       "wiki_revision": 1181365,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1000",
         "Rock Beam: 500-1200? (earth)",
@@ -99059,6 +99307,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lord_of_the_Elements",
       "wiki_revision": 1103853,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 0.167,
       "abilities": [
         "Melee: 0-350+",
         "Summon Massive Earth Elemental: 2 (Massive Fire Elemental)",
@@ -99122,6 +99372,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Lord_of_the_Lice",
       "wiki_revision": 1055678,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-396",
         "Dizzy Missile (?)",
@@ -99184,6 +99435,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Lord_Retro",
       "wiki_revision": 1175891,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "location": "In the Time Travel Dungeon - through the portal , specifically found ."
     },
     {
@@ -100304,6 +100557,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mad_Mage",
       "wiki_revision": 1176226,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-30+",
         "Fire Missile: 0-200+ (fire)",
@@ -100543,6 +100797,7 @@
       "wiki_revision": 1179228,
       "speed": 165,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-2000",
         "Energy Ball: 180-695 (energy)",
@@ -100771,6 +101026,8 @@
       "wiki_revision": 1140904,
       "speed": 40,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee",
         "Death Ball: ? (?)",
@@ -101077,6 +101334,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mahatheb",
       "wiki_revision": 1181533,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?",
         "Paralysis",
@@ -101133,6 +101391,7 @@
       "wiki_revision": 1181288,
       "armor": 42,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-400",
         "Fire Exori: 150-800 (fire)",
@@ -101195,6 +101454,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Maior_Domus",
       "wiki_revision": 1206176,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Figurine of Maior Domus",
@@ -101216,7 +101477,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/d/da/Maior_Domus_%28Final%29.gif/revision/latest?cb=20260623204458&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Maior_Domus_(Final)",
       "wiki_revision": 1195748,
-      "boss": true
+      "boss": true,
+      "cooldown_hours": 68.0
     },
     {
       "id": "major-bug",
@@ -101460,6 +101722,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Malofur_Mangrinder",
       "wiki_revision": 1129099,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "loot": [
         {
           "amount": "5",
@@ -101603,6 +101866,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Malvaroth",
       "wiki_revision": 1179409,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "name": "Crystal Coin",
@@ -101814,6 +102078,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Man_in_the_Cave",
       "wiki_revision": 1171643,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-62 (physical)",
         "Throws Small Stones: 0-95",
@@ -101860,6 +102125,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Manhunter",
       "wiki_revision": 1163296,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300",
         "Poison Burst Arrow: 0-300 (earth)",
@@ -102446,6 +102712,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Marziel",
       "wiki_revision": 1084068,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Life Drain: 0-600 (life drain)",
         "Summon Vampire: 3",
@@ -102515,6 +102782,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Massacre",
       "wiki_revision": 1193090,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1700+",
         "Throws boulders: 0-1100"
@@ -102942,6 +103210,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Maw",
       "wiki_revision": 1170829,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: ?",
         "short Groundshaker beam: 500-700 (?)",
@@ -103024,6 +103293,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mawhawk",
       "wiki_revision": 1036064,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Melee",
         "Summon Guzzlemaw: 4",
@@ -103115,6 +103385,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Maxxenius",
       "wiki_revision": 1116545,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1000",
         "Energy Beam: 500-1200 (energy)",
@@ -103277,6 +103548,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Mazoran",
       "wiki_revision": 1198033,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 44.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -103419,6 +103692,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Mazzinor",
       "wiki_revision": 1140906,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee",
         "Energy Beam: ?-600+ (energy)",
@@ -103694,6 +103969,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Mean_Masher",
       "wiki_revision": 1124186,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Same as a Hive Overseer? (?)",
         "Summon Spidris Elite: 2"
@@ -104063,6 +104339,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Mega_Magmaoid",
       "wiki_revision": 1140942,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "location": "Dwelling of the Forgotten"
     },
     {
@@ -104092,6 +104370,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Megasylvan_Yselda",
       "wiki_revision": 1176233,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-?",
         "Summon Carnisylvan Sapling: 1"
@@ -104202,6 +104482,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Melting_Frozen_Horror",
       "wiki_revision": 1140908,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -105781,6 +106063,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mephiles",
       "wiki_revision": 1068594,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-35",
         "Fire Explosion: 15-45 (fire)",
@@ -106194,6 +106477,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Michael_the_Stalwart",
       "wiki_revision": 1195817,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "amount": "13-46",
@@ -106575,6 +106859,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Mimar_Haffar",
       "wiki_revision": 1203381,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Moonsilver Battle Visor"
@@ -106600,7 +106886,8 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/f/fe/Mimar_Haffar_%28Final%29.gif/revision/latest?cb=20260627092042&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Mimar_Haffar_(Final)",
       "wiki_revision": 1195646,
-      "boss": true
+      "boss": true,
+      "cooldown_hours": 68.0
     },
     {
       "id": "mimic",
@@ -106646,6 +106933,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mindmasher",
       "wiki_revision": 1181383,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-100",
         "Healing: 5-20",
@@ -108560,6 +108848,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mitmah_Vanguard",
       "wiki_revision": 1209510,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Root: Rooted",
         "Melee: ?",
@@ -108838,6 +109127,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Monster",
       "wiki_revision": 1183496,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Hex"
       ],
@@ -108971,6 +109261,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Monstor",
       "wiki_revision": 1084167,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-167+",
         "Green Life Drain Wave: 66-85+ (life drain)",
@@ -109333,6 +109624,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Moonlight_Aster",
       "wiki_revision": 1181447,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-225",
         "Mana Drain Spark Beam: 313-345 (mana drain)",
@@ -109488,6 +109781,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Moonsnow_Magnolia",
       "wiki_revision": 1203380,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "loot": [
         {
           "name": "Enchanted Flamingo Amulet of Destruction",
@@ -109664,6 +109958,7 @@
       "armor": 130,
       "speed": 305,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-2250",
         "Fire Ball: 100-900 (fire)",
@@ -109957,6 +110252,7 @@
       "armor": 75,
       "speed": 295,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-680",
         "Bloodrage: Increases melee by 50-70% for 5 seconds (buff)",
@@ -110053,6 +110349,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mornenion",
       "wiki_revision": 968558,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Distance Arrows (similar to an Elf Scout): 0-40 (physical)",
         "Healing: 25-35"
@@ -110082,6 +110379,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Morshabaal",
       "wiki_revision": 1151861,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 1000-2500",
         "Great Energy Beam: 5500+ (Energy)",
@@ -110348,6 +110646,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mozradek",
       "wiki_revision": 1116556,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-600?",
         "Death Bomb: 666 (death)",
@@ -110393,6 +110692,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Mr._Punish",
       "wiki_revision": 968100,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1100",
         "Distance Fighting Throwing Knives: 0-707+ (?)",
@@ -110921,6 +111221,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Murcion",
       "wiki_revision": 1202397,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 1000+",
         "Summon Mushroom: 8",
@@ -111319,6 +111621,7 @@
       "wiki_revision": 1139122,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300",
         "Mana Drain Wave: 0-15 (mana drain)",
@@ -112110,6 +112413,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Neferi_the_Spy",
       "wiki_revision": 1174587,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1000",
         "Summon Skeleton Elite Warrior: 1"
@@ -112714,6 +113019,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Nightmare_Beast",
       "wiki_revision": 1140945,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500?",
         "Death Bomb: 500-1000 (death)",
@@ -113928,6 +114235,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Obujos",
       "wiki_revision": 1206327,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-1200",
         "Great Cloud-Energy Bomb: 200-600 (mana drain)",
@@ -113966,6 +114274,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Ocyakao",
       "wiki_revision": 1150697,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-165+",
         "Healing: 0 60+",
@@ -114670,6 +114979,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Old_Whopper",
       "wiki_revision": 1181323,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-175+",
         "Drunkwave: 3 sqm in front of himself; makes you very drunk"
@@ -114899,6 +115209,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Omrafir",
       "wiki_revision": 1077955,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-8000+?",
         "Beam: 0-12000+? (?)",
@@ -115034,6 +115345,7 @@
       "wiki_revision": 1181609,
       "armor": 60,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-116+",
         "Shoots arrows: 0-500",
@@ -115116,6 +115428,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Oodok_Witchmaster",
       "wiki_revision": 1181393,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-20",
         "melee Life Drain: 1-40 (life drain)",
@@ -117095,6 +117408,7 @@
       "armor": 90,
       "speed": 270,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-1991",
         "Mana Drain Strike: 300-600 (mana drain)",
@@ -117334,6 +117648,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Outburst",
       "wiki_revision": 1140912,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "amount": "100",
@@ -117575,6 +117891,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Overseer_Osverger",
       "wiki_revision": 1195819,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-3600"
       ],
@@ -117658,6 +117975,7 @@
       "wiki_revision": 1179332,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Melee: 0-300",
         "Bleeding Beam (bleeding)",
@@ -117986,6 +118304,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Pale_Count",
       "wiki_revision": 1084173,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee",
         "Shoots sniper arrows: 0-490?",
@@ -118132,6 +118451,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Pale_Worm",
       "wiki_revision": 1140946,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1500",
         "Poison GFB: 0-900 (earth)",
@@ -118611,6 +118932,8 @@
       "speed": 0,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Abyss Hammer"
@@ -118974,6 +119297,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Phosphorus",
       "wiki_revision": 1196973,
       "boss": true,
+      "cooldown_hours": 68.0,
       "abilities": [
         "Melee",
         "Holy Strike (holy)",
@@ -118994,6 +119318,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Phosphorus_(Final)",
       "wiki_revision": 1197584,
       "boss": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 68.0,
       "loot": [
         {
           "name": "Moonsilver Claymore"
@@ -119036,6 +119362,7 @@
       "wiki_revision": 1126271,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-2000?",
         "Haste"
@@ -120737,6 +121064,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Plagirath",
       "wiki_revision": 1140913,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 44.0,
       "abilities": [
         "Melee: 0-1350",
         "Poison UE on target: 1500 (earth)",
@@ -120863,6 +121192,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Plagueroot",
       "wiki_revision": 1158766,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "loot": [
         {
           "amount": "5",
@@ -121292,6 +121622,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Plasmother",
       "wiki_revision": 1181611,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-400",
         "poisons you: up to 40 hp/turn (earth)",
@@ -121852,6 +122183,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Preceptor_Lazare",
       "wiki_revision": 1129064,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-500+",
         "Explosion Bolt: 734-1241 (?)",
@@ -122588,6 +122920,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Professor_Maxxen",
       "wiki_revision": 1152342,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "amount": "1-10",
@@ -124271,6 +124604,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ragiaz",
       "wiki_revision": 1178432,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 44.0,
       "abilities": [
         "Melee: 950+",
         "Earth Strike: 500+ (earth)",
@@ -124411,6 +124746,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Raging_Mage",
       "wiki_revision": 1176227,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Plus shaped Energy Fields (energy)",
         "Thunderstorm: 100-200 (energy)",
@@ -124533,6 +124869,7 @@
       "armor": 40,
       "speed": 220,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-130",
         "Life drain strike: 50-750 (life drain)",
@@ -124606,6 +124943,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Rakesh_Moonfang",
       "wiki_revision": 1197716,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 2.0,
       "location": "Underneath Oskayaat -"
     },
     {
@@ -124691,6 +125030,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ratmiral_Blackwhiskers",
       "wiki_revision": 1140915,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -125089,6 +125430,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Ravager",
       "wiki_revision": 1186617,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-400+",
         "Death Hit: 0-700+ (death)",
@@ -125166,6 +125508,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Ravenous_Hunger",
       "wiki_revision": 1140916,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-400+",
         "Summon Mutated Bat: 4",
@@ -125346,6 +125690,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Raxias",
       "wiki_revision": 1181404,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-350",
         "Single-target Stone Shower: 50-100 (earth)",
@@ -125420,6 +125765,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Razzagorn",
       "wiki_revision": 1140917,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 44.0,
       "abilities": [
         "Melee: 0-1250",
         "Death Beam: 500-1000 (death)",
@@ -125676,6 +126023,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Realityquake",
       "wiki_revision": 1140918,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "name": "Red Gem"
@@ -127705,6 +128054,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Robby_the_Reckless",
       "wiki_revision": 1054661,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-40?",
         "Shoots Arrow: 0-20? (PHYSICAL)",
@@ -127856,6 +128206,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Rootkraken",
       "wiki_revision": 1140947,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Root (rooted)",
         "Death and Holy AoE",
@@ -128372,6 +128723,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Rotrender",
       "wiki_revision": 1181332,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 1300-4000+",
         "Healing: 1000-60000+",
@@ -128545,6 +128897,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Rotspit",
       "wiki_revision": 1116403,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-200?",
         "Healing: 5-20",
@@ -128896,6 +129249,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Rotworm_Queen",
       "wiki_revision": 1177626,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-80+",
         "Summon Rotworm: 3",
@@ -128938,6 +129292,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Rukor_Zad",
       "wiki_revision": 1181259,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-170",
         "Distance Fighting with Poison Arrows and Throwing Stars: 0-100 (poison)",
@@ -129024,6 +129379,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Rupture",
       "wiki_revision": 1140919,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-783+",
         "Great Drown Beam: 0-619+ (drowning)",
@@ -129641,6 +129998,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Sandking",
       "wiki_revision": 1140948,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-700+ (physical)",
         "Poison Wave: 400-700 (energy)",
@@ -130006,6 +130365,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Scarlett_Etzel",
       "wiki_revision": 1154642,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-1150",
         "Holy Beam: 300-600 (holy)",
@@ -130269,6 +130630,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Scion_of_Havoc",
       "wiki_revision": 1106180,
       "boss": true,
+      "cooldown_hours": 20.0,
       "location": "Secret Library."
     },
     {
@@ -130343,6 +130705,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Scourge_of_Oblivion",
       "wiki_revision": 1140949,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Ability",
         "Self healing: 1000-1850",
@@ -130570,6 +130934,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Scourge_of_Oblivion_(Charging)",
       "wiki_revision": 1106179,
       "boss": true,
+      "cooldown_hours": 20.0,
       "abilities": [
         "Ability",
         "Four Directions Death Beam: 8000-11000 (death)",
@@ -130601,6 +130966,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Scourge_of_Oblivion_(Reflective)",
       "wiki_revision": 1106183,
       "boss": true,
+      "cooldown_hours": 20.0,
       "abilities": [
         "High Damage Reflection (3000~%)",
         "Self healing: 800+",
@@ -131581,6 +131947,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Shadowpelt",
       "wiki_revision": 1140921,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-300",
         "Healing: 0-325",
@@ -131685,6 +132053,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Shadowstalker",
       "wiki_revision": 1116402,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-300+",
         "Invisibility (invisible)"
@@ -132016,6 +132385,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Sharpclaw",
       "wiki_revision": 1179345,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-300",
         "Summon Werebadger: 1",
@@ -132139,6 +132510,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Shatterer",
       "wiki_revision": 1071789,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "name": "Gold Coin"
@@ -132395,6 +132767,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Shlorg",
       "wiki_revision": 1166740,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "location": "Edron Earth Elemental Cave"
     },
     {
@@ -132561,6 +132934,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Shulgrax",
       "wiki_revision": 1140923,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 44.0,
       "abilities": [
         "Melee: 0-1500",
         "Fire Explosion: 150-350 (death)",
@@ -133169,6 +133544,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Sir_Baeloc",
       "wiki_revision": 1181368,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Hex"
       ],
@@ -133310,6 +133687,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Sir_Leonard",
       "wiki_revision": 1206545,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 2.0,
       "abilities": [
         "Summon Crusader Guardian: 5"
       ],
@@ -133407,6 +133786,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Sir_Leopold",
       "wiki_revision": 1204042,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Healing: 0-325"
       ],
@@ -133476,6 +133856,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Sir_Nictros",
       "wiki_revision": 1181369,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Hex"
       ],
@@ -133504,6 +133886,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Sir_Valorcrest",
       "wiki_revision": 1181321,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-700",
         "Summons 4 Vampires at once (summon)",
@@ -133584,6 +133967,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Sister_Hetai",
       "wiki_revision": 1140926,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-600"
       ],
@@ -134254,6 +134639,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Smuggler_Baron_Silvertoe",
       "wiki_revision": 1071024,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-50 (physical)",
         "Throwing Knives: 0-?",
@@ -134867,6 +135253,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Soul_of_Dragonking_Zyrtarch",
       "wiki_revision": 1140927,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "amount": "0-200",
@@ -135105,6 +135493,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Souldespoiler",
       "wiki_revision": 1140950,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-600+ (physical)",
         "Death Bomb on target: 300-500?",
@@ -135371,6 +135761,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Source_of_Corruption",
       "wiki_revision": 1141626,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500+",
         "Energy Beam: 300-500+ (energy)",
@@ -136020,6 +136412,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Spellstealer",
       "wiki_revision": 1106175,
       "boss": true,
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 400+",
         "Small Spell Ball: ? (?)",
@@ -136048,6 +136441,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Spellstealer_(Creator)",
       "wiki_revision": 1136002,
       "boss": true,
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 400+",
         "Small Poison Ball: 300-1100 (Poison)",
@@ -136075,6 +136469,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Spellstealer_(Destructor)",
       "wiki_revision": 1136003,
       "boss": true,
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 400+",
         "Small Fire Explosion: 300-800 (Fire)",
@@ -137211,6 +137606,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Srezz_Yellow_Eyes",
       "wiki_revision": 1140928,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-200",
         "Life Drain Wave: 200-300 (life drain)",
@@ -138530,6 +138927,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Sugar_Daddy",
       "wiki_revision": 1205123,
       "boss": true,
+      "bosstiary_class": "Bane",
+      "cooldown_hours": 2.0,
       "abilities": [
         "Ability",
         "Hex",
@@ -138636,6 +139035,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Sugar_Mommy",
       "wiki_revision": 1208265,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Healing: 250-300"
       ],
@@ -139486,6 +139886,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Tamru_the_Black",
       "wiki_revision": 1135992,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "abilities": [
         "Melee",
         "Small Electricity Ball: ?-400 (Energy)",
@@ -139564,6 +139965,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Tanjis",
       "wiki_revision": 1181442,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-600",
         "Avalanche: 200-400 (?)",
@@ -139657,6 +140059,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Tarbaz",
       "wiki_revision": 1140929,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 44.0,
       "abilities": [
         "Melee: ?",
         "Fire Wave: 650-850 (fire)",
@@ -139858,6 +140262,8 @@
       "wiki_revision": 1088706,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-600",
         "Fire Wave: 100-500 (fire)",
@@ -139983,6 +140389,7 @@
       "speed": 170,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-550",
         "Avalanche: 0-300? (?)",
@@ -140056,6 +140463,8 @@
       "wiki_revision": 1140930,
       "speed": 0,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-400",
         "Thunderstorm: 100-350? (?)",
@@ -140610,6 +141019,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Thaian",
       "wiki_revision": 1206528,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -140676,6 +141087,7 @@
       "armor": 40,
       "speed": 210,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-991",
         "Poison Hit: 300-650 (earth)",
@@ -140862,6 +141274,7 @@
       "image_url": "https://static.wikia.nocookie.net/tibia/images/c/ca/Thawing_Dragon_Lord.gif/revision/latest?cb=20180709141934&path-prefix=en",
       "source_url": "https://tibia.fandom.com/wiki/Thawing_Dragon_Lord",
       "wiki_revision": 1082707,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-300",
         "Healing: 475-525",
@@ -141277,6 +141690,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Time_Guardian",
       "wiki_revision": 1140952,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-750",
         "Flame Strike: 0-850+ (fire)",
@@ -141557,6 +141972,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Timira_the_Many-Headed",
       "wiki_revision": 1206529,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-230+",
         "Fire Ring: ?",
@@ -142846,6 +143263,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Tropical_Desolator",
       "wiki_revision": 1205503,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Summon Bound Ape: 2 (Bound Cave Spider)"
       ],
@@ -143923,6 +144342,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Twisterror",
       "wiki_revision": 1177423,
       "boss": true,
+      "bosstiary_class": "Bane",
       "loot": [
         {
           "name": "Skin of Twisterror",
@@ -144059,6 +144479,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Tyrn",
       "wiki_revision": 1181391,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee",
         "waves: ? (?)",
@@ -144175,6 +144596,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Tzumrah_the_Dazzler",
       "wiki_revision": 1181394,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-150?",
         "close range Divine Life Drain: 300+ (life drain)",
@@ -144263,6 +144685,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Unarmored_Voidborn",
       "wiki_revision": 1140953,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500+",
         "Death Wave: ? (death)",
@@ -144403,6 +144827,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Unaz_the_Mean",
       "wiki_revision": 1140958,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -145585,6 +146011,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Unwelcome",
       "wiki_revision": 1140954,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -145732,6 +146160,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Urmahlullu_the_Weakened",
       "wiki_revision": 1197302,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -145912,6 +146342,7 @@
       "wiki_revision": 1181300,
       "speed": 220,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-1200 (physical)",
         "Death Beam: 0-500",
@@ -146512,6 +146943,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Utua_Stone_Sting",
       "wiki_revision": 1140960,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-300",
         "Blood Wave: 0-400 (physical)",
@@ -147267,6 +147700,7 @@
       "wiki_revision": 1181451,
       "armor": 40,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-200",
         "Great Musical Bomb: 250-550 (death)",
@@ -147329,6 +147763,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Vemiath",
       "wiki_revision": 1200655,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Summon Pillar of Dark Energy: 8",
         "Melee: ?-1500+",
@@ -148360,6 +148796,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Vladrukh",
       "wiki_revision": 1140962,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "loot": [
         {
           "amount": "1-3",
@@ -148448,6 +148886,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Voice_of_Ruin",
       "wiki_revision": 1181273,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-400+",
         "Poison Berserk: 0-350 (poison)",
@@ -148526,6 +148965,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Vok_the_Freakish",
       "wiki_revision": 1140963,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: ?"
       ],
@@ -149535,6 +149976,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Warlord_Ruzad",
       "wiki_revision": 1083283,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-300?",
         "Summon Orc Berserker: 2",
@@ -150489,6 +150931,7 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Welter",
       "wiki_revision": 1206118,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-600+",
         "Death beam (death)",
@@ -151936,6 +152379,7 @@
       "source_url": "https://tibia.fandom.com/wiki/White_Pale",
       "wiki_revision": 1181431,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?",
         "Wrath of Nature: ~100 (?)",
@@ -152439,6 +152883,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Willi_Wasp",
       "wiki_revision": 971419,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-?"
       ],
@@ -152609,6 +153054,8 @@
       "source_url": "https://tibia.fandom.com/wiki/The_Winter_Bloom",
       "wiki_revision": 1181618,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-500",
         "Healing: 300-375",
@@ -153104,6 +153551,8 @@
       "source_url": "https://tibia.fandom.com/wiki/World_Devourer",
       "wiki_revision": 1086448,
       "boss": true,
+      "bosstiary_class": "Nemesis",
+      "cooldown_hours": 332.0,
       "abilities": [
         "Melee: ?",
         "Huge Area Attack: 0-888+ (?)",
@@ -153466,6 +153915,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Wrathful_Archivist",
       "wiki_revision": 1140964,
       "boss": true,
+      "bosstiary_class": "Archfoe",
       "loot": [
         {
           "amount": "1-2",
@@ -153746,6 +154196,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Xenia",
       "wiki_revision": 1181324,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-50+",
         "Healing",
@@ -153784,6 +154235,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Xogixath",
       "wiki_revision": 1116555,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-500"
       ],
@@ -153860,6 +154312,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Yaga_the_Crone",
       "wiki_revision": 1181256,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-50",
         "Fireball: 30-50 (fire)",
@@ -153925,6 +154378,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Yakchal",
       "wiki_revision": 1181477,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-415+",
         "Summon Ice Golem: 4",
@@ -154230,6 +154684,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Yirkas_Blue_Scales",
       "wiki_revision": 1140965,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-100",
         "Energy Strike: 400-500 (energy)",
@@ -154627,6 +155083,8 @@
       "source_url": "https://tibia.fandom.com/wiki/Zamulosh",
       "wiki_revision": 1181434,
       "boss": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 44.0,
       "abilities": [
         "Melee",
         "Sparkles Bomb: ? (?)",
@@ -154878,6 +155336,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Zarabustor",
       "wiki_revision": 1181465,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-130",
         "shoots Burst Arrows: 0-250 (fire)",
@@ -155099,6 +155558,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Zevelon_Duskbringer",
       "wiki_revision": 1185007,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-400",
         "Summons 3 Vampires at once (summon)",
@@ -155189,6 +155649,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Zomba",
       "wiki_revision": 1007150,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-70; causes Bleeding from 5",
         "Haste"
@@ -155358,6 +155819,8 @@
       "wiki_revision": 1088633,
       "boss": true,
       "event": true,
+      "bosstiary_class": "Archfoe",
+      "cooldown_hours": 20.0,
       "abilities": [
         "Melee: 0-385?",
         "Death Wave: 200-520? (death)",
@@ -155452,6 +155915,7 @@
       "wiki_revision": 1181669,
       "speed": 165,
       "boss": true,
+      "bosstiary_class": "Bane",
       "abilities": [
         "Melee: 0-800",
         "Life Drain: 0-500 (life drain)",
@@ -155593,6 +156057,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Zulazza_the_Corruptor",
       "wiki_revision": 1181500,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: 0-2078+",
         "Poison Bomb: 250-500 (poison)",
@@ -155709,6 +156174,7 @@
       "source_url": "https://tibia.fandom.com/wiki/Zushuka",
       "wiki_revision": 1093167,
       "boss": true,
+      "bosstiary_class": "Nemesis",
       "abilities": [
         "Melee: ?",
         "Ice Beam: 750+ (ice)",

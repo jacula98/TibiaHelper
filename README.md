@@ -14,6 +14,9 @@ do przeglądarki.
 - **Zakładka „Potwory”.** Ponad 2000 potworów z wyszukiwarką. Każdy ma HP, exp, obrażenia od żywiołów,
   umiejętności, loot i mapę miejsc (expowisk), w których występuje. Listę można sortować po HP i expie.
   Przycisk „Filtry” pokazuje też bossy, potwory eventowe, niedostępne w grze, bez HP i bez expa (domyślnie ukryte).
+- **Zakładka „Bossy”.** Bossy opisane przez autora: wymagania (z linkiem do questa), jak dojść i jak bić.
+  Do tego klasa w Bosstiary, ile killi trzeba do Prowess, Expertise i Mastery, cooldown oraz czym bić.
+  Loot i mapa są na karcie potwora. Lista ma wyszukiwarkę i filtr klasy (Bane, Archfoe, Nemesis).
 - **Zakładka „Przedmioty”.** Wyszukasz dowolny przedmiot i zobaczysz, któremu NPC go sprzedać i za ile
   (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada. Quest itemy, soul core, pojemniki i przedmioty
   bez handlu z NPC są domyślnie ukryte (do pokazania przyciskiem „Filtry”). Przedmiotów z fansite'ów nie ma wcale.
@@ -35,7 +38,7 @@ do przeglądarki.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
   Gdy na GitHubie pojawi się nowa wersja programu (Release), pokaże pasek z przyciskiem „Pobierz”.
 
-Wkrótce: Hunt/Bestiary zones (strefy huntów) i bossy.
+Wkrótce: Hunt/Bestiary zones (strefy huntów) i trasy do bossów.
 
 ## Jak uruchomić
 

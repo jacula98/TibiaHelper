@@ -19,6 +19,11 @@ W edytorze można zmieniać nazwę, level, przedmioty, nagrody i kroki (dodawać
 
 Publikacja: wyślij ten plik Claude w czacie projektu.
 
+**Bossy.** W trybie autora zakładka „Bossy” pokazuje wszystkie bossy z bazy potworów („Tylko dodane” zawęża
+listę). Otwórz bossa i kliknij „✏ Edytuj”: wpisz wymagania, zaznacz questy z wymagań (u graczy są klikalne),
+jak dojść i jak bić. HP, exp, loot, żywioły, klasa w Bosstiary i cooldown są z TibiaWiki, więc ich nie wpisujesz.
+Gracze widzą bossa dopiero po zaznaczeniu „Gotowy: pokaż graczom”.
+
 Inne opcje: `--show-drafts` (podgląd szkiców bez edycji), `--no-update` (tylko pliki z repo, bez kopii z GitHuba).
 
 ## Generator danych
