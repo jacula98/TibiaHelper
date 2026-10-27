@@ -624,7 +624,7 @@ class _MarkerTile(QFrame):
 
         self._sprite = AnimatedSprite(MARKER_SPRITE)
         self._icon = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
-        self._icon.setPixmap(icon("pin.svg").pixmap(QSize(18, 24)))
+        self._icon.setPixmap(icon("pin").pixmap(QSize(18, 24)))
         caption = QLabel(marker.label, wordWrap=True, alignment=Qt.AlignmentFlag.AlignCenter)
         caption.setTextFormat(Qt.TextFormat.PlainText)
         layout = QVBoxLayout(self)

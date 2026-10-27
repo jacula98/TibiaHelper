@@ -59,7 +59,7 @@ def main() -> int:
     # Język przed budową okien: teksty są wstawiane przy ich tworzeniu.
     language = set_language(load_settings(settings_file()).language)
     _install_qt_translator(app, language)
-    apply_theme(app)
+    apply_theme(app, load_settings(settings_file()).theme)
 
     def visible(result: LoadResult) -> list:
         return result.quests if args.show_drafts else result.visible_quests
