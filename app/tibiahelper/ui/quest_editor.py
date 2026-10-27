@@ -371,7 +371,7 @@ class QuestEditor(QWidget):
         if self._pending_step != self._current:
             # Autor przełączył krok w trakcie: pinezka trafia do kroku, z którego ją dodawał.
             self._steps_list.setCurrentRow(self._pending_step)
-        dialog = _MarkerDialog(self._pending_anchor or self._location.text().strip(), self)
+        dialog = MarkerDialog(self._pending_anchor or self._location.text().strip(), self)
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return
         self._store_step()
@@ -488,7 +488,7 @@ class QuestEditor(QWidget):
         )
 
 
-class _MarkerDialog(QDialog):
+class MarkerDialog(QDialog):
     """Nazwa i rodzaj nowej pinezki."""
 
     def __init__(self, suggested_label: str, parent: QWidget) -> None:
