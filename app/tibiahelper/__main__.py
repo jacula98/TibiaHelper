@@ -19,6 +19,8 @@ from .core.paths import (
 from .core.progress import ProgressStore
 from .core.repository import LoadResult, QuestFileError, load_quest_file
 from .core.spawns import load_spawns
+from . import __version__
+from .core.releases import check_for_release
 from .core.updater import Update, apply_update, check_for_update, load_best_local
 from .ui.main_window import MainWindow
 from .ui.theme import apply_theme
@@ -32,6 +34,7 @@ class _UpdateNotifier(QObject):
     """
 
     updated = Signal(object)
+    release = Signal(object)  # nowsza wersja programu (Release na GitHubie)
 
 
 def main() -> int:
@@ -110,6 +113,7 @@ def main() -> int:
         notifier.updated.connect(
             lambda update: window.offer_update(update.data_version, lambda: install(update))
         )
+        notifier.release.connect(lambda release: window.offer_release(release.version, release.url))
         current = result.data_version if result else 0
         # Pobieranie w tle, żeby okno nie zamarzło przy wolnym internecie.
         # daemon=True: zamknięcie okna nie czeka na koniec pobierania.
@@ -124,6 +128,9 @@ def _run_update(notifier: _UpdateNotifier, current_version: int, spawns_version:
     update = check_for_update(current_version, spawns_version=spawns_version)
     if update is not None:
         notifier.updated.emit(update)
+    release = check_for_release(__version__)
+    if release is not None:
+        notifier.release.emit(release)
 
 
 if __name__ == "__main__":

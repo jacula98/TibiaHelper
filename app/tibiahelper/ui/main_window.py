@@ -3,8 +3,8 @@
 from collections.abc import Callable
 from pathlib import Path
 
-from PySide6.QtCore import QByteArray, Qt
-from PySide6.QtGui import QCloseEvent
+from PySide6.QtCore import QByteArray, Qt, QUrl
+from PySide6.QtGui import QCloseEvent, QDesktopServices
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -88,11 +88,14 @@ class MainWindow(QMainWindow):
 
         self._banner = UpdateBanner()
         self._banner.hide()
+        self._release_banner = ReleaseBanner()
+        self._release_banner.hide()
 
         central = QWidget()
         layout = QVBoxLayout(central)
         layout.setContentsMargins(12, 8, 12, 12)
         layout.addLayout(self._build_header())
+        layout.addWidget(self._release_banner)
         layout.addWidget(self._banner)
         layout.addWidget(self._stack, 1)
         self.setCentralWidget(central)
@@ -158,6 +161,10 @@ class MainWindow(QMainWindow):
     def offer_update(self, data_version: int, on_accept: Callable[[], None]) -> None:
         """Pokazuje pasek „są nowsze poradniki”. Dane zmieniają się dopiero po kliknięciu."""
         self._banner.show_offer(data_version, on_accept)
+
+    def offer_release(self, version: str, url: str) -> None:
+        """Pokazuje pasek „jest nowa wersja programu”. Pobieranie robi gracz w przeglądarce."""
+        self._release_banner.show_release(version, url)
 
     def _build_header(self) -> QHBoxLayout:
         name = QLabel("TibiaHelper")
@@ -302,3 +309,39 @@ class UpdateBanner(QFrame):
         self.hide()
         if self._on_accept is not None:
             self._on_accept()
+
+
+class ReleaseBanner(QFrame):
+    """Pasek „Jest nowa wersja programu” + Pobierz / Później."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.setObjectName("banner")
+        self._url = ""
+        self._text = QLabel(wordWrap=True)
+        later = QPushButton("Później")
+        later.clicked.connect(self.hide)
+        download = QPushButton("Pobierz")
+        download.setObjectName("primary")
+        download.clicked.connect(self._download)
+
+        buttons = QHBoxLayout()
+        buttons.addStretch(1)
+        buttons.addWidget(later)
+        buttons.addWidget(download)
+
+        layout = QVBoxLayout(self)
+        layout.addWidget(self._text)
+        layout.addLayout(buttons)
+
+    def show_release(self, version: str, url: str) -> None:
+        self._url = url
+        self._text.setText(
+            f"Jest nowa wersja programu ({version}). Pobierz ją z GitHuba: nowe zakładki "
+            "i poprawki przychodzą tylko z nową wersją."
+        )
+        self.show()
+
+    def _download(self) -> None:
+        self.hide()
+        QDesktopServices.openUrl(QUrl(self._url))

@@ -31,6 +31,7 @@ do przeglądarki.
 - **Zgłoś błąd** przy queście, potworze i przedmiocie otwiera gotowe zgłoszenie na GitHubie.
 - **Przezroczystość okna** (10–100%) ustawiasz trybikiem ⚙ w prawym górnym rogu.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
+  Gdy na GitHubie pojawi się nowa wersja programu (Release), pokaże pasek z przyciskiem „Pobierz”.
 
 Wkrótce: expowiska i bossy.
 
