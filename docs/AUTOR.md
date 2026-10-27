@@ -63,6 +63,9 @@ Aktualizacja w programie pobiera tylko dane (`data/quests.json`, `data/spawns.js
 3. Programy graczy przy starcie zobaczą nowszy tag i pokażą pasek „Jest nowa wersja programu” z przyciskiem
    „Pobierz” (otwiera stronę Release). Program niczego sam nie podmienia.
 
+Ikona .exe to `app/tibiahelper/ui/assets/logo.ico`. Po zmianie `logo.svg` wygeneruj ją ponownie:
+`python scripts/make_icon.py`.
+
 ## Sprawdzenie przed PR
 
 ```

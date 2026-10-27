@@ -23,7 +23,7 @@ from . import __version__
 from .core.releases import check_for_release
 from .core.updater import Update, apply_update, check_for_update, load_best_local
 from .ui.main_window import MainWindow
-from .ui.theme import apply_theme
+from .ui.theme import apply_theme, icon
 
 
 class _UpdateNotifier(QObject):
@@ -53,8 +53,11 @@ def main() -> int:
         args.show_drafts = args.no_update = True
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+    _set_windows_app_id()
     app = QApplication(sys.argv)
     apply_theme(app)
+    # Ikona okna i paska zadań. SVG skaluje się do każdego rozmiaru (16 px, 32 px...).
+    app.setWindowIcon(icon("logo.svg"))
 
     def visible(result: LoadResult) -> list:
         return result.quests if args.show_drafts else result.visible_quests
@@ -122,6 +125,17 @@ def main() -> int:
         ).start()
 
     return app.exec()
+
+
+def _set_windows_app_id() -> None:
+    """Na Windows pasek zadań pokazuje ikonę python.exe, jeśli program się nie przedstawi.
+
+    Własny identyfikator sprawia, że Windows bierze ikonę z naszego okna (logo kompasu).
+    """
+    if sys.platform == "win32":
+        import ctypes
+
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("TibiaHelper")
 
 
 def _run_update(notifier: _UpdateNotifier, current_version: int, spawns_version: int) -> None:
