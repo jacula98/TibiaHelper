@@ -213,6 +213,10 @@ QPushButton#submenu {{
 QPushButton#submenu:hover {{ border-color: {t.accent}; }}
 QToolButton#icon {{ border: none; background: transparent; font-size: 18px; padding: 2px 6px; }}
 QToolButton#icon:hover {{ background: {t.surface_hover}; }}
+/* Boosted potwór i boss pod nagłówkiem: mały, płaski przycisk z obrazkiem. */
+QToolButton#boosted {{ border: none; background: transparent; padding: 1px 4px; font-size: 12px; }}
+QToolButton#boosted:hover {{ background: {t.surface_hover}; }}
+QToolButton#boosted:disabled {{ color: {t.text}; }}
 
 QListWidget {{
     background: transparent;
