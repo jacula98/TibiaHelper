@@ -86,9 +86,16 @@ class SettingsDialog(QDialog):
             + "<br>• "
             + tr("obrazki potworów i przedmiotów z TibiaWiki, © CipSoft GmbH (pobierane przy pierwszym użyciu)")
             + "<br>• "
+            + tr("dzisiejszy boosted potwór i boss z TibiaWiki (sprawdzane raz dziennie)")
+            + "<br>• "
             + tr(
                 "miejsca występowania potworów: Źródło danych: {route} (za zgodą TibiaRoute)",
                 route='<a href="https://tibiaroute.com/">tibiaroute.com</a>',
+            )
+            + "<br>• "
+            + tr(
+                "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje",
+                kick='<a href="https://kick.com/jackyykick">kick.com</a>',
             )
         )
         sources.setObjectName("muted")

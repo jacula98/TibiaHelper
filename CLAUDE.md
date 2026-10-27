@@ -25,6 +25,11 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
 - Aplikacja nie łączy się z TibiaWiki ani TibiaRoute. Robi to tylko generator, uruchamiany przez autora.
   Jedyny wyjątek: obrazki potworów (© CipSoft, nie trzymamy ich w repo). Aplikacja pobiera je
   przy pierwszym użyciu z `static.wikia.nocookie.net/tibia/images/`, pod adresami zapisanymi w danych.
+  Drugi wyjątek: dzisiejszy boosted potwór i boss (`core/boosted.py`). Jedno zapytanie do API
+  TibiaWiki, najwyżej raz na dzień Tibii (wynik w `boosted.json`), plus ponowne próby co godzinę,
+  dopóki wiki nie pokaże nowego dnia.
+- Przycisk „Stream” co kilka minut pyta publiczne API Kick (`kick.com/api/v2/channels/jackyykick`),
+  czy autor nadaje. Tylko odczyt, bez klucza i bez danych gracza.
 - Brak automatyzacji gry i czytania jej pamięci: to tylko poradnik.
 
 ## Sprawdzenie przed PR

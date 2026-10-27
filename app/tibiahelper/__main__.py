@@ -9,6 +9,7 @@ from PySide6.QtCore import QLibraryInfo, QObject, QTranslator, Signal
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from .core.paths import (
+    boosted_file,
     bundled_data_file,
     bundled_spawns_file,
     cached_data_file,
@@ -101,6 +102,7 @@ def main() -> int:
     window.set_spawns(spawns)
 
     window.show()
+    window.start_boosted(boosted_file())
     if error:
         QMessageBox.warning(window, "TibiaHelper", tr("Nie udało się wczytać questów.") + f"\n\n{error}")
 

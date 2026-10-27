@@ -74,3 +74,8 @@ def cached_spawns_file() -> Path:
 def bundled_qol_dir() -> Path:
     """Gotowe ustawienia lootu i cen (Quality of life), dołączone obok quests.json."""
     return bundled_data_file().with_name("qol")
+
+
+def boosted_file() -> Path:
+    """Dzisiejszy boosted potwór i boss (z TibiaWiki), żeby nie pytać wiki przy każdym starcie."""
+    return user_data_dir() / "boosted.json"
