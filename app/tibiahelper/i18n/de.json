@@ -213,5 +213,9 @@
   "← Przedmiot": "← Gegenstand",
   "← Quality of life": "← Quality of life",
   "← Quest": "← Quest",
-  "← Wstecz": "← Zurück"
+  "← Wstecz": "← Zurück",
+  "Stream trwa na Kick. Kliknij, żeby oglądać.": "Gerade live auf Kick. Klicken zum Ansehen.",
+  "Stream offline. Kliknij, żeby otworzyć kanał na Kick.": "Stream offline. Klicken, um den Kick-Kanal zu öffnen.",
+  "Nie udało się sprawdzić, czy stream trwa. Kliknij, żeby otworzyć kanał na Kick.": "Konnte nicht prüfen, ob der Stream läuft. Klicken, um den Kick-Kanal zu öffnen.",
+  "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "die Stream-Schaltfläche prüft alle paar Minuten auf {kick}, ob der Autor live ist"
 }

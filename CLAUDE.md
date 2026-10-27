@@ -28,6 +28,8 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
   Drugi wyjątek: dzisiejszy boosted potwór i boss (`core/boosted.py`). Jedno zapytanie do API
   TibiaWiki, najwyżej raz na dzień Tibii (wynik w `boosted.json`), plus ponowne próby co godzinę,
   dopóki wiki nie pokaże nowego dnia.
+- Przycisk „Stream” co kilka minut pyta publiczne API Kick (`kick.com/api/v2/channels/jackyykick`),
+  czy autor nadaje. Tylko odczyt, bez klucza i bez danych gracza.
 - Brak automatyzacji gry i czytania jej pamięci: to tylko poradnik.
 
 ## Sprawdzenie przed PR
