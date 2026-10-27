@@ -6,6 +6,7 @@ from pathlib import Path
 from PySide6.QtCore import QByteArray, Qt, QUrl
 from PySide6.QtGui import QCloseEvent, QDesktopServices
 from PySide6.QtWidgets import (
+    QApplication,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -35,6 +36,7 @@ from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
 from .settings_dialog import SettingsDialog
+from .theme import apply_theme
 
 
 class MainWindow(QMainWindow):
@@ -183,9 +185,12 @@ class MainWindow(QMainWindow):
         return header
 
     def _open_settings(self) -> None:
-        dialog = SettingsDialog(self._settings.opacity, self._data_version, self._settings.language, self)
+        dialog = SettingsDialog(
+            self._settings.opacity, self._data_version, self._settings.language, self._settings.theme, self
+        )
         dialog.opacity_changed.connect(self._set_opacity)
         dialog.language_changed.connect(self._set_language)
+        dialog.theme_changed.connect(self._set_theme)
         dialog.exec()
         # Zapis po zamknięciu dialogu, a nie przy każdym ruchu suwaka.
         self._save_settings()
@@ -197,6 +202,16 @@ class MainWindow(QMainWindow):
     def _set_language(self, language: str) -> None:
         # Tylko zapis: nowy język działa od następnego uruchomienia (teksty są już w oknach).
         self._settings.language = language
+
+    def _set_theme(self, key: str) -> None:
+        self._settings.theme = key
+        apply_theme(QApplication.instance(), key)
+        # Strony potwora i przedmiotu mają kolory wpisane w tekst HTML, więc otwartą budujemy od nowa.
+        current = self._stack.currentWidget()
+        if current is self._monster_page and self._monster_page.monster is not None:
+            self._monster_page.show_monster(self._monster_page.monster)
+        elif current is self._item_page and self._item_page.item is not None:
+            self._item_page.show_item(self._item_page.item)
 
     def _save_settings(self) -> None:
         self._settings.geometry = bytes(self.saveGeometry().toBase64()).decode("ascii")

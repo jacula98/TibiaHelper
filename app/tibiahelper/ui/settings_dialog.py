@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QComboBox, QDialog, QHBoxLayout, QLabel, QPushButt
 
 from ..core.i18n import LANGUAGES, N_, current_language, load_catalog, tr
 from ..core.settings import MAX_OPACITY, MIN_OPACITY
+from .theme import THEMES, theme_key
 
 RESTART_HINT = N_("Język zmieni się po ponownym uruchomieniu programu.")
 
@@ -14,7 +15,9 @@ class SettingsDialog(QDialog):
     opacity_changed = Signal(float)
     language_changed = Signal(str)  # kod języka, np. "en"
 
-    def __init__(self, opacity: float, data_version: int, language: str, parent=None) -> None:
+    theme_changed = Signal(str)
+
+    def __init__(self, opacity: float, data_version: int, language: str, theme: str, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle(tr("Ustawienia"))
         # Dialog też musi być nad grą, inaczej schowa się pod oknem Tibii.
@@ -33,6 +36,17 @@ class SettingsDialog(QDialog):
         header.addWidget(QLabel(tr("Widoczność okna")))
         header.addStretch(1)
         header.addWidget(self._value)
+
+        # Lista motywów: widać nazwę, a w danych elementu (userData) siedzi klucz do zapisu.
+        themes = QComboBox()
+        for key, t in THEMES.items():
+            themes.addItem(tr(t.label), key)
+        themes.setCurrentIndex(themes.findData(theme_key(theme)))
+        themes.currentIndexChanged.connect(lambda _: self.theme_changed.emit(themes.currentData()))
+        theme_row = QHBoxLayout()
+        theme_row.addWidget(QLabel(tr("Motyw")))
+        theme_row.addStretch(1)
+        theme_row.addWidget(themes)
 
         # Teksty są wstawiane przy budowaniu okien, więc nowy język działa od następnego uruchomienia.
         self._restart = QLabel(wordWrap=True)
@@ -91,6 +105,8 @@ class SettingsDialog(QDialog):
         layout.addSpacing(8)
         layout.addLayout(language_row)
         layout.addWidget(self._restart)
+        layout.addSpacing(8)
+        layout.addLayout(theme_row)
         layout.addSpacing(12)
         layout.addWidget(version)
         layout.addWidget(sources)

@@ -320,7 +320,7 @@ def header_html(monster: Monster) -> str:
         stats.append(f"speed <b>{monster.speed}</b>")
     return (
         f'<span style="font-size: 18px; font-weight: 600;">{escape(monster.name)}</span><br>'
-        f'<span style="color: #9aa0a6;">{" · ".join(tags)}</span><br>{" · ".join(stats)}'
+        f'<span style="color: {theme.MUTED};">{" · ".join(tags)}</span><br>{" · ".join(stats)}'
     )
 
 
@@ -355,7 +355,7 @@ def loot_html(
             name = escape(item.name)
             if known(item.name):
                 name = f'<a href="{ITEM_LINK_PREFIX}{index}" style="color: {theme.TEXT};">{name}</a>'
-            rarity = f' <span style="color: #9aa0a6;">({escape(tr(RARITY_NAMES[item.rarity]))})</span>' if item.rarity else ""
+            rarity = f' <span style="color: {theme.MUTED};">({escape(tr(RARITY_NAMES[item.rarity]))})</span>' if item.rarity else ""
             path = icon(item.name)
             image = f'<img src="{path.as_uri()}" width="{LOOT_ICON}" height="{LOOT_ICON}">' if path else ""
             rows.append(
@@ -365,7 +365,7 @@ def loot_html(
         parts.append(f'<table cellspacing="0" cellpadding="1">{"".join(rows)}</table>')
 
     parts.append(
-        f'<span style="color: #9aa0a6;">{escape(tr("Źródło:"))} '
+        f'<span style="color: {theme.MUTED};">{escape(tr("Źródło:"))} '
         f'<a href="{escape(monster.source_url, quote=True)}">TibiaWiki</a> (CC BY-SA 4.0) · '
         f'{escape(tr("obrazki © CipSoft"))}</span>'
     )
@@ -373,4 +373,4 @@ def loot_html(
 
 
 def _section(title: str) -> str:
-    return f'<br><span style="color: #9aa0a6; font-size: 11px; font-weight: 600;">{escape(title)}</span>'
+    return f'<br><span style="color: {theme.MUTED}; font-size: 11px; font-weight: 600;">{escape(title)}</span>'
