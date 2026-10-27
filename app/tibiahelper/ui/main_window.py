@@ -171,7 +171,7 @@ class MainWindow(QMainWindow):
 
     def _build_header(self) -> QHBoxLayout:
         logo = QLabel()
-        logo.setPixmap(icon("logo-mark.svg").pixmap(42, 42))
+        logo.setPixmap(icon("logo-mark").pixmap(42, 42))
         name = QLabel("TibiaHelper")
         name.setObjectName("appName")
         gear = QToolButton(text="⚙")
