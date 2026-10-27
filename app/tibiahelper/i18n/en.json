@@ -208,5 +208,8 @@
   "← Przedmiot": "← Item",
   "← Quality of life": "← Quality of life",
   "← Quest": "← Quest",
-  "← Wstecz": "← Back"
+  "← Wstecz": "← Back",
+  "📨 Wyślij loot z bossa": "📨 Send boss loot",
+  "📨 Wyślij Hunt Analyzer": "📨 Send Hunt Analyzer",
+  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Opens a form in your browser (no account needed). Paste your report there."
 }
