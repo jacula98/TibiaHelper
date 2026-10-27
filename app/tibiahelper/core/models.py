@@ -248,6 +248,13 @@ class Quest(_Model):
         return list(totals.items())
 
 
+class QuestRequirement(_Model):
+    """Quest potrzebny np. do bossa: cały albo zrobiony do kroku `step` (numer od 1, włącznie)."""
+
+    quest: str
+    step: int | None = Field(default=None, ge=1)
+
+
 class Boss(_Model):
     """Boss do zakładki „Bossy”, dodany przez autora.
 
@@ -257,7 +264,7 @@ class Boss(_Model):
 
     monster: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
     requirements: str | None = None  # co trzeba mieć, żeby go bić (np. zrobiony quest)
-    quests: list[str] = Field(default_factory=list)  # id questów z wymagań (klikalne w programie)
+    quests: list[QuestRequirement] = Field(default_factory=list)  # questy z wymagań (klikalne w programie)
     access: str | None = None  # jak dojść
     # Trasa do bossa: punkty po kolei (start, przejścia, sala bossa). Autor wskazuje je na mapie.
     route: list[Waypoint] = Field(default_factory=list)

@@ -60,7 +60,7 @@ def check_quest(quest: dict, monster_ids: set[str] | None = None) -> Quest:
     return model
 
 
-def check_boss(boss: dict, monster_ids: set[str], quest_ids: set[str]) -> Boss:
+def check_boss(boss: dict, monster_ids: set[str], quest_steps: dict[str, int]) -> Boss:
     """Walidacja bossa: poprawne pola, istniejący potwór i questy, bez angielskich nazw."""
     try:
         model = Boss.model_validate(boss)
@@ -68,9 +68,15 @@ def check_boss(boss: dict, monster_ids: set[str], quest_ids: set[str]) -> Boss:
         raise AuthorError(f"Boss {boss.get('monster', '?')!r} ma błędy: {_problems(exc)}") from exc
     if model.monster not in monster_ids:
         raise AuthorError(f"Boss {model.monster!r}: nie ma takiego potwora w pliku.")
-    unknown = sorted(set(model.quests) - quest_ids)
+    unknown = sorted({r.quest for r in model.quests} - quest_steps.keys())
     if unknown:
         raise AuthorError(f"Boss {model.monster!r}: nieznane questy {unknown}.")
+    for requirement in model.quests:
+        if requirement.step is not None and requirement.step > quest_steps[requirement.quest]:
+            raise AuthorError(
+                f"Boss {model.monster!r}: quest {requirement.quest!r} ma tylko "
+                f"{quest_steps[requirement.quest]} kroków, a wymaganie mówi o kroku {requirement.step}."
+            )
     forbidden = find_forbidden(json.dumps(boss, ensure_ascii=False))
     if forbidden:
         raise AuthorError(
@@ -126,10 +132,10 @@ def save_data(data: dict, path: Path) -> None:
         monster_ids.add(monster.id)
     for quest in data["quests"]:
         check_quest(quest, monster_ids)
-    quest_ids = {quest["id"] for quest in data["quests"]}
+    quest_steps = {quest["id"]: len(quest.get("steps", [])) for quest in data["quests"]}
     boss_ids: set[str] = set()
     for boss in data.get("bosses", []):
-        model = check_boss(boss, monster_ids, quest_ids)
+        model = check_boss(boss, monster_ids, quest_steps)
         if model.monster in boss_ids:
             raise AuthorError(f"Boss {model.monster!r} jest w pliku dwa razy.")
         boss_ids.add(model.monster)

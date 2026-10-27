@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
         self._minimap = MinimapPage()
         self._ui_hotkeys = UiHotkeysPage(bundled_qol_dir() / "clientoptions.json")
         self._boss_list = BossListPage(sprites_dir(), author_mode=author_file is not None)
-        self._boss_page = BossPage(sprites_dir(), maps_dir(), author_mode=author_file is not None)
+        self._boss_page = BossPage(sprites_dir(), maps_dir(), progress, author_mode=author_file is not None)
         self._monsters: dict[str, Monster] = {}
         self._quest_names: dict[str, str] = {}
         pages = (

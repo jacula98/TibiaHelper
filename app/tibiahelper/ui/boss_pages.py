@@ -21,8 +21,6 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QListWidget,
-    QListWidgetItem,
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
@@ -45,19 +43,18 @@ from ..core.bosses import (
 )
 from ..core.i18n import tr
 from ..core.issues import monster_issue_url
-from ..core.mapdata import floor_label
 from ..core.models import Boss, Monster, Quest, Waypoint
 from ..core.monsters import download_missing, sprite_path
+from ..core.progress import ProgressStore
 from . import theme
-from .map_window import KIND_NAMES, MapPanel, MapWindow
+from .map_window import MapPanel
 from .monster_grid import MonsterGrid
 from .monster_pages import PAGE_SPRITE, header_html
 from .monster_widgets import AnimatedSprite, ElementBars
-from .quest_editor import DEFAULT_START, MarkerDialog
+from .quest_picker import QUEST_LINK_PREFIX, QuestPicker, requirements_html
+from .route_widgets import ROUTE_LINK_PREFIX, RouteEditor, numbered, route_html
 from .theme import report_button
 
-QUEST_LINK_PREFIX = "quest:"
-ROUTE_LINK_PREFIX = "route:"
 ROUTE_MAP_HEIGHT = 320
 
 
@@ -136,10 +133,17 @@ class BossPage(QWidget):
     edit_requested = Signal(object)  # tryb autora: BossEntry
 
     def __init__(
-        self, sprites_dir: Path, maps_dir: Path, author_mode: bool = False, parent: QWidget | None = None
+        self,
+        sprites_dir: Path,
+        maps_dir: Path,
+        progress: ProgressStore,
+        author_mode: bool = False,
+        parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._sprites_dir = sprites_dir
+        # Postęp questów: wymagane questy są zielone, gdy gracz je odhaczył.
+        self._progress = progress
         self._quests: dict[str, Quest] = {}
         self._data_version = 0
         self.entry: BossEntry | None = None
@@ -244,7 +248,7 @@ class BossPage(QWidget):
         monster = self.entry.monster
         self._sprite.set_path(sprite_path(self._sprites_dir, monster.id))
         self._header.setText(header_html(monster))
-        self._body.setText(boss_html(self.entry, self._quests))
+        self._body.setText(boss_html(self.entry, self._quests, self._progress))
         self._route_list.setText(route_html(self.entry.boss.route if self.entry.boss else []))
         self._strategy.setText(strategy_html(self.entry.boss))
         self._source.setText(
@@ -274,7 +278,7 @@ class BossPage(QWidget):
             QDesktopServices.openUrl(QUrl(monster_issue_url(self.entry.monster, self._data_version)))
 
 
-def boss_html(entry: BossEntry, quests: dict[str, Quest]) -> str:
+def boss_html(entry: BossEntry, quests: dict[str, Quest], progress: ProgressStore) -> str:
     """Bosstiary, cooldown i opis autora. Każdy tekst z danych przechodzi przez escape."""
     monster, boss = entry.monster, entry.boss
     parts = []
@@ -306,48 +310,13 @@ def boss_html(entry: BossEntry, quests: dict[str, Quest]) -> str:
             parts.append(_section(tr("WYMAGANIA")))
             if boss.requirements:
                 parts.append(_text(boss.requirements))
-            links = []
-            for quest_id in boss.quests:
-                quest = quests.get(quest_id)
-                if quest is None:
-                    continue
-                links.append(f'📜 <a href="{QUEST_LINK_PREFIX}{escape(quest.id, quote=True)}" '
-                             f'style="color: {theme.ACCENT};">{escape(quest.name)}</a>')
-            if links:
-                parts.append("<br>".join(links))
+            if links := requirements_html(boss.quests, quests, progress):
+                parts.append(links)
         if boss.access or boss.route:
             parts.append(_section(tr("JAK DOJŚĆ")))
         if boss.access:
             parts.append(_text(boss.access))
     return "<br>".join(parts)
-
-
-def numbered(route: list[Waypoint]) -> list[Waypoint]:
-    """Numery w podpisach („1. Start”), żeby na mapie było widać kolejność. Punkty drogi bez podpisu zostają bez."""
-    result, number = [], 0
-    for point in route:
-        if point.label:
-            number += 1
-            point = point.model_copy(update={"label": f"{number}. {point.label}"})
-        result.append(point)
-    return result
-
-
-def route_html(route: list[Waypoint]) -> str:
-    """Podpisane punkty trasy po kolei; klik przenosi mapę pod spodem na miejsce i piętro punktu.
-
-    Link ma indeks z całej trasy (z punktami drogi), bo tak szuka go strona bossa.
-    """
-    rows = []
-    for index, point in enumerate(route):
-        if not point.label:
-            continue
-        rows.append(
-            f'{len(rows) + 1}. <a href="{ROUTE_LINK_PREFIX}{index}" style="color: {theme.ACCENT};">{escape(point.label)}</a>'
-            f' <span style="color: {theme.MUTED};">({escape(tr(KIND_NAMES[point.kind]))}, '
-            f'{escape(tr("piętro: {floor}", floor=floor_label(point.z)))})</span>'
-        )
-    return "<br>".join(rows)
 
 
 def strategy_html(boss: Boss | None) -> str:
@@ -403,43 +372,9 @@ class BossEditor(QDialog):
         self._requirements = _edit(old.get("requirements"), "Np. zrobiony quest, poziom, dostęp premium…")
         self._access = _edit(old.get("access"), "Skąd wyruszyć i jak dojść do bossa.")
         self._strategy = _edit(old.get("strategy"), "Jak go bić: co robi, gdzie stać, czym bić.")
-        self._quest_search = QLineEdit(placeholderText="Szukaj questa…", clearButtonEnabled=True)
-        self._quest_list = QListWidget()
-        self._quest_list.setMinimumHeight(160)
-        chosen = set(old.get("quests", []))
-        # Zaznaczone questy na górze, żeby od razu było widać wymagania.
-        for quest_id, name in sorted(quests.items(), key=lambda q: (q[0] not in chosen, q[1].lower())):
-            item = QListWidgetItem(name)
-            item.setData(Qt.ItemDataRole.UserRole, quest_id)
-            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-            item.setCheckState(Qt.CheckState.Checked if quest_id in chosen else Qt.CheckState.Unchecked)
-            self._quest_list.addItem(item)
-        self._quest_search.textChanged.connect(self._filter_quests)
+        self._quests = QuestPicker(quests, old.get("quests", []))
         # Trasa: punkty po kolei, wskazywane kliknięciem na mapie (jak pinezki w edytorze questa).
-        self._route: list[dict] = list(old.get("route", []))
-        self._maps_dir = maps_dir
-        self._map: MapWindow | None = None
-        self._route_list = QListWidget()
-        self._route_list.setMinimumHeight(110)
-        route_buttons = QHBoxLayout()
-        for text, slot in (
-            ("📍 Dodaj punkt", self._add_point),
-            ("↑", lambda: self._move_point(-1)),
-            ("↓", lambda: self._move_point(+1)),
-            ("Usuń", self._remove_point),
-        ):
-            button = QPushButton(text)
-            button.clicked.connect(slot)
-            route_buttons.addWidget(button)
-        route_buttons.addStretch(1)
-        # Szybkie klikanie: każdy klik na mapie to punkt drogi (bez okienka); mapa zostaje otwarta.
-        self._quick = QCheckBox("Szybkie klikanie drogi (bez podpisów)")
-        self._quick.setChecked(True)
-        self._quick.setToolTip(
-            "Włączone: klikasz po mapie kolejne punkty drogi, linia je łączy.\n"
-            "Wyłączone: po kliknięciu podajesz podpis i rodzaj (start, schody, sala bossa)."
-        )
-        self._refresh_route()
+        self._route = RouteEditor(old.get("route", []), maps_dir, "start, schody, sala bossa")
         self._ready = QCheckBox("Gotowy: pokaż graczom")
         self._ready.setChecked(old.get("status") == "reviewed")
 
@@ -451,74 +386,15 @@ class BossEditor(QDialog):
         layout.addWidget(_title("WYMAGANIA"))
         layout.addWidget(self._requirements)
         layout.addWidget(_title("QUESTY Z WYMAGAŃ (klikalne u graczy)"))
-        layout.addWidget(self._quest_search)
-        layout.addWidget(self._quest_list)
+        layout.addWidget(self._quests)
         layout.addWidget(_title("JAK DOJŚĆ"))
         layout.addWidget(self._access)
         layout.addWidget(_title("TRASA (od startu do bossa)"))
-        layout.addWidget(self._route_list)
-        layout.addLayout(route_buttons)
-        layout.addWidget(self._quick)
+        layout.addWidget(self._route)
         layout.addWidget(_title("JAK BIĆ"))
         layout.addWidget(self._strategy)
         layout.addWidget(self._ready)
         layout.addWidget(buttons)
-
-    def _refresh_route(self) -> None:
-        if self._map is not None and self._map.isVisible():
-            self._map.update_points(self._waypoints())
-        self._route_list.clear()
-        for number, point in enumerate(self._route, start=1):
-            floor = f"piętro {floor_label(point['z'])}"
-            if point.get("label"):
-                kind = KIND_NAMES[point.get("kind", "place")]
-                self._route_list.addItem(f"{number}. {point['label']} ({kind}, {floor})")
-            else:
-                self._route_list.addItem(f"{number}. · droga ({floor})")
-
-    def _waypoints(self) -> list[Waypoint]:
-        return [Waypoint.model_validate(p) for p in self._route]
-
-    def _add_point(self) -> None:
-        points = self._waypoints()
-        start = points[-1] if points else DEFAULT_START
-        if self._map is None:
-            self._map = MapWindow(self._maps_dir, self)
-            self._map.point_picked.connect(self._on_point_picked)
-        self._map.pick_point(points, start, route=True)
-
-    def _on_point_picked(self, x: int, y: int, z: int) -> None:
-        point = {"x": x, "y": y, "z": z}
-        if not self._quick.isChecked():
-            # To samo okienko co przy pinezce w queście: podpis i rodzaj punktu.
-            dialog = MarkerDialog("", self)
-            if dialog.exec() != QDialog.DialogCode.Accepted:
-                return
-            point.update(label=dialog.label(), kind=dialog.kind())
-        self._route.append(point)
-        # Mapa zostaje otwarta i w tym samym miejscu (_refresh_route ją odświeża): następny klik to następny punkt.
-        self._refresh_route()
-        self._route_list.setCurrentRow(len(self._route) - 1)
-
-    def _move_point(self, delta: int) -> None:
-        row = self._route_list.currentRow()
-        target = row + delta
-        if 0 <= row < len(self._route) and 0 <= target < len(self._route):
-            self._route[row], self._route[target] = self._route[target], self._route[row]
-            self._refresh_route()
-            self._route_list.setCurrentRow(target)
-
-    def _remove_point(self) -> None:
-        row = self._route_list.currentRow()
-        if 0 <= row < len(self._route):
-            del self._route[row]
-            self._refresh_route()
-
-    def _filter_quests(self, text: str) -> None:
-        text = text.strip().lower()
-        for row in range(self._quest_list.count()):
-            item = self._quest_list.item(row)
-            item.setHidden(text not in item.text().lower())
 
     def boss_dict(self, now: datetime | None = None) -> dict:
         """Boss z pól edytora, w formacie quests.json (puste pola pomijamy)."""
@@ -527,15 +403,10 @@ class BossEditor(QDialog):
             text = edit.toPlainText().strip()
             if text:
                 boss[key] = text
-        quests = [
-            self._quest_list.item(row).data(Qt.ItemDataRole.UserRole)
-            for row in range(self._quest_list.count())
-            if self._quest_list.item(row).checkState() == Qt.CheckState.Checked
-        ]
-        if quests:
+        if quests := self._quests.requirements():
             boss["quests"] = quests
-        if self._route:
-            boss["route"] = self._route
+        if route := self._route.route():
+            boss["route"] = route
         if self._ready.isChecked():
             boss["status"] = "reviewed"
             # Data przeglądu zostaje stara, jeśli boss już był gotowy.
