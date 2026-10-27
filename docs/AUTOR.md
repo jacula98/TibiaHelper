@@ -53,6 +53,16 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
 - Listy `items` (przedmioty) i `npcs` (NPC z pozycjami) są w `data/quests.json`. W edytorze zaznacz imię
   NPC w tekście kroku i kliknij „👤 NPC”: pinezka stanie tam, gdzie stoi ten NPC.
 
+## Nowa wersja programu (Release)
+
+Aktualizacja w programie pobiera tylko dane (`data/quests.json`, `data/spawns.json`). Nowy kod
+(nowe zakładki, `data/qol/`, nowy schemat danych) dociera do graczy tylko z nowym .exe:
+
+1. Podbij `__version__` w `app/tibiahelper/__init__.py` (i `version` w `pyproject.toml`), np. na `0.2.0`.
+2. Zbuduj .exe i na GitHubie utwórz Release z tagiem `v0.2.0`, z plikiem .exe w załączniku.
+3. Programy graczy przy starcie zobaczą nowszy tag i pokażą pasek „Jest nowa wersja programu” z przyciskiem
+   „Pobierz” (otwiera stronę Release). Program niczego sam nie podmienia.
+
 ## Sprawdzenie przed PR
 
 ```
