@@ -1,7 +1,6 @@
 """Testy zakładki „Bossy”: dane bossa, Bosstiary, cooldown i zapis w trybie autora."""
 
 import json
-import shutil
 from pathlib import Path
 
 import pytest
@@ -25,8 +24,11 @@ def monster(monster_id: str, **extra) -> Monster:
 @pytest.fixture
 def data_file(tmp_path):
     # Kopia prawdziwych danych: testy nie mogą zmieniać pliku w repo.
+    # Bez bossów autora (np. Darkfang): testy sprawdzają tylko te, które same dodają.
+    raw = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    raw["bosses"] = []
     path = tmp_path / "quests.json"
-    shutil.copy(DATA_FILE, path)
+    path.write_text(json.dumps(raw, ensure_ascii=False), encoding="utf-8")
     return path
 
 
