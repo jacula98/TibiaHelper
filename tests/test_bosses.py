@@ -135,6 +135,21 @@ def test_route_is_saved_in_order_and_shown_escaped(data_file):
     assert 'href="route:1"' in html  # numer punktu w linku, klik przenosi mapę
 
 
+def test_road_points_without_label_are_only_line_bends():
+    from tibiahelper.core.models import Waypoint
+    from tibiahelper.ui.boss_pages import numbered, route_html
+
+    route = [
+        Waypoint(x=32369, y=32241, z=7, label="Start"),
+        Waypoint(x=32372, y=32241, z=7),  # punkt drogi
+        Waypoint(x=32375, y=32244, z=7, label="Schody", kind="passage"),
+    ]
+    assert [p.label for p in numbered(route)] == ["1. Start", None, "2. Schody"]
+    html = route_html(route)
+    assert html.count("<a ") == 2
+    assert 'href="route:2"' in html and "2. <a" in html  # link z indeksem w całej trasie, numer bez punktu drogi
+
+
 def test_route_point_outside_map_is_rejected(data_file):
     data = author.load_data(data_file)
     author.upsert_boss(data, {"monster": "drume", "route": [{"x": 1, "y": 1, "z": 7, "label": "X"}]})

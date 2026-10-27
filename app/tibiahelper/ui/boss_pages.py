@@ -46,7 +46,7 @@ from ..core.bosses import (
 from ..core.i18n import tr
 from ..core.issues import monster_issue_url
 from ..core.mapdata import floor_label
-from ..core.models import Boss, MapPoint, Monster, Quest
+from ..core.models import Boss, Monster, Quest, Waypoint
 from ..core.monsters import download_missing, sprite_path
 from . import theme
 from .map_window import KIND_NAMES, MapPanel, MapWindow
@@ -169,7 +169,7 @@ class BossPage(QWidget):
         self._route_list = _html_label()
         self._route_list.setOpenExternalLinks(False)
         self._route_list.linkActivated.connect(self._on_link)
-        self._route: list[MapPoint] = []
+        self._route: list[Waypoint] = []
         self._map = MapPanel(maps_dir)
         self._map.setFixedHeight(ROUTE_MAP_HEIGHT)
         self._strategy = _html_label()
@@ -221,15 +221,12 @@ class BossPage(QWidget):
         self._column.insertWidget(self._elements_at, self._elements)
         self._render()
         self._scroll.verticalScrollBar().setValue(0)
-        # Numer w podpisie na mapie, żeby było widać kolejność punktów.
-        self._route = [
-            point.model_copy(update={"label": f"{number}. {point.label}"})
-            for number, point in enumerate(entry.boss.route if entry.boss else [], start=1)
-        ]
-        self._route_list.setVisible(bool(self._route))
+        self._route = numbered(entry.boss.route if entry.boss else [])
+        labeled = [point for point in self._route if point.label]
+        self._route_list.setVisible(bool(labeled))
         self._map.setVisible(bool(self._route))
         if self._route:
-            self._map.show_route(tr("Trasa do bossa"), self._route, self._route[0])
+            self._map.show_route(tr("Trasa do bossa"), self._route, labeled[0] if labeled else self._route[0])
             # Po pokazaniu strony mapa ma już swój rozmiar, więc dopiero wtedy da się ją wyśrodkować.
             QTimer.singleShot(0, self._map.recenter)
         monster = entry.monster
@@ -263,9 +260,8 @@ class BossPage(QWidget):
     def _on_link(self, link: str) -> None:
         if link.startswith(ROUTE_LINK_PREFIX):
             index = link.removeprefix(ROUTE_LINK_PREFIX)
-            if index.isdigit() and int(index) < len(self._route):
-                point = self._route[int(index)]
-                self._map.show_route(tr("Trasa do bossa"), self._route, point)
+            if index.isdigit() and int(index) < len(self._route) and self._route[int(index)].label:
+                self._map.show_route(tr("Trasa do bossa"), self._route, self._route[int(index)])
         elif link.startswith(QUEST_LINK_PREFIX):
             quest = self._quests.get(link.removeprefix(QUEST_LINK_PREFIX))
             if quest is not None:
@@ -326,14 +322,31 @@ def boss_html(entry: BossEntry, quests: dict[str, Quest]) -> str:
     return "<br>".join(parts)
 
 
-def route_html(route: list[MapPoint]) -> str:
-    """Punkty trasy po kolei; klik w punkt przenosi mapę pod spodem na jego miejsce i piętro."""
-    rows = [
-        f'{number}. <a href="{ROUTE_LINK_PREFIX}{number - 1}" style="color: {theme.ACCENT};">{escape(point.label)}</a>'
-        f' <span style="color: {theme.MUTED};">({escape(tr(KIND_NAMES[point.kind]))}, '
-        f'{escape(tr("piętro: {floor}", floor=floor_label(point.z)))})</span>'
-        for number, point in enumerate(route, start=1)
-    ]
+def numbered(route: list[Waypoint]) -> list[Waypoint]:
+    """Numery w podpisach („1. Start”), żeby na mapie było widać kolejność. Punkty drogi bez podpisu zostają bez."""
+    result, number = [], 0
+    for point in route:
+        if point.label:
+            number += 1
+            point = point.model_copy(update={"label": f"{number}. {point.label}"})
+        result.append(point)
+    return result
+
+
+def route_html(route: list[Waypoint]) -> str:
+    """Podpisane punkty trasy po kolei; klik przenosi mapę pod spodem na miejsce i piętro punktu.
+
+    Link ma indeks z całej trasy (z punktami drogi), bo tak szuka go strona bossa.
+    """
+    rows = []
+    for index, point in enumerate(route):
+        if not point.label:
+            continue
+        rows.append(
+            f'{len(rows) + 1}. <a href="{ROUTE_LINK_PREFIX}{index}" style="color: {theme.ACCENT};">{escape(point.label)}</a>'
+            f' <span style="color: {theme.MUTED};">({escape(tr(KIND_NAMES[point.kind]))}, '
+            f'{escape(tr("piętro: {floor}", floor=floor_label(point.z)))})</span>'
+        )
     return "<br>".join(rows)
 
 
@@ -419,6 +432,13 @@ class BossEditor(QDialog):
             button.clicked.connect(slot)
             route_buttons.addWidget(button)
         route_buttons.addStretch(1)
+        # Szybkie klikanie: każdy klik na mapie to punkt drogi (bez okienka); mapa zostaje otwarta.
+        self._quick = QCheckBox("Szybkie klikanie drogi (bez podpisów)")
+        self._quick.setChecked(True)
+        self._quick.setToolTip(
+            "Włączone: klikasz po mapie kolejne punkty drogi, linia je łączy.\n"
+            "Wyłączone: po kliknięciu podajesz podpis i rodzaj (start, schody, sala bossa)."
+        )
         self._refresh_route()
         self._ready = QCheckBox("Gotowy: pokaż graczom")
         self._ready.setChecked(old.get("status") == "reviewed")
@@ -438,19 +458,29 @@ class BossEditor(QDialog):
         layout.addWidget(_title("TRASA (od startu do bossa)"))
         layout.addWidget(self._route_list)
         layout.addLayout(route_buttons)
+        layout.addWidget(self._quick)
         layout.addWidget(_title("JAK BIĆ"))
         layout.addWidget(self._strategy)
         layout.addWidget(self._ready)
         layout.addWidget(buttons)
 
     def _refresh_route(self) -> None:
+        if self._map is not None and self._map.isVisible():
+            self._map.update_points(self._waypoints())
         self._route_list.clear()
         for number, point in enumerate(self._route, start=1):
-            kind = KIND_NAMES[point.get("kind", "place")]
-            self._route_list.addItem(f"{number}. {point['label']} ({kind}, piętro {floor_label(point['z'])})")
+            floor = f"piętro {floor_label(point['z'])}"
+            if point.get("label"):
+                kind = KIND_NAMES[point.get("kind", "place")]
+                self._route_list.addItem(f"{number}. {point['label']} ({kind}, {floor})")
+            else:
+                self._route_list.addItem(f"{number}. · droga ({floor})")
+
+    def _waypoints(self) -> list[Waypoint]:
+        return [Waypoint.model_validate(p) for p in self._route]
 
     def _add_point(self) -> None:
-        points = [MapPoint.model_validate(p) for p in self._route]
+        points = self._waypoints()
         start = points[-1] if points else DEFAULT_START
         if self._map is None:
             self._map = MapWindow(self._maps_dir, self)
@@ -458,15 +488,17 @@ class BossEditor(QDialog):
         self._map.pick_point(points, start, route=True)
 
     def _on_point_picked(self, x: int, y: int, z: int) -> None:
-        # To samo okienko co przy pinezce w queście: podpis i rodzaj punktu.
-        dialog = MarkerDialog("", self)
-        if dialog.exec() != QDialog.DialogCode.Accepted:
-            return
-        self._route.append({"x": x, "y": y, "z": z, "label": dialog.label(), "kind": dialog.kind()})
+        point = {"x": x, "y": y, "z": z}
+        if not self._quick.isChecked():
+            # To samo okienko co przy pinezce w queście: podpis i rodzaj punktu.
+            dialog = MarkerDialog("", self)
+            if dialog.exec() != QDialog.DialogCode.Accepted:
+                return
+            point.update(label=dialog.label(), kind=dialog.kind())
+        self._route.append(point)
+        # Mapa zostaje otwarta i w tym samym miejscu (_refresh_route ją odświeża): następny klik to następny punkt.
         self._refresh_route()
         self._route_list.setCurrentRow(len(self._route) - 1)
-        if self._map is not None:
-            self._map.close()
 
     def _move_point(self, delta: int) -> None:
         row = self._route_list.currentRow()

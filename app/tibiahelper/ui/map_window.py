@@ -252,6 +252,13 @@ class MapPanel(QWidget):
         self._legend.setText(f"{focus.label} · {tr(KIND_NAMES[focus.kind])} · x {focus.x}, y {focus.y}")
         self._set_floor(focus.z)
 
+    def update_points(self, points: list[MapPoint]) -> None:
+        """Nowe punkty bez ruszania widoku (edytor trasy: klikanie punkt po punkcie)."""
+        self._points = list(points)
+        path = floor_path(self._maps_dir, self._floor)
+        if path.exists():
+            self._draw(self._floor, path, keep_view=True)
+
     def show_route(self, title: str, points: list[MapPoint], focus: MapPoint) -> None:
         """Trasa (np. do bossa): punkty po kolei, połączone linią na każdym piętrze."""
         self._picking = False
@@ -335,7 +342,8 @@ class MapPanel(QWidget):
         font = QFont()
         font.setPixelSize(3)
         for point in self._points:
-            if point.z != z:
+            # Punkt drogi bez podpisu (trasa) to tylko zgięcie linii.
+            if point.z != z or point.label is None:
                 continue
             px, py = to_pixel(point.x, point.y)
             # +0.5: środek kratki, a nie jej lewy górny róg.
@@ -434,3 +442,6 @@ class MapWindow(QWidget):
         self.show()
         self.raise_()
         self.activateWindow()
+
+    def update_points(self, points: list[MapPoint]) -> None:
+        self.panel.update_points(points)

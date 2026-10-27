@@ -61,6 +61,12 @@ class MapPoint(_Model):
     anchor: str | None = None
 
 
+class Waypoint(MapPoint):
+    """Punkt trasy (np. do bossa). Bez podpisu = zwykły punkt drogi: tylko zgięcie linii, bez kropki."""
+
+    label: str | None = Field(default=None, min_length=1)
+
+
 class LootItem(_Model):
     name: str = Field(min_length=1)
     amount: str | None = None  # np. "0-10"; None = 1 sztuka
@@ -251,7 +257,7 @@ class Boss(_Model):
     quests: list[str] = Field(default_factory=list)  # id questów z wymagań (klikalne w programie)
     access: str | None = None  # jak dojść
     # Trasa do bossa: punkty po kolei (start, przejścia, sala bossa). Autor wskazuje je na mapie.
-    route: list[MapPoint] = Field(default_factory=list)
+    route: list[Waypoint] = Field(default_factory=list)
     strategy: str | None = None  # jak bić
     status: QuestStatus = "draft"
     reviewed_at: datetime | None = None
