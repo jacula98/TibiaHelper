@@ -295,3 +295,21 @@ def test_untouched_draft_detection():
     assert _is_untouched_draft(draft)
     assert not _is_untouched_draft({**draft, "steps": [{"text": "TODO: x"}, {"text": "Go", "npc": "Sven"}]})
     assert not _is_untouched_draft({**draft, "steps": [{"text": "Idź do Svena"}]})
+
+
+def test_spoiler_keeps_later_missions_of_long_quests():
+    # Grimvale Quest: misja „The Curse Spreads” zaczyna się po ok. 60 linijkach i dawniej ginęła (limit 40).
+    from generator import spoiler
+
+    lines = "".join(f"Step {i}.\n" for i in range(60))
+    wikitext = f"== The Curse of the Full Moon ==\n{lines}== The Curse Spreads ==\n=== Edron ===\nGo to Edron.\n"
+    steps, _ = spoiler.draft_content(wikitext, "Grimvale Quest")
+    # Misja bez własnego tekstu łączy się z pierwszą podsekcją.
+    assert steps[-1]["text"] == "[The Curse Spreads / Edron] Go to Edron."
+
+
+def test_html_entities_are_decoded():
+    from generator import spoiler
+
+    assert strip_markup("A Father&#39;s Burden Quest") == "A Father's Burden Quest"
+    assert spoiler.clean("Talk to [[Tom]] &amp; Sven") == "Talk to Tom & Sven"

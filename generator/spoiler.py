@@ -6,6 +6,7 @@ Pierwszy krok ma „TODO”, więc szkicu nie da się oznaczyć jako przejrzany,
 dopóki autor go nie przerobi.
 """
 
+import html
 import re
 
 from tibiahelper.core.models import MAP_X_MAX, MAP_X_MIN, MAP_Y_MAX, MAP_Y_MIN
@@ -14,7 +15,9 @@ from .terminology import apply_terms
 from .wikitext import BLOCK
 
 TODO_STEP = "TODO: przetłumacz i uprość kroki poniżej (tekst z TibiaWiki, po angielsku)"
-MAX_STEPS = 40
+# Dawniej 40: długie questy (np. Grimvale z 3 misjami) traciły całe misje.
+# Najdłuższe spoilery mają ok. 350 kroków, więc limit chroni tylko przed zepsutą stroną.
+MAX_STEPS = 500
 MAX_STEP_CHARS = 600
 MAX_ITEM_CHARS = 120
 MARKER_LABEL = "Miejsce"  # podpis pinezki z wiki; autor zmienia go na konkretny (np. „Wejście do jaskini”)
@@ -60,6 +63,7 @@ def clean(text: str) -> str:
     text = _LINK.sub(r"\1", text)
     text = _REF.sub("", text)
     text = text.replace("'''", "").replace("''", "")
+    text = html.unescape(text)  # wiki zapisuje np. apostrof jako &#39;
     text = re.sub(r"^[*#:;]+\s*", "", text.strip())
     return apply_terms(" ".join(text.split()))
 
@@ -91,6 +95,10 @@ def _mapper_link_token(match: re.Match) -> str:
     return f"@@{int(bx) * BLOCK + int(ox)},{int(by) * BLOCK + int(oy)},{int(z)}@@{text}"
 
 
+def _is_skipped(heading: str) -> bool:
+    return any(word in heading.lower() for word in SKIP_HEADINGS)
+
+
 def _skip_line(text: str) -> bool:
     return len(text) < 3 or bool(_IMAGE_LINE.match(text) or _ACHIEVEMENT.match(text))
 
@@ -110,6 +118,7 @@ def draft_content(wikitext: str, quest_name: str) -> tuple[list[dict], list[str]
     required: list[str] = []
     heading = ""
     pending_heading = ""
+    pending_level = 0
     wikitext = _TABLE.sub("", _GALLERY.sub("", wikitext))
     text_only = _MAPPER.sub(_mapper_token, wikitext)
     text_only = _MAPPER_LINK.sub(_mapper_link_token, text_only)
@@ -118,10 +127,17 @@ def draft_content(wikitext: str, quest_name: str) -> tuple[list[dict], list[str]
         line, markers = _markers(line.strip(), MARKER_LABEL)
         match = _HEADING.match(line)
         if match:
-            heading = clean(match.group(2))
-            pending_heading = heading
+            heading, level = clean(match.group(2)), len(match.group(1))
+            if _is_skipped(heading) or heading.lower() in REQUIRED_HEADINGS:
+                continue
+            # Misja bez własnego tekstu (np. „The Curse Spreads”, od razu „=== Edron ===”) nie może zginąć:
+            # łączymy ją z podsekcją, żeby nazwa misji była w krokach i w wyszukiwarce.
+            if pending_heading and pending_level < level:
+                pending_heading = f"{pending_heading} / {heading}"
+            else:
+                pending_heading, pending_level = heading, level
             continue
-        if any(word in heading.lower() for word in SKIP_HEADINGS):
+        if _is_skipped(heading):
             continue
         text = clean(line)
         if _skip_line(text):
