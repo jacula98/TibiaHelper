@@ -220,5 +220,12 @@
   "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "Stream-knappen kollar på {kick} med några minuters mellanrum om författaren sänder",
   "📨 Wyślij loot z bossa": "📨 Skicka bossloot",
   "📨 Wyślij Hunt Analyzer": "📨 Skicka Hunt Analyzer",
-  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Öppnar ett formulär i webbläsaren (inget konto behövs). Klistra in din rapport där."
+  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Öppnar ett formulär i webbläsaren (inget konto behövs). Klistra in din rapport där.",
+  "OSTATNIE RAPORTY GRACZY": "SENASTE SPELARRAPPORTER",
+  "Wczytuję…": "Laddar…",
+  "Brak raportów. Wyślij pierwszy przyciskiem 📨 na dole.": "Inga rapporter än. Skicka den första med 📨-knappen nedan.",
+  "Pokaż więcej ({count})": "Visa fler ({count})",
+  "anonim": "anonym",
+  "Raporty wysyłają gracze. Nikt ich nie sprawdza.": "Rapporterna skickas av spelare och kontrolleras inte.",
+  "ostatnie raporty graczy z {form} (publiczny arkusz, najwyżej co 15 minut, przy otwarciu bossa albo miejsca)": "senaste spelarrapporter från {form} (offentligt kalkylark, högst var 15:e minut, när du öppnar en boss eller plats)"
 }

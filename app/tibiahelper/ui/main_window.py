@@ -39,6 +39,7 @@ from .qol_pages import LootSettingsPage, MinimapPage, QolPage, UiHotkeysPage
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
+from .report_list import ReportFeed
 from .settings_dialog import SettingsDialog
 from .stream_button import StreamButton
 from .theme import apply_theme, icon
@@ -210,6 +211,15 @@ class MainWindow(QMainWindow):
     def offer_release(self, version: str, url: str) -> None:
         """Pokazuje pasek „jest nowa wersja programu”. Pobieranie robi gracz w przeglądarce."""
         self._release_banner.show_release(version, url)
+
+    def start_reports(self, cache: Path) -> None:
+        """Włącza „Ostatnie raporty graczy” (arkusz pobierany przy otwarciu bossa albo miejsca).
+
+        Osobno od __init__, żeby testy nie łączyły się z siecią.
+        """
+        feed = ReportFeed(cache, self)
+        self._boss_page.set_report_feed(feed)
+        self._hunt_page.set_report_feed(feed)
 
     def start_boosted(self, cache: Path) -> None:
         """Zaczyna pobierać dzisiejszy boosted (w tle). Osobno od __init__, żeby testy nie łączyły się z siecią."""

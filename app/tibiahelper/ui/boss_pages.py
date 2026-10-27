@@ -43,16 +43,17 @@ from ..core.bosses import (
 )
 from ..core.i18n import tr
 from ..core.issues import monster_issue_url
-from ..core.reports import boss_report_url
 from ..core.models import Boss, Monster, Quest, Waypoint
 from ..core.monsters import download_missing, sprite_path
 from ..core.progress import ProgressStore
+from ..core.reports import boss_report_url, boss_subject
 from . import theme
 from .map_window import MapPanel
 from .monster_grid import MonsterGrid
 from .monster_pages import PAGE_SPRITE, header_html
 from .monster_widgets import AnimatedSprite, ElementBars
 from .quest_picker import QUEST_LINK_PREFIX, QuestPicker, requirements_html
+from .report_list import ReportFeed, ReportList
 from .route_widgets import ROUTE_LINK_PREFIX, RouteEditor, numbered, route_html
 from .theme import report_button
 
@@ -184,6 +185,7 @@ class BossPage(QWidget):
         monster_card = QPushButton(tr("Karta potwora: loot i mapa →"))
         monster_card.clicked.connect(lambda: self.entry and self.monster_requested.emit(self.entry.monster))
         self._source = _html_label()
+        self._reports = ReportList()
 
         content = QWidget()
         column = QVBoxLayout(content)
@@ -195,6 +197,7 @@ class BossPage(QWidget):
         column.addWidget(self._strategy)
         column.addWidget(self._elements_title)
         self._elements_at = column.count()
+        column.addWidget(self._reports)
         column.addWidget(monster_card, 0, Qt.AlignmentFlag.AlignLeft)
         column.addWidget(self._source)
         column.addStretch(1)
@@ -228,8 +231,12 @@ class BossPage(QWidget):
         self._quests = {quest.id: quest for quest in quests}
         self._data_version = data_version
 
+    def set_report_feed(self, feed: ReportFeed) -> None:
+        self._reports.set_feed(feed)
+
     def show_boss(self, entry: BossEntry) -> None:
         self.entry = entry
+        self._reports.set_subject(boss_subject(entry.monster))
         if self._elements is not None:
             self._elements.deleteLater()
         self._elements = ElementBars(entry.monster)

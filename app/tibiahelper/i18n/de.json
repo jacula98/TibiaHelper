@@ -220,5 +220,12 @@
   "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "die Stream-Schaltfläche prüft alle paar Minuten auf {kick}, ob der Autor live ist",
   "📨 Wyślij loot z bossa": "📨 Boss-Loot senden",
   "📨 Wyślij Hunt Analyzer": "📨 Hunt Analyzer senden",
-  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Öffnet ein Formular im Browser (ohne Konto). Füge dort deinen Bericht ein."
+  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Öffnet ein Formular im Browser (ohne Konto). Füge dort deinen Bericht ein.",
+  "OSTATNIE RAPORTY GRACZY": "NEUESTE SPIELERBERICHTE",
+  "Wczytuję…": "Wird geladen…",
+  "Brak raportów. Wyślij pierwszy przyciskiem 📨 na dole.": "Noch keine Berichte. Sende den ersten mit dem 📨-Knopf unten.",
+  "Pokaż więcej ({count})": "Mehr anzeigen ({count})",
+  "anonim": "anonym",
+  "Raporty wysyłają gracze. Nikt ich nie sprawdza.": "Berichte stammen von Spielern und werden nicht geprüft.",
+  "ostatnie raporty graczy z {form} (publiczny arkusz, najwyżej co 15 minut, przy otwarciu bossa albo miejsca)": "neueste Spielerberichte aus {form} (öffentliche Tabelle, höchstens alle 15 Minuten, beim Öffnen eines Bosses oder Ortes)"
 }
