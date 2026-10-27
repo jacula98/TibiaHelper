@@ -91,6 +91,8 @@ def test_filters_by_level_vocation_city_and_sorts():
     assert filter_hunts(hunts, level=60) == [rats, dragons]  # bez profesji: najniższy poziom
     assert filter_hunts(hunts, city="Port Hope") == [asura]
     assert filter_hunts(hunts, text="thais") == [rats, dragons, unknown]
+    with_dragon = _hunt("cave", areas=[{"monsters": ["dragon"]}])
+    assert filter_hunts([*hunts, with_dragon], text="drag", monster_names={"dragon": "Dragon"}) == [dragons, with_dragon]
     assert sort_hunts([rats, dragons], "Poziom malejąco", "paladin") == [dragons, rats]
     assert sort_hunts(hunts, "Exp (gwiazdki)")[0] == asura
 

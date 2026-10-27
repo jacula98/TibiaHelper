@@ -53,7 +53,8 @@ class HuntListPage(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._hunts: list[Hunt] = []
-        self._search = QLineEdit(placeholderText=tr("Szukaj miejsca albo miasta…"), clearButtonEnabled=True)
+        self._monster_names: dict[str, str] = {}
+        self._search = QLineEdit(placeholderText=tr("Szukaj miejsca, miasta albo potwora…"), clearButtonEnabled=True)
         # Pole tekstowe jak w questach: puste = bez filtra poziomu.
         self._level = QLineEdit(placeholderText=tr("mój lvl"), clearButtonEnabled=True)
         self._level.setValidator(QIntValidator(0, MAX_LEVEL, self._level))
@@ -99,8 +100,9 @@ class HuntListPage(QWidget):
             combo.currentIndexChanged.connect(self._refresh)
         self._list.itemClicked.connect(lambda item: self.hunt_selected.emit(item.data(Qt.ItemDataRole.UserRole)))
 
-    def set_hunts(self, hunts: list[Hunt]) -> None:
+    def set_hunts(self, hunts: list[Hunt], monsters: dict[str, Monster]) -> None:
         self._hunts = hunts
+        self._monster_names = {m.id: m.name for m in monsters.values()}
         current = self._city.currentData()
         # blockSignals: przebudowa listy miast nie ma odświeżać listy przy każdym dodanym mieście.
         self._city.blockSignals(True)
@@ -115,7 +117,9 @@ class HuntListPage(QWidget):
     def _refresh(self) -> None:
         level = int(self._level.text()) if self._level.text().isdigit() else None
         vocation = self._vocation.currentData()
-        found = filter_hunts(self._hunts, self._search.text(), level, vocation, self._city.currentData())
+        found = filter_hunts(
+            self._hunts, self._search.text(), level, vocation, self._city.currentData(), self._monster_names
+        )
         shown = sort_hunts(found, self._sort.currentData(), vocation)
         self._list.clear()
         for hunt in shown:
@@ -216,8 +220,9 @@ class HuntPage(QWidget):
             entrance = hunt.entrance.model_copy(update={"label": tr("Wejście")})
             self._map.show_points([entrance], entrance)
         self._map.setVisible(bool(self._route) or hunt.entrance is not None)
-        # Po pokazaniu strony mapa ma już swój rozmiar, więc dopiero wtedy da się ją wyśrodkować.
-        QTimer.singleShot(0, self._map.recenter)
+        if self._map.isVisibleTo(self):
+            # Po pokazaniu strony mapa ma już swój rozmiar, więc dopiero wtedy da się ją wyśrodkować.
+            QTimer.singleShot(0, self._map.recenter)
         missing = [
             self._monsters[m] for m in hunt.monster_ids()
             if m in self._monsters and self._monsters[m].image_url and sprite_path(self._sprites_dir, m) is None

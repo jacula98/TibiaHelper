@@ -180,7 +180,7 @@ class MainWindow(QMainWindow):
         self._monsters = monsters
         self._boss_list.set_data(monsters, bosses or [])
         self._boss_page.set_quests(quests, data_version)
-        self._hunt_list.set_hunts(hunts or [])
+        self._hunt_list.set_hunts(hunts or [], monsters)
         self._hunt_page.set_data(monsters, items, data_version)
         self._quest_view.set_npcs(npcs)
         self._monster_page.set_items(items)

@@ -42,13 +42,21 @@ def hunt_level(hunt: Hunt, vocation: str | None) -> int | None:
 
 
 def filter_hunts(
-    hunts: list[Hunt], text: str = "", level: int | None = None, vocation: str | None = None, city: str | None = None
+    hunts: list[Hunt],
+    text: str = "",
+    level: int | None = None,
+    vocation: str | None = None,
+    city: str | None = None,
+    monster_names: dict[str, str] | None = None,
 ) -> list[Hunt]:
-    """Wyszukiwanie po nazwie, mieście i potworach; poziom: tylko miejsca na mój lvl (bez nieznanego lvl)."""
+    """Wyszukiwanie po nazwie, mieście i potworach (monster_names: id -> nazwa);
+    poziom: tylko miejsca na mój lvl (bez nieznanego lvl)."""
     text = text.strip().lower()
+    names = monster_names or {}
     result = []
     for hunt in hunts:
-        if text and text not in hunt.name.lower() and text not in (hunt.city or "").lower():
+        searchable = [hunt.name, hunt.city or "", *(names.get(m, "") for m in hunt.monster_ids())]
+        if text and not any(text in value.lower() for value in searchable):
             continue
         if city is not None and hunt.city != city:
             continue

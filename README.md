@@ -15,7 +15,7 @@ do przeglądarki.
   umiejętności, loot i mapę miejsc (expowisk), w których występuje. Listę można sortować po HP i expie.
   Przycisk „Filtry” pokazuje też bossy, potwory eventowe, niedostępne w grze, bez HP i bez expa (domyślnie ukryte).
 - **Zakładka „Hunt/Bestiary zones”.** Ponad 400 miejsc huntów z TibiaWiki. Wpisz swój level i wybierz profesję,
-  a zobaczysz miejsca, na które już możesz iść; do tego filtr miasta i sortowanie po poziomie, expie i loocie.
+  a zobaczysz miejsca, na które już możesz iść. Wyszukasz też po potworze (np. „dragon”); do tego filtr miasta i sortowanie po poziomie, expie i loocie.
   Każde miejsce ma gwiazdki exp/loot, potwory z Bestiary (ile killi i charm pointów), części miejsca (piętra),
   najlepszy loot i mapę z wejściem albo trasą od autora.
 - **Zakładka „Bossy”.** Bossy opisane przez autora: wymagania (z linkiem do questa), jak dojść (z trasą na mapie) i jak bić.
