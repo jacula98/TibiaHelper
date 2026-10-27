@@ -115,3 +115,28 @@ def test_author_cannot_save_broken_boss(data_file, boss, message):
     with pytest.raises(author.AuthorError, match=message):
         author.save_data(data, data_file)
     assert data_file.read_text(encoding="utf-8") == before
+
+
+def test_route_is_saved_in_order_and_shown_escaped(data_file):
+    from tibiahelper.ui.boss_pages import route_html
+
+    route = [
+        {"x": 32369, "y": 32241, "z": 7, "label": "Start <depot>"},
+        {"x": 32370, "y": 32245, "z": 8, "label": "Dziura", "kind": "passage"},
+    ]
+    data = author.load_data(data_file)
+    author.upsert_boss(data, {"monster": "drume", "route": route})
+    author.save_data(data, data_file)
+    boss = load_quest_file(data_file).bosses[0]
+    assert [p.label for p in boss.route] == ["Start <depot>", "Dziura"]
+
+    html = route_html(boss.route)
+    assert "Start &lt;depot&gt;" in html and "<depot>" not in html
+    assert 'href="route:1"' in html  # numer punktu w linku, klik przenosi mapę
+
+
+def test_route_point_outside_map_is_rejected(data_file):
+    data = author.load_data(data_file)
+    author.upsert_boss(data, {"monster": "drume", "route": [{"x": 1, "y": 1, "z": 7, "label": "X"}]})
+    with pytest.raises(author.AuthorError, match="route"):
+        author.save_data(data, data_file)

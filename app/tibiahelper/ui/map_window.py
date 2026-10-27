@@ -136,6 +136,8 @@ class MapPanel(QWidget):
         self._spawn_icon: QPixmap | None = None
         self._floor = 7
         self._loading: set[int] = set()
+        # Tryb trasy (boss): kolejne punkty na tym samym piętrze łączy linia.
+        self._route = False
 
         self._loader = _FloorLoader()
         self._loader.loaded.connect(self._on_floor_loaded)
@@ -190,6 +192,7 @@ class MapPanel(QWidget):
         """Wszystkie miejsca występowania potwora; start na piętrze i w miejscu, gdzie jest ich najwięcej."""
         self._spawn_icon = icon
         self._picking = False
+        self._route = False
         self._points = []
         self._spawns = spawns
         self._spawn_note = note
@@ -212,10 +215,11 @@ class MapPanel(QWidget):
         self._focus = MapPoint(x=x, y=y, z=z, label=self._title.text() or tr("miejsce"))
         self._set_floor(z)
 
-    def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
+    def pick_point(self, points: list[MapPoint], start: MapPoint, route: bool = False) -> None:
         """Tryb autora: autor klika miejsce na mapie, okno wysyła point_picked."""
         self._spawns = []
         self._picking = True
+        self._route = route
         self._points = list(points)
         self._focus = start
         self._title.setText("Kliknij miejsce na mapie")
@@ -239,12 +243,25 @@ class MapPanel(QWidget):
     def show_points(self, points: list[MapPoint], focus: MapPoint) -> None:
         """Pokazuje punkty jednego kroku i centruje mapę na klikniętym."""
         self._picking = False
+        self._route = False
         self._spawns = []
         self._points = points
         self._focus = focus
         self._title.setText(focus.label)
         self._title.setToolTip(focus.label)
         self._legend.setText(f"{focus.label} · {tr(KIND_NAMES[focus.kind])} · x {focus.x}, y {focus.y}")
+        self._set_floor(focus.z)
+
+    def show_route(self, title: str, points: list[MapPoint], focus: MapPoint) -> None:
+        """Trasa (np. do bossa): punkty po kolei, połączone linią na każdym piętrze."""
+        self._picking = False
+        self._spawns = []
+        self._route = True
+        self._points = points
+        self._focus = focus
+        self._title.setText(title)
+        self._title.setToolTip(title)
+        self._legend.setText(focus.label)
         self._set_floor(focus.z)
 
     def recenter(self) -> None:
@@ -313,6 +330,8 @@ class MapPanel(QWidget):
         scene.addPixmap(pixmap)
         scene.setSceneRect(pixmap.rect())
 
+        if self._route:
+            self._draw_route_lines(scene, z)
         font = QFont()
         font.setPixelSize(3)
         for point in self._points:
@@ -347,6 +366,17 @@ class MapPanel(QWidget):
             px, py = to_pixel(self._focus.x, self._focus.y)
             self._view.centerOn(px, py)
 
+
+    def _draw_route_lines(self, scene: QGraphicsScene, z: int) -> None:
+        # Linia tylko między sąsiednimi punktami z tego piętra; zmianę piętra pokazuje punkt „przejście”.
+        # Ciemny spód pod kolorową linią: widać ją i na trawie, i na czerwonych ścianach.
+        pens = (QPen(QColor(0, 0, 0, 200), 1.6), QPen(QColor(theme.ACCENT), 0.8))
+        for start, end in zip(self._points, self._points[1:]):
+            if start.z == end.z == z:
+                (x1, y1), (x2, y2) = to_pixel(start.x, start.y), to_pixel(end.x, end.y)
+                # Rysowana przed kropkami, więc leży nad mapą, ale pod nimi i pod podpisami.
+                for pen in pens:
+                    scene.addLine(x1 + 0.5, y1 + 0.5, x2 + 0.5, y2 + 0.5, pen)
 
     def _draw_spawns(self, scene: QGraphicsScene, z: int) -> None:
         # Jedna ścieżka zamiast setek osobnych elementów: scena rysuje i przewija się szybciej.
@@ -399,8 +429,8 @@ class MapWindow(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(self.panel)
 
-    def pick_point(self, points: list[MapPoint], start: MapPoint) -> None:
-        self.panel.pick_point(points, start)
+    def pick_point(self, points: list[MapPoint], start: MapPoint, route: bool = False) -> None:
+        self.panel.pick_point(points, start, route)
         self.show()
         self.raise_()
         self.activateWindow()

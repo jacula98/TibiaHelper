@@ -76,7 +76,7 @@ class MainWindow(QMainWindow):
         self._minimap = MinimapPage()
         self._ui_hotkeys = UiHotkeysPage(bundled_qol_dir() / "clientoptions.json")
         self._boss_list = BossListPage(sprites_dir(), author_mode=author_file is not None)
-        self._boss_page = BossPage(sprites_dir(), author_mode=author_file is not None)
+        self._boss_page = BossPage(sprites_dir(), maps_dir(), author_mode=author_file is not None)
         self._monsters: dict[str, Monster] = {}
         self._quest_names: dict[str, str] = {}
         pages = (
@@ -289,7 +289,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Edytor", f"Nie można wczytać {self._author_file}:\n{exc}")
             return
         quests = {q["id"]: q.get("name", q["id"]) for q in raw.get("quests", []) if isinstance(q, dict) and "id" in q}
-        editor = BossEditor(entry, self._author_file, quests, self)
+        editor = BossEditor(entry, self._author_file, quests, maps_dir(), self)
         editor.saved.connect(self._reload_after_boss_edit)
         editor.exec()
 
