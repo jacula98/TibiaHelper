@@ -7,6 +7,7 @@ nim wstrzyknąć własnego HTML. Jedyne znaczniki to te, które dodajemy tu sami
 from collections.abc import Callable
 from html import escape
 
+from ..core.i18n import tr
 from ..core.models import Monster, Step
 from ..core.monsters import describe
 
@@ -85,5 +86,5 @@ def monster_tooltip(monster: Monster, img_tag: str = "") -> str:
     return (
         f'<table cellspacing="4"><tr><td>{img_tag}</td>'
         f"<td><b>{escape(monster.name)}</b><br>{lines}<br>"
-        '<span style="color: #9aa0a6;">kliknij: loot, umiejętności, miejsca</span></td></tr></table>'
+        f'<span style="color: #9aa0a6;">{escape(tr("kliknij: loot, umiejętności, miejsca"))}</span></td></tr></table>'
     )

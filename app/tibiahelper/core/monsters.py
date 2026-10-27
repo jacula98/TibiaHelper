@@ -13,6 +13,7 @@ import urllib.request
 from collections.abc import Callable
 from pathlib import Path
 
+from .i18n import N_, tr
 from .models import SPRITE_URL_PREFIX, Monster
 from .storage import write_bytes_atomic
 
@@ -25,14 +26,15 @@ RETRY_DELAY = 1.0  # sekundy
 # Rozpoznajemy obrazek po pierwszych bajtach, żeby nie zapisać np. strony błędu z HTML.
 SIGNATURES = {b"GIF87a": ".gif", b"GIF89a": ".gif", b"\x89PNG\r\n\x1a\n": ".png"}
 
+# N_: tłumaczymy przy pokazaniu, tr(ELEMENT_NAMES[...]) (zob. i18n.py).
 ELEMENT_NAMES = {
-    "physical": "fizyczne",
-    "earth": "ziemia",
-    "fire": "ogień",
-    "energy": "energia",
-    "ice": "lód",
-    "holy": "święte",
-    "death": "śmierć",
+    "physical": N_("fizyczne"),
+    "earth": N_("ziemia"),
+    "fire": N_("ogień"),
+    "energy": N_("energia"),
+    "ice": N_("lód"),
+    "holy": N_("święte"),
+    "death": N_("śmierć"),
 }
 
 Fetch = Callable[[str], bytes]
@@ -141,32 +143,33 @@ def describe(monster: Monster) -> list[str]:
     weak = [(e, p) for e, p in monster.elements.items() if p > 100]
     strong = [(e, p) for e, p in monster.elements.items() if p < 100]
     if weak:
-        lines.append("Słaby na: " + ", ".join(f"{ELEMENT_NAMES[e]} {p}%" for e, p in weak))
+        lines.append(tr("Słaby na: {list}", list=", ".join(f"{tr(ELEMENT_NAMES[e])} {p}%" for e, p in weak)))
     if strong:
-        lines.append("Odporny na: " + ", ".join(f"{ELEMENT_NAMES[e]} {p}%" for e, p in strong))
+        lines.append(tr("Odporny na: {list}", list=", ".join(f"{tr(ELEMENT_NAMES[e])} {p}%" for e, p in strong)))
     return lines
 
 
 # Sortowanie listy potworów: nazwa -> (klucz, malejąco?). Kolejność tu = kolejność w menu.
+# Polska nazwa jest kluczem; w menu pokazujemy tr(nazwa).
 SORTS: dict[str, tuple[Callable[[Monster], object], bool]] = {
     "A–Z": (lambda m: m.name.lower(), False),
-    "HP rosnąco": (lambda m: m.hp, False),
-    "HP malejąco": (lambda m: m.hp, True),
-    "Exp rosnąco": (lambda m: m.exp, False),
-    "Exp malejąco": (lambda m: m.exp, True),
+    N_("HP rosnąco"): (lambda m: m.hp, False),
+    N_("HP malejąco"): (lambda m: m.hp, True),
+    N_("Exp rosnąco"): (lambda m: m.exp, False),
+    N_("Exp malejąco"): (lambda m: m.exp, True),
     # Exp za każdy punkt HP: im więcej, tym bardziej opłaca się bić (max(hp, 1), bo bywa HP 0).
-    "Exp / HP (najlepsze)": (lambda m: m.exp / max(m.hp, 1), True),
+    N_("Exp / HP (najlepsze)"): (lambda m: m.exp / max(m.hp, 1), True),
 }
 
 
 # Filtry listy jak przy przedmiotach: grupy domyślnie ukryte, do pokazania w menu „Filtry”.
 MONSTER_FILTERS: dict[str, Callable[[Monster], bool]] = {
-    "Bossy": lambda m: m.boss,
-    "Eventowe": lambda m: m.event,
-    "Niedostępne w grze": lambda m: m.unavailable,
-    "Bez HP na wiki": lambda m: m.hp == 0,
+    N_("Bossy"): lambda m: m.boss,
+    N_("Eventowe"): lambda m: m.event,
+    N_("Niedostępne w grze"): lambda m: m.unavailable,
+    N_("Bez HP na wiki"): lambda m: m.hp == 0,
     # Np. zwierzęta z miast, przyzwańce i obiekty z questów: nic za nie nie wpada.
-    "Bez expa": lambda m: m.exp == 0,
+    N_("Bez expa"): lambda m: m.exp == 0,
 }
 
 

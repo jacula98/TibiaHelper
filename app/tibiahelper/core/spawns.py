@@ -11,11 +11,12 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from .i18n import N_
 from .models import MAP_X_MAX, MAP_X_MIN, MAP_Y_MAX, MAP_Y_MIN
 
 log = logging.getLogger(__name__)
 
-SOURCE_NOTE = "Źródło danych: tibiaroute.com"
+SOURCE_NOTE = N_("Źródło danych: tibiaroute.com")  # tłumaczymy przy pokazaniu: tr(SOURCE_NOTE)
 CLUSTER = 64  # kratki: wielkość kwadratu, w którym szukamy największego skupiska
 PLACE_CELL = 32  # kratki: punkty w sąsiednich kwadratach tej wielkości to jedno miejsce (expowisko)
 

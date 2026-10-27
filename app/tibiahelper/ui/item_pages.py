@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ..core.i18n import tr
 from ..core.issues import item_issue_url
 from ..core.filters import hide_groups
 from ..core.items import ITEM_FILTERS, ITEM_SORTS, Drop, effective_price, sort_items
@@ -57,9 +58,9 @@ def item_subtitle(item: Item) -> str:
     """Druga linia na liście: najważniejsze dla gracza, czyli komu i za ile sprzedać."""
     if item.sell_to:
         names = ", ".join(t.npc for t in item.sell_to[:3]) + (" …" if len(item.sell_to) > 3 else "")
-        return f"sprzedasz za {_gp(item.value)}: {names}"
+        return tr("sprzedasz za {price}: {npcs}", price=_gp(item.value), npcs=names)
     if item.buy_from:
-        return f"kupisz za {_gp(item.price)}"
+        return tr("kupisz za {price}", price=_gp(item.price))
     return item.category or ""
 
 
@@ -140,10 +141,12 @@ class ItemListPage(QWidget):
     def __init__(self, items_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._items: list[Item] = []
-        self._search = QLineEdit(placeholderText="Szukaj przedmiotu, np. fish fin…", clearButtonEnabled=True)
+        self._search = QLineEdit(placeholderText=tr("Szukaj przedmiotu, np. fish fin…"), clearButtonEnabled=True)
         self._sort = QComboBox()
-        self._sort.addItems(list(ITEM_SORTS))
-        self._sort.setToolTip("Sortowanie i filtr")
+        # Na liście tłumaczenie, a w danych pozycji polska nazwa, po której szuka sort_items.
+        for name in ITEM_SORTS:
+            self._sort.addItem(tr(name), name)
+        self._sort.setToolTip(tr("Sortowanie i filtr"))
         self._animator = SpriteAnimator(items_dir, self)
         self._model = ItemModel(self)
         self._list = QListView()
@@ -164,7 +167,7 @@ class ItemListPage(QWidget):
         self._timer.timeout.connect(self._animator.forget_unused)
         self._empty = QLabel(alignment=Qt.AlignmentFlag.AlignCenter, wordWrap=True)
 
-        back = QPushButton("← Menu")
+        back = QPushButton(tr("← Menu"))
         back.clicked.connect(self.back_requested)
         top = QHBoxLayout()
         top.addWidget(back)
@@ -184,7 +187,7 @@ class ItemListPage(QWidget):
         layout.addWidget(self._empty, 1)
 
         self._search.textChanged.connect(self._refresh)
-        self._sort.currentTextChanged.connect(self._refresh)
+        self._sort.currentIndexChanged.connect(self._refresh)
 
     def set_items(self, items: dict[str, Item]) -> None:
         self._items = list(items.values())
@@ -193,10 +196,12 @@ class ItemListPage(QWidget):
     def _refresh(self) -> None:
         text = self._search.text().strip().lower()
         found = [i for i in self._items if text in i.name.lower()]
-        shown = sort_items(hide_groups(found, ITEM_FILTERS, self._filters.shown()), self._sort.currentText())
+        shown = sort_items(hide_groups(found, ITEM_FILTERS, self._filters.shown()), self._sort.currentData())
         self._model.set_items(shown)
         self._list.scrollToTop()
-        self._empty.setText("Brak przedmiotów w danych." if not self._items else "Nic nie pasuje do wyszukiwania i filtrów.")
+        self._empty.setText(
+            tr("Brak przedmiotów w danych.") if not self._items else tr("Nic nie pasuje do wyszukiwania i filtrów.")
+        )
         self._list.setVisible(bool(shown))
         self._empty.setVisible(not shown)
 
@@ -229,11 +234,11 @@ class _TradeRow(QFrame):
         layout.addWidget(self._sprite)
         layout.addWidget(name, 1)
         if npc is None:
-            hint = QLabel("brak na mapie", objectName="muted")
+            hint = QLabel(tr("brak na mapie"), objectName="muted")
             layout.addWidget(hint)
         else:
             self.setCursor(Qt.CursorShape.PointingHandCursor)
-            self.setToolTip("Kliknij, żeby zobaczyć, gdzie stoi")
+            self.setToolTip(tr("Kliknij, żeby zobaczyć, gdzie stoi"))
         layout.addWidget(price_label)
 
     def set_image(self, image: Path | None) -> None:
@@ -268,7 +273,7 @@ class ItemPage(QWidget):
         self._loader = _Loader(self)
         self._loader.loaded.connect(self._on_images_loaded)
 
-        self._back = QPushButton("← Wstecz")
+        self._back = QPushButton(tr("← Wstecz"))
         self._back.clicked.connect(self.back_requested)
         top = QHBoxLayout()
         top.addWidget(self._back)
@@ -332,8 +337,9 @@ class ItemPage(QWidget):
         self._map.hide()
         self._drops_label.setText(drops_html(self._drops.get(item.name.lower(), []), self._monster_icon))
         self._source.setText(
-            f'<span style="color: {theme.MUTED};">Źródło: <a href="{escape(item.source_url, quote=True)}">'
-            "TibiaWiki</a> (CC BY-SA 4.0) · obrazki © CipSoft</span>"
+            f'<span style="color: {theme.MUTED};">{escape(tr("Źródło:"))} '
+            f'<a href="{escape(item.source_url, quote=True)}">TibiaWiki</a> (CC BY-SA 4.0) · '
+            f'{escape(tr("obrazki © CipSoft"))}</span>'
         )
         self._scroll.verticalScrollBar().setValue(0)
         self._load_images(item)
@@ -347,12 +353,12 @@ class ItemPage(QWidget):
                 widget.deleteLater()
         self._rows = []
         sections = (
-            ("SPRZEDASZ U NPC (NPC KUPUJE)", item.sell_to, item.value),
-            ("KUPISZ U NPC", item.buy_from, item.price),
+            (tr("SPRZEDASZ U NPC (NPC KUPUJE)"), item.sell_to, item.value),
+            (tr("KUPISZ U NPC"), item.buy_from, item.price),
         )
         if not item.sell_to and not item.buy_from:
             self._trades.addWidget(_section_label("NPC"))
-            self._trades.addWidget(QLabel("Żaden NPC tego nie kupuje ani nie sprzedaje.", objectName="muted"))
+            self._trades.addWidget(QLabel(tr("Żaden NPC tego nie kupuje ani nie sprzedaje."), objectName="muted"))
         for title, trades, default in sections:
             if not trades:
                 continue
@@ -453,8 +459,8 @@ def drops_html(drops: list[Drop], icon) -> str:
     for drop in drops:
         path = icon(drop.monster.id)
         image = f'<img src="{path.as_uri()}" width="24" height="24"> ' if path else ""
-        rarity = f' <span style="color: {theme.MUTED};">({RARITY_NAMES[drop.rarity]})</span>' if drop.rarity else ""
+        rarity = f' <span style="color: {theme.MUTED};">({escape(tr(RARITY_NAMES[drop.rarity]))})</span>' if drop.rarity else ""
         link = f'<a href="{DROP_LINK_PREFIX}{escape(drop.monster.id, quote=True)}">{escape(drop.monster.name)}</a>'
         lines.append(f"{image}{link}{rarity}")
-    title = f'<span style="color: {theme.MUTED}; font-size: 11px; font-weight: 600;">WYPADA Z POTWORÓW</span>'
+    title = f'<span style="color: {theme.MUTED}; font-size: 11px; font-weight: 600;">{escape(tr("WYPADA Z POTWORÓW"))}</span>'
     return title + "<br>" + "<br>".join(lines)

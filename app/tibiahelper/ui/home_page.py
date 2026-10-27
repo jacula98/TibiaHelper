@@ -3,6 +3,8 @@
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
 
+from ..core.i18n import tr
+
 
 class HomePage(QWidget):
     quests_requested = Signal()
@@ -16,25 +18,25 @@ class HomePage(QWidget):
         layout.setContentsMargins(0, 12, 0, 0)
         layout.setSpacing(10)
 
-        quests = _menu_button("📜  Questy", "Poradniki questów krok po kroku")
+        quests = _menu_button("📜  " + tr("Questy"), tr("Poradniki questów krok po kroku"))
         quests.clicked.connect(self.quests_requested)
         layout.addWidget(quests)
 
-        monsters = _menu_button("🐉  Potwory", "HP, exp, słabości, loot i gdzie występują")
+        monsters = _menu_button("🐉  " + tr("Potwory"), tr("HP, exp, słabości, loot i gdzie występują"))
         monsters.clicked.connect(self.monsters_requested)
         layout.addWidget(monsters)
 
-        items = _menu_button("🎒  Przedmioty", "Komu sprzedać, gdzie kupić, z czego wypada")
+        items = _menu_button("🎒  " + tr("Przedmioty"), tr("Komu sprzedać, gdzie kupić, z czego wypada"))
         items.clicked.connect(self.items_requested)
         layout.addWidget(items)
 
         # Expowiska i bossy dojdą w kolejnych etapach; do tego czasu przyciski są nieaktywne.
-        for text in ("⚔  Expowiska", "💀  Bossy"):
-            button = _menu_button(text, "Wkrótce")
+        for text in ("⚔  " + tr("Expowiska"), "💀  " + tr("Bossy")):
+            button = _menu_button(text, tr("Wkrótce"))
             button.setEnabled(False)
             layout.addWidget(button)
 
-        qol = _menu_button("✨  Quality of life", "Minimapa, loot filter, UI i hotkeye")
+        qol = _menu_button("✨  Quality of life", tr("Minimapa, loot filter, UI i hotkeye"))
         qol.clicked.connect(self.qol_requested)
         layout.addWidget(qol)
 

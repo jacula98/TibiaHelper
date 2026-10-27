@@ -6,6 +6,7 @@ przekazujemy w adresie URL, a użytkownik sam klika „Submit” na GitHubie.
 
 import urllib.parse
 
+from .i18n import tr
 from .models import Item, Monster, Quest
 
 NEW_ISSUE_URL = "https://github.com/jacula98/TibiaHelper/issues/new"
@@ -14,7 +15,7 @@ NEW_ISSUE_URL = "https://github.com/jacula98/TibiaHelper/issues/new"
 def issue_url(quest: Quest, data_version: int) -> str:
     return _url(
         f"[{quest.id}] Błąd w poradniku",
-        "(opisz problem, np. numer kroku i co się nie zgadza)",
+        tr("(opisz problem, np. numer kroku i co się nie zgadza)"),
         [
             f"Quest: {quest.name} (`{quest.id}`)",
             f"Wersja danych: {data_version}",
@@ -27,7 +28,7 @@ def issue_url(quest: Quest, data_version: int) -> str:
 def monster_issue_url(monster: Monster, data_version: int) -> str:
     return _url(
         f"[potwór: {monster.id}] Błąd w danych potwora",
-        "(opisz problem, np. złe HP, loot albo miejsce na mapie)",
+        tr("(opisz problem, np. złe HP, loot albo miejsce na mapie)"),
         [
             f"Potwór: {monster.name} (`{monster.id}`)",
             f"Wersja danych: {data_version}",
@@ -40,7 +41,7 @@ def monster_issue_url(monster: Monster, data_version: int) -> str:
 def item_issue_url(item: Item, data_version: int) -> str:
     return _url(
         f"[przedmiot: {item.name}] Błąd w danych przedmiotu",
-        "(opisz problem, np. zła cena albo NPC, który tego nie kupuje)",
+        tr("(opisz problem, np. zła cena albo NPC, który tego nie kupuje)"),
         [f"Przedmiot: {item.name}", f"Wersja danych: {data_version}", f"Źródło: {item.source_url}"],
     )
 
