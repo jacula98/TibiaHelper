@@ -222,10 +222,9 @@
   "📨 Wyślij Hunt Analyzer": "📨 Hunt Analyzer senden",
   "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Öffnet ein Formular im Browser (ohne Konto). Füge dort deinen Bericht ein.",
   "OSTATNIE RAPORTY GRACZY": "NEUESTE SPIELERBERICHTE",
-  "Wczytuję…": "Wird geladen…",
   "Brak raportów. Wyślij pierwszy przyciskiem 📨 na dole.": "Noch keine Berichte. Sende den ersten mit dem 📨-Knopf unten.",
   "Pokaż więcej ({count})": "Mehr anzeigen ({count})",
   "anonim": "anonym",
   "Raporty wysyłają gracze. Nikt ich nie sprawdza.": "Berichte stammen von Spielern und werden nicht geprüft.",
-  "ostatnie raporty graczy z {form} (publiczny arkusz, najwyżej co 15 minut, przy otwarciu bossa albo miejsca)": "neueste Spielerberichte aus {form} (öffentliche Tabelle, höchstens alle 15 Minuten, beim Öffnen eines Bosses oder Ortes)"
+  "ostatnie raporty graczy z {form} (przychodzą razem z aktualizacją poradników)": "neueste Spielerberichte aus {form} (kommen mit dem Update der Anleitungen)"
 }

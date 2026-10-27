@@ -2,6 +2,7 @@
 
 import datetime
 import urllib.parse
+from pathlib import Path
 
 from tibiahelper.core.models import Hunt, Monster
 from tibiahelper.core.reports import (
@@ -63,23 +64,55 @@ def test_parse_reports_rejects_sheet_without_columns_and_clips_long_text():
     assert len(long.loot) == MAX_LOOT
 
 
-def test_reports_are_cached_and_offline_keeps_last(tmp_path):
-    from tibiahelper.core.reports import REFRESH_SECONDS, get_reports
+def test_generator_saves_reports_only_when_changed(tmp_path):
+    from datetime import UTC, datetime
 
-    cache = tmp_path / "reports.json"
-    calls = []
+    from generator import reports as gen_reports
+    from tibiahelper.core.reports import load_reports
+
+    path = tmp_path / "reports.json"
+    now = datetime(2026, 10, 27, 18, 0, tzinfo=UTC)
+    assert gen_reports.update(CSV, path, now) == 3
+    assert gen_reports.update(CSV, path, now) is None  # bez zmian: brak zapisu, brak „nowych danych” u graczy
+    version, reports = load_reports(path)
+    assert version == 202610271800 and reports[0].subject == "Hunt: Asura Palace"
+
+
+def test_newer_reports_come_with_data_update(tmp_path):
+    import json
+
+    from tibiahelper.core import updater
+    from tibiahelper.core.reports import load_reports, parse_reports, reports_to_json
+
+    quests = json.loads((Path(__file__).parents[1] / "data" / "quests.json").read_text(encoding="utf-8"))
+    quests["data_version"] += 1
+    reports_file = json.dumps(reports_to_json(5, parse_reports(CSV))).encode()
+    files = {updater.DATA_URL: json.dumps(quests).encode(), updater.REPORTS_URL: reports_file}
 
     def fetch(url):
-        calls.append(url)
-        return CSV
+        if url not in files:
+            raise OSError("404")
+        return files[url]
 
-    assert len(get_reports(cache, 1000.0, fetch)) == 3
-    assert len(get_reports(cache, 1000.0 + 60, fetch)) == 3 and len(calls) == 1  # z pliku, bez sieci
+    update = updater.check_for_update(quests["data_version"] - 1, fetch, reports_version=4)
+    assert update is not None and update.reports_raw == reports_file
+    assert updater.check_for_update(quests["data_version"] - 1, fetch, reports_version=5).reports_raw is None
 
-    def offline(url):
-        raise OSError("brak sieci")
+    cached = tmp_path / "reports.json"
+    assert updater.apply_update(update, tmp_path / "quests.json", None, cached)
+    # Dołączony plik (wersja 0 albo brak) przegrywa z nowszym pobranym.
+    assert load_reports(tmp_path / "brak.json", cached)[0] == 5
 
-    assert len(get_reports(cache, 1000.0 + REFRESH_SECONDS + 1, offline)) == 3  # ostatnie znane
+
+def test_broken_reports_file_is_ignored(tmp_path):
+    from tibiahelper.core.reports import load_reports
+
+    bad = tmp_path / "reports.json"
+    bad.write_text('{"version": "x"}')
+    assert load_reports(bad) == (0, [])
+    bad.write_text('{"version": 3, "reports": [{"subject": "A"}, {"subject": "B", "loot": "' + "x" * 9000 + '"}]}')
+    version, reports = load_reports(bad)
+    assert version == 3 and [r.subject for r in reports] == ["B"] and len(reports[0].loot) < 9000
 
 
 def test_reports_html_escapes_player_text():

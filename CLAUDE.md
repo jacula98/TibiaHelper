@@ -31,8 +31,9 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
 - Przycisk „Stream” co kilka minut pyta publiczne API Kick (`kick.com/api/v2/channels/jackyykick`),
   czy autor nadaje. Tylko odczyt, bez klucza i bez danych gracza.
 - Raporty graczy (loot, Hunt Analyzer) idą przez formularz Google: program tylko otwiera go w przeglądarce.
-  Ostatnie raporty czyta z publicznego eksportu CSV arkusza odpowiedzi (`core/reports.py`), najwyżej co 15 minut,
-  przy otwarciu bossa albo miejsca. Teksty wpisują obcy ludzie: zawsze escape i ucinanie długości.
+  Program graczy NIE czyta arkusza (przy wielu graczach Google mógłby blokować). Arkusz czyta generator
+  (`python -m generator reports` → `data/reports.json`), a gracze dostają raporty z aktualizacją danych.
+  Teksty wpisują obcy ludzie: zawsze escape i ucinanie długości.
 - Brak automatyzacji gry i czytania jej pamięci: to tylko poradnik.
 
 ## Sprawdzenie przed PR

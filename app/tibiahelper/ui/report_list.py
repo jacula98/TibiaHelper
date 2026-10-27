@@ -1,20 +1,18 @@
 """„Ostatnie raporty graczy” pod bossem i miejscem huntu (z formularza Google).
 
-ReportFeed pobiera arkusz w tle i trzyma raporty dla całego programu.
+ReportFeed trzyma raporty dla całego programu. Przychodzą z data/reports.json,
+razem z aktualizacją poradników (program graczy nie łączy się z Google).
 ReportList pokazuje raporty jednego bossa albo miejsca: 5 najnowszych,
 a „Pokaż więcej” rozwija kolejne.
 """
 
-import threading
-import time
 from html import escape
-from pathlib import Path
 
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget
 
 from ..core.i18n import tr
-from ..core.reports import Report, get_reports, reports_for
+from ..core.reports import Report, reports_for
 from . import theme
 
 FIRST = 5  # tyle raportów widać od razu
@@ -22,35 +20,16 @@ MORE = 10  # tyle dochodzi po każdym „Pokaż więcej”
 
 
 class ReportFeed(QObject):
-    """Wspólne raporty dla stron bossów i huntów. Pobieranie w wątku, wynik przez sygnał."""
+    """Wspólne raporty dla stron bossów i huntów (z data/reports.json, aktualizowane z danymi)."""
 
     changed = Signal()
-    _loaded = Signal(object)
 
-    def __init__(self, cache: Path, parent: QObject | None = None) -> None:
+    def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
-        self._cache = cache
         self.reports: list[Report] = []
-        self.ready = False  # False do pierwszego wyniku: lista pokazuje „Wczytuję…”
-        self._busy = False
-        self._loaded.connect(self._on_loaded)
 
-    def refresh(self) -> None:
-        """Wołane przy otwarciu strony. get_reports sam pilnuje, żeby nie pytać częściej niż co 15 min."""
-        if self._busy:
-            return
-        self._busy = True
-
-        def work() -> None:
-            # Sygnał przenosi wynik do wątku okna (widżetów Qt nie wolno zmieniać z innego wątku).
-            self._loaded.emit(get_reports(self._cache, time.time()))
-
-        threading.Thread(target=work, daemon=True, name="reports").start()
-
-    def _on_loaded(self, reports: list[Report]) -> None:
-        self._busy = False
+    def set_reports(self, reports: list[Report]) -> None:
         self.reports = reports
-        self.ready = True
         self.changed.emit()
 
 
@@ -78,14 +57,13 @@ class ReportList(QWidget):
         feed.changed.connect(self._render)
 
     def set_subject(self, subject: str) -> None:
-        """Nowa strona (boss albo miejsce): od początku 5 raportów i odświeżenie arkusza."""
+        """Nowa strona (boss albo miejsce): od początku 5 raportów."""
         self._subject = subject
         self._shown = FIRST
         if self._feed is None:
             return
         self.show()
         self._render()
-        self._feed.refresh()
 
     def _show_more(self) -> None:
         self._shown += MORE
@@ -96,7 +74,7 @@ class ReportList(QWidget):
             return
         reports = reports_for(self._feed.reports, self._subject)
         if not reports:
-            text = tr("Wczytuję…") if not self._feed.ready else tr("Brak raportów. Wyślij pierwszy przyciskiem 📨 na dole.")
+            text = tr("Brak raportów. Wyślij pierwszy przyciskiem 📨 na dole.")
             self._list.setText(f'<span style="color:{theme.MUTED}">{escape(text)}</span>')
             self._more.hide()
             return

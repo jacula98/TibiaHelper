@@ -21,15 +21,17 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from .reports import parse_reports_file
 from .repository import LoadResult, QuestFileError, load_quest_file, parse_quest_data
 from .spawns import parse_spawns
-from .storage import write_json_atomic
+from .storage import write_bytes_atomic, write_json_atomic
 
 log = logging.getLogger(__name__)
 
 DATA_URL = "https://raw.githubusercontent.com/jacula98/TibiaHelper/main/data/quests.json"
 # Miejsca występowania potworów (TibiaRoute): pobierane razem z nowymi poradnikami.
 SPAWNS_URL = "https://raw.githubusercontent.com/jacula98/TibiaHelper/main/data/spawns.json"
+REPORTS_URL = "https://raw.githubusercontent.com/jacula98/TibiaHelper/main/data/reports.json"
 TIMEOUT_SECONDS = 10
 # Plik z bazą potworów i questów ma ok. 5 MB (spakowany gzipem ok. 0,7 MB).
 # Limity chronią przed pobieraniem albo rozpakowaniem czegoś ogromnego.
@@ -97,13 +99,17 @@ class Update:
     raw: dict
     # Nowsze spawns.json albo None (brak zmian lub nie udało się pobrać).
     spawns_raw: dict | None = None
+    # Nowszy reports.json (raporty graczy) albo None.
+    reports_raw: bytes | None = None
 
     @property
     def data_version(self) -> int:
         return self.result.data_version
 
 
-def check_for_update(current_version: int, fetch: Fetch = download, spawns_version: int = 0) -> Update | None:
+def check_for_update(
+    current_version: int, fetch: Fetch = download, spawns_version: int = 0, reports_version: int = 0
+) -> Update | None:
     """Sprawdza, czy na GitHubie są nowsze dane. Niczego nie zapisuje.
 
     Zapis robi dopiero apply_update(), gdy użytkownik się zgodzi.
@@ -120,7 +126,7 @@ def check_for_update(current_version: int, fetch: Fetch = download, spawns_versi
         return None
     if result.data_version <= current_version:
         return None
-    return Update(result, raw, _check_spawns(spawns_version, fetch))
+    return Update(result, raw, _check_spawns(spawns_version, fetch), _check_reports(reports_version, fetch))
 
 
 def _check_spawns(current_version: int, fetch: Fetch) -> dict | None:
@@ -134,13 +140,28 @@ def _check_spawns(current_version: int, fetch: Fetch) -> dict | None:
     return raw if version > current_version else None
 
 
-def apply_update(update: Update, cached: Path, cached_spawns: Path | None = None) -> bool:
+def _check_reports(current_version: int, fetch: Fetch) -> bytes | None:
+    """reports.json, jeśli na GitHubie jest nowszy. Błąd tu nie blokuje aktualizacji poradników."""
+    try:
+        data = fetch(REPORTS_URL)
+        version, _ = parse_reports_file(data)
+    except (OSError, http.client.HTTPException, ValueError) as exc:
+        log.info("Pominięto aktualizację raportów: %s", exc)
+        return None
+    return data if version > current_version else None
+
+
+def apply_update(
+    update: Update, cached: Path, cached_spawns: Path | None = None, cached_reports: Path | None = None
+) -> bool:
     """Zapisuje pobrane dane jako lokalną kopię. False, gdy zapis się nie udał."""
     try:
         # Najpierw spawny: gdy ten zapis się nie uda, poradniki zostają stare
         # i przy następnym starcie aktualizacja (razem ze spawnami) będzie zaproponowana znowu.
         if update.spawns_raw is not None and cached_spawns is not None:
             write_json_atomic(cached_spawns, update.spawns_raw)
+        if update.reports_raw is not None and cached_reports is not None:
+            write_bytes_atomic(cached_reports, update.reports_raw)
         write_json_atomic(cached, update.raw)
     except OSError as exc:
         log.error("Nie można zapisać pobranych danych do %s: %s", cached, exc)

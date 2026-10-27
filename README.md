@@ -63,6 +63,7 @@ i wersją danych, wystarczy dopisać, co jest nie tak. Potrzebne jest darmowe ko
 Pod bossem jest przycisk „📨 Wyślij loot z bossa”, a pod miejscem huntu „📨 Wyślij Hunt Analyzer”. Otwiera
 formularz Google z wpisaną nazwą; wklejasz loot albo analyzer i klikasz „Prześlij”. Konto nie jest potrzebne.
 Ostatnie raporty innych graczy widać na tej samej stronie (5 najnowszych, „Pokaż więcej” rozwija kolejne).
+Nowe raporty dochodzą razem z aktualizacją poradników, więc twój pojawi się po kolejnej aktualizacji.
 Raportów nikt nie sprawdza.
 
 ## Gdzie program zapisuje dane

@@ -11,15 +11,17 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from .core.paths import (
     boosted_file,
     bundled_data_file,
+    bundled_reports_file,
     bundled_spawns_file,
     cached_data_file,
+    cached_reports_file,
     cached_spawns_file,
     progress_file,
-    reports_file,
     settings_file,
 )
 from .core.i18n import set_language, tr
 from .core.progress import ProgressStore
+from .core.reports import load_reports
 from .core.repository import LoadResult, QuestFileError, load_quest_file
 from .core.settings import load_settings
 from .core.spawns import load_spawns
@@ -101,10 +103,13 @@ def main() -> int:
     spawns_paths = [bundled_spawns_file()] if args.no_update else [bundled_spawns_file(), cached_spawns_file()]
     spawns = load_spawns(*spawns_paths)
     window.set_spawns(spawns)
+    # Raporty graczy przychodzą z aktualizacją danych (jak spawny), bez łączenia się z Google.
+    reports_paths = [bundled_reports_file()] if args.no_update else [bundled_reports_file(), cached_reports_file()]
+    reports_version, reports = load_reports(*reports_paths)
+    window.set_reports(reports)
 
     window.show()
     window.start_boosted(boosted_file())
-    window.start_reports(reports_file())
     if error:
         QMessageBox.warning(window, "TibiaHelper", tr("Nie udało się wczytać questów.") + f"\n\n{error}")
 
@@ -113,7 +118,7 @@ def main() -> int:
 
         def install(update: Update) -> None:
             # Wywoływane dopiero po kliknięciu „Zaktualizuj”.
-            if not apply_update(update, cached_data_file(), cached_spawns_file()):
+            if not apply_update(update, cached_data_file(), cached_spawns_file(), cached_reports_file()):
                 QMessageBox.warning(window, "TibiaHelper", tr("Nie udało się zapisać nowych poradników."))
             # Nawet gdy zapis się nie udał, pokazujemy nowe dane do końca tej sesji.
             window.set_quests(
@@ -127,6 +132,8 @@ def main() -> int:
             )
             if update.spawns_raw is not None:
                 window.set_spawns(load_spawns(bundled_spawns_file(), cached_spawns_file()))
+            if update.reports_raw is not None:
+                window.set_reports(load_reports(bundled_reports_file(), cached_reports_file())[1])
 
         notifier.updated.connect(
             lambda update: window.offer_update(update.data_version, lambda: install(update))
@@ -136,7 +143,9 @@ def main() -> int:
         # Pobieranie w tle, żeby okno nie zamarzło przy wolnym internecie.
         # daemon=True: zamknięcie okna nie czeka na koniec pobierania.
         threading.Thread(
-            target=lambda: _run_update(notifier, current, spawns.version), daemon=True, name="update"
+            target=lambda: _run_update(notifier, current, spawns.version, reports_version),
+            daemon=True,
+            name="update",
         ).start()
 
     return app.exec()
@@ -162,8 +171,8 @@ def _install_qt_translator(app: QApplication, language: str) -> None:
         app.installTranslator(translator)
 
 
-def _run_update(notifier: _UpdateNotifier, current_version: int, spawns_version: int) -> None:
-    update = check_for_update(current_version, spawns_version=spawns_version)
+def _run_update(notifier: _UpdateNotifier, current_version: int, spawns_version: int, reports_version: int) -> None:
+    update = check_for_update(current_version, spawns_version=spawns_version, reports_version=reports_version)
     if update is not None:
         notifier.updated.emit(update)
     release = check_for_release(__version__)

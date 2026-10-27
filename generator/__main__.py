@@ -23,7 +23,7 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import bulk, cache, hunts, items, monsters, npcs, quests, quests_file, spawns  # noqa: E402
+from . import bulk, cache, hunts, items, monsters, npcs, quests, quests_file, reports, spawns  # noqa: E402
 from tibiahelper.core import author  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
 from .wikitext import infobox_position, mapper_coords  # noqa: E402
@@ -59,6 +59,7 @@ def main(argv: list[str] | None = None) -> int:
     import_all.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
 
     commands.add_parser("spawns", help="pobierz miejsca występowania potworów z TibiaRoute")
+    commands.add_parser("reports", help="pobierz raporty graczy z arkusza formularza do data/reports.json")
 
     npcs_cmd = commands.add_parser("npcs", help="pobierz NPC z pozycjami i obrazkami do data/quests.json")
     npcs_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
@@ -136,6 +137,15 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Potwory z miejscami: {len(data['monsters'])}, punktów: {total}")
             if unmatched:
                 print("Bez pary w data/quests.json:", ", ".join(unmatched))
+
+        elif args.command == "reports":
+            count = reports.update(reports.download())
+            if count is None:
+                print("Raporty bez zmian, nic nie zapisano.")
+            else:
+                # Aplikacja szuka aktualizacji po data_version w quests.json, więc podbijamy ją też tutaj.
+                quests_file.save(quests_file.load())
+                print(f"Zapisano raportów: {count} (data/reports.json)")
 
         elif args.command == "npcs":
             pages = bulk.load_pages(client, client.embedded_in("Infobox NPC"), args.refresh)
