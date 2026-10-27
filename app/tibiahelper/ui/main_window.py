@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import author
-from ..core.bosses import boss_entries
+from ..core.bosses import BossEntry, boss_entries
 from ..core.i18n import tr
 from ..core.items import build_drops
 from ..core.models import Boss, Hunt, Item, Monster, Npc, Quest
@@ -29,6 +29,7 @@ from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
+from .boosted_bar import BoostedBar
 from .boss_pages import BossEditor, BossListPage, BossPage
 from .home_page import HomePage
 from .hunt_pages import HuntEditor, HuntListPage, HuntPage
@@ -107,11 +108,15 @@ class MainWindow(QMainWindow):
         self._banner.hide()
         self._release_banner = ReleaseBanner()
         self._release_banner.hide()
+        self._boosted = BoostedBar(sprites_dir())
+        self._boosted.monster_requested.connect(self._open_boosted)
+        self._visible_bosses: dict[str, Boss] = {}
 
         central = QWidget()
         layout = QVBoxLayout(central)
         layout.setContentsMargins(12, 8, 12, 12)
         layout.addLayout(self._build_header())
+        layout.addWidget(self._boosted)
         layout.addWidget(self._release_banner)
         layout.addWidget(self._banner)
         layout.addWidget(self._stack, 1)
@@ -179,6 +184,8 @@ class MainWindow(QMainWindow):
         monsters, items, npcs = monsters or {}, items or {}, npcs or {}
         self._data_version = data_version
         self._monsters = monsters
+        self._boosted.set_monsters(monsters)
+        self._visible_bosses = {boss.monster: boss for boss in bosses or []}
         self._boss_list.set_data(monsters, bosses or [])
         self._boss_page.set_quests(quests, data_version)
         self._hunt_list.set_hunts(hunts or [], monsters)
@@ -203,6 +210,18 @@ class MainWindow(QMainWindow):
     def offer_release(self, version: str, url: str) -> None:
         """Pokazuje pasek „jest nowa wersja programu”. Pobieranie robi gracz w przeglądarce."""
         self._release_banner.show_release(version, url)
+
+    def start_boosted(self, cache: Path) -> None:
+        """Zaczyna pobierać dzisiejszy boosted (w tle). Osobno od __init__, żeby testy nie łączyły się z siecią."""
+        self._boosted.start(cache)
+
+    def _open_boosted(self, monster: Monster) -> None:
+        # Boss opisany przez autora: jego karta z trasą i strategią. Inaczej zwykła karta potwora.
+        boss = self._visible_bosses.get(monster.id)
+        if boss is not None:
+            self._open_boss(BossEntry(monster, boss))
+        else:
+            self._open_detail("monster", monster)
 
     def _build_header(self) -> QHBoxLayout:
         logo = QLabel()
@@ -374,6 +393,7 @@ class MainWindow(QMainWindow):
                 self._quest_view: tr("← Quest"),
                 self._boss_page: tr("← Boss"),
                 self._hunt_page: tr("← Hunt"),
+                self._home: tr("← Menu"),  # z paska „Boosted dziś” na ekranie startowym
             }.get(previous, tr("← Lista"))
         page = self._monster_page if kind == "monster" else self._item_page
         page.set_back_text(back)
