@@ -99,9 +99,12 @@ co w kodzie (jak `ui/assets`): `--add-data "app/tibiahelper/i18n;tibiahelper/i18
 Aktualizacja w programie pobiera tylko dane (`data/quests.json`, `data/spawns.json`). Nowy kod
 (nowe zakładki, `data/qol/`, nowy schemat danych) dociera do graczy tylko z nowym .exe:
 
-1. Podbij `__version__` w `app/tibiahelper/__init__.py` (i `version` w `pyproject.toml`), np. na `0.2.0`.
-2. Zbuduj .exe i na GitHubie utwórz Release z tagiem `v0.2.0`, z plikiem .exe w załączniku.
-3. Programy graczy przy starcie zobaczą nowszy tag i pokażą pasek „Jest nowa wersja programu” z przyciskiem
+1. Podbij `__version__` w `app/tibiahelper/__init__.py` (i `version` w `pyproject.toml`), np. na `1.1.0`.
+2. Na Windowsie zbuduj .exe: `pip install -r requirements-dev.txt`, potem `python scripts/build_exe.py`.
+   Wynik to `dist/TibiaHelper.exe` (jeden plik z danymi, tłumaczeniami i ikoną). Tryb `--author` jest w nim wyłączony.
+3. Na GitHubie: Releases → „Draft a new release” → tag `v1.1.0` (z „v”), tytuł np. „TibiaHelper 1.1.0”,
+   przeciągnij `dist/TibiaHelper.exe` do załączników → „Publish release”.
+4. Programy graczy przy starcie zobaczą nowszy tag i pokażą pasek „Jest nowa wersja programu” z przyciskiem
    „Pobierz” (otwiera stronę Release). Program niczego sam nie podmienia.
 
 Ikona .exe to `app/tibiahelper/ui/assets/logo.ico`. Po zmianie `logo.svg` wygeneruj ją ponownie:
