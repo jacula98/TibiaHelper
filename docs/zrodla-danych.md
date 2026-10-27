@@ -7,6 +7,7 @@
 | [tibiamaps](https://github.com/tibiamaps/tibia-map-data) | mapy pięter; paczki minimapy wgrywane do klienta (pobierane przez aplikację na żądanie, nie są w repo) | „Feel free to use”, kod MIT |
 | [tibiaroute.com](https://tibiaroute.com/) | miejsca występowania potworów | pisemna zgoda (niżej) |
 | [Yuukiciu](https://www.youtube.com/watch?v=4fIlbgTtXMg) | `data/qol/`: loot filter (pomijane śmieci) i ceny z Marketu dla itemów do delivery tasków i imbu | pliki dostarczył autor projektu; w aplikacji podpis „Źródło: Yuukiciu” z linkiem |
+| [Kick](https://kick.com/jackyykick) | tylko informacja, czy kanał autora nadaje (przycisk „Stream”) | publiczne API bez klucza, sam odczyt; nic nie zapisujemy |
 
 Nie korzystamy z Tibiopedii (brak licencji pozwalającej na użycie).
 

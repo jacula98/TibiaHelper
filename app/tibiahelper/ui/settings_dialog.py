@@ -90,6 +90,11 @@ class SettingsDialog(QDialog):
                 "miejsca występowania potworów: Źródło danych: {route} (za zgodą TibiaRoute)",
                 route='<a href="https://tibiaroute.com/">tibiaroute.com</a>',
             )
+            + "<br>• "
+            + tr(
+                "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje",
+                kick='<a href="https://kick.com/jackyykick">kick.com</a>',
+            )
         )
         sources.setObjectName("muted")
         sources.setWordWrap(True)

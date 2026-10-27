@@ -39,6 +39,7 @@ from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
 from .settings_dialog import SettingsDialog
+from .stream_button import StreamButton
 from .theme import apply_theme, icon
 
 
@@ -219,6 +220,7 @@ class MainWindow(QMainWindow):
         header.addWidget(logo)
         header.addWidget(name)
         header.addStretch(1)
+        header.addWidget(StreamButton())
         header.addWidget(gear)
         return header
 
