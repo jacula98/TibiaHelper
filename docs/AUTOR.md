@@ -72,8 +72,15 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
 Przyciski „📨 Wyślij…” otwierają formularz z wpisanym polem „Boss/Hunt place” (dla miejsc: `Hunt: <nazwa>`) i datą.
 Numery pól (`entry.*`) i adres arkusza są w `app/tibiahelper/core/reports.py`. Zmiana tytułu pytania ich nie zmienia,
 ale usunięcie pytania i dodanie nowego już tak. Wtedy popraw stałe w tym pliku.
-Program czyta arkusz sam, więc żadna komenda generatora nie jest potrzebna. Spam albo testowe wpisy usuń w arkuszu
-(Odpowiedzi w formularzu → usuń); zniknie u graczy przy następnym odświeżeniu (do 15 minut).
+Program graczy nie łączy się z arkuszem. Raporty do programu wrzuca komenda:
+
+```
+python -m generator reports
+```
+
+Pobiera arkusz, zapisuje `data/reports.json` i podbija `data_version`, gdy coś się zmieniło (bez zmian nic nie zapisuje).
+Po commicie gracze dostaną raporty razem z aktualizacją poradników. Spam albo testowe wpisy usuń najpierw w arkuszu
+(Odpowiedzi w formularzu → usuń), potem uruchom komendę. Przy wydaniu .exe dołącz `data/reports.json` obok `quests.json`.
 
 ## Tłumaczenia interfejsu
 

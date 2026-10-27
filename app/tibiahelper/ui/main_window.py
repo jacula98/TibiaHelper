@@ -28,6 +28,7 @@ from ..core.paths import bundled_qol_dir, items_dir, maps_dir, npcs_dir, sprites
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
+from ..core.reports import Report
 from ..core.settings import load_settings, save_settings
 from .boosted_bar import BoostedBar
 from .boss_pages import BossEditor, BossListPage, BossPage
@@ -109,6 +110,7 @@ class MainWindow(QMainWindow):
         self._banner.hide()
         self._release_banner = ReleaseBanner()
         self._release_banner.hide()
+        self._report_feed: ReportFeed | None = None
         self._boosted = BoostedBar(sprites_dir())
         self._boosted.monster_requested.connect(self._open_boosted)
         self._visible_bosses: dict[str, Boss] = {}
@@ -212,14 +214,13 @@ class MainWindow(QMainWindow):
         """Pokazuje pasek „jest nowa wersja programu”. Pobieranie robi gracz w przeglądarce."""
         self._release_banner.show_release(version, url)
 
-    def start_reports(self, cache: Path) -> None:
-        """Włącza „Ostatnie raporty graczy” (arkusz pobierany przy otwarciu bossa albo miejsca).
-
-        Osobno od __init__, żeby testy nie łączyły się z siecią.
-        """
-        feed = ReportFeed(cache, self)
-        self._boss_page.set_report_feed(feed)
-        self._hunt_page.set_report_feed(feed)
+    def set_reports(self, reports: list[Report]) -> None:
+        """Raporty graczy z data/reports.json: przy starcie i po aktualizacji danych."""
+        if self._report_feed is None:
+            self._report_feed = ReportFeed(self)
+            self._boss_page.set_report_feed(self._report_feed)
+            self._hunt_page.set_report_feed(self._report_feed)
+        self._report_feed.set_reports(reports)
 
     def start_boosted(self, cache: Path) -> None:
         """Zaczyna pobierać dzisiejszy boosted (w tle). Osobno od __init__, żeby testy nie łączyły się z siecią."""

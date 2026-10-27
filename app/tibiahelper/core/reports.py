@@ -2,13 +2,13 @@
 
 Tak jak przy „Zgłoś błąd”, aplikacja niczego sama nie wysyła. Wypełnione pola
 są w adresie URL, a gracz wkleja loot (albo Hunt Analyzer) i sam klika „Prześlij”.
-Odpowiedzi trafiają do publicznego arkusza autora. Program czyta go (najwyżej
-co 15 minut) i pokazuje ostatnie raporty pod bossem albo miejscem huntu.
+Odpowiedzi trafiają do publicznego arkusza autora. Program graczy nie łączy się
+z arkuszem: generator autora (`python -m generator reports`) zapisuje raporty
+do data/reports.json, a gracze dostają je razem z aktualizacją danych.
 """
 
 import csv
 import datetime
-import http.client
 import io
 import json
 import logging
@@ -17,8 +17,6 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .models import Hunt, Monster
-from .storage import write_json_atomic
-from .updater import Fetch, download
 
 log = logging.getLogger(__name__)
 
@@ -51,14 +49,13 @@ def _url(subject: str, today: datetime.date | None) -> str:
     return f"{FORM_URL}?{query}"
 
 
-# --- ostatnie raporty (odczyt arkusza z odpowiedziami) ------------------------
+# --- ostatnie raporty (arkusz -> data/reports.json -> program) -----------------
 
-# Publiczny eksport arkusza z odpowiedziami jako CSV (tylko odczyt, bez klucza).
+# Publiczny eksport arkusza z odpowiedziami jako CSV. Czyta go tylko generator.
 SHEET_CSV_URL = (
     "https://docs.google.com/spreadsheets/d/"
     "1Yo_v_KamDe85JXVRolC0f8sGUWpRsMec6iHk5QKMrSw/export?format=csv"
 )
-REFRESH_SECONDS = 15 * 60  # częściej nie pytamy: raporty nie zmieniają się co minutę
 MAX_REPORTS = 2000  # tyle najnowszych wierszy trzymamy (resztę pomijamy)
 # Teksty wpisują obcy ludzie: ucinamy je, żeby jeden wpis nie zalał okna.
 MAX_LOOT = 1500
@@ -150,31 +147,49 @@ def reports_for(reports: list[Report], subject: str) -> list[Report]:
     return [r for r in reports if " ".join(r.subject.split()).casefold() == key]
 
 
-def load_cache(path: Path) -> tuple[float, list[Report]]:
-    """(czas pobrania, raporty) z pliku. Brak albo zły plik: (0, [])."""
-    try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-        reports = [Report(**{k: str(item[k]) for k in Report.__dataclass_fields__}) for item in raw["reports"]]
-        return float(raw["fetched_at"]), reports[:MAX_REPORTS]
-    except (OSError, ValueError, KeyError, TypeError, AttributeError):
-        return 0.0, []
+def reports_to_json(version: int, reports: list[Report]) -> dict:
+    """Zawartość data/reports.json (zapisuje generator)."""
+    return {"source": "Formularz Google TibiaHelper", "version": version, "reports": [asdict(r) for r in reports]}
 
 
-def get_reports(cache: Path, now: float, fetch: Fetch = download) -> list[Report]:
-    """Raporty z pliku albo świeże z arkusza (najwyżej co REFRESH_SECONDS). Bez sieci: ostatnie znane.
+def _parse_file(raw: object) -> tuple[int, list[Report]]:
+    if not isinstance(raw, dict) or not isinstance(raw.get("version"), int) or not isinstance(raw.get("reports"), list):
+        raise ValueError("Zły plik reports.json")
+    reports = []
+    for item in raw["reports"][:MAX_REPORTS]:
+        try:
+            # Plik też pochodzi z sieci (aktualizacja z GitHuba), więc ucinamy długości jeszcze raz.
+            reports.append(
+                Report(
+                    subject=_clip(str(item["subject"]), MAX_SHORT),
+                    loot=_clip(str(item["loot"]), MAX_LOOT),
+                    date=_clip(str(item.get("date", "")), MAX_SHORT),
+                    author=_clip(str(item.get("author", "")), MAX_SHORT),
+                    comment=_clip(str(item.get("comment", "")), MAX_COMMENT),
+                )
+            )
+        except (KeyError, TypeError, AttributeError):
+            continue  # zły wpis: pomijamy tylko jego
+    return raw["version"], reports
 
-    Wołaj w wątku w tle: pobranie arkusza może trwać kilka sekund.
-    """
-    fetched_at, cached = load_cache(cache)
-    if 0 <= now - fetched_at < REFRESH_SECONDS:
-        return cached
+
+def parse_reports_file(data: bytes) -> tuple[int, list[Report]]:
+    """Bajty reports.json (np. z aktualizacji) -> (wersja, raporty). Rzuca ValueError."""
     try:
-        fresh = parse_reports(fetch(SHEET_CSV_URL))
-    except (OSError, http.client.HTTPException, ValueError) as exc:
-        log.info("Pobieranie raportów pominięte: %s", exc)
-        return cached
-    try:
-        write_json_atomic(cache, {"fetched_at": now, "reports": [asdict(r) for r in fresh]})
-    except OSError as exc:
-        log.info("Nie udało się zapisać %s: %s", cache, exc)
-    return fresh
+        return _parse_file(json.loads(data.decode("utf-8")))
+    except UnicodeDecodeError as exc:
+        raise ValueError(str(exc)) from exc
+
+
+def load_reports(*paths: Path) -> tuple[int, list[Report]]:
+    """Najnowszy z plików (dołączony do programu albo pobrany z aktualizacją). Brak plików: (0, [])."""
+    best: tuple[int, list[Report]] = (0, [])
+    for path in paths:
+        try:
+            found = parse_reports_file(path.read_bytes())
+        except (OSError, ValueError) as exc:
+            log.info("Pominięto %s: %s", path, exc)
+            continue
+        if found[0] > best[0]:
+            best = found
+    return best

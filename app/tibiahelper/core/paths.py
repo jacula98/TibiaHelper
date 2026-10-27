@@ -81,6 +81,11 @@ def boosted_file() -> Path:
     return user_data_dir() / "boosted.json"
 
 
-def reports_file() -> Path:
-    """Ostatnie raporty graczy (z arkusza formularza), żeby nie pobierać ich przy każdym starcie."""
+def bundled_reports_file() -> Path:
+    """reports.json dołączony do aplikacji (obok quests.json)."""
+    return bundled_data_file().with_name("reports.json")
+
+
+def cached_reports_file() -> Path:
+    """reports.json pobrany z GitHuba razem z aktualizacją poradników."""
     return user_data_dir() / "reports.json"

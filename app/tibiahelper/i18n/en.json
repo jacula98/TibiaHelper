@@ -222,10 +222,9 @@
   "📨 Wyślij Hunt Analyzer": "📨 Send Hunt Analyzer",
   "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Opens a form in your browser (no account needed). Paste your report there.",
   "OSTATNIE RAPORTY GRACZY": "LATEST PLAYER REPORTS",
-  "Wczytuję…": "Loading…",
   "Brak raportów. Wyślij pierwszy przyciskiem 📨 na dole.": "No reports yet. Send the first one with the 📨 button below.",
   "Pokaż więcej ({count})": "Show more ({count})",
   "anonim": "anonymous",
   "Raporty wysyłają gracze. Nikt ich nie sprawdza.": "Reports are sent by players and are not checked.",
-  "ostatnie raporty graczy z {form} (publiczny arkusz, najwyżej co 15 minut, przy otwarciu bossa albo miejsca)": "latest player reports from {form} (public sheet, at most every 15 minutes, when you open a boss or place)"
+  "ostatnie raporty graczy z {form} (przychodzą razem z aktualizacją poradników)": "latest player reports from {form} (they come with the guide updates)"
 }
