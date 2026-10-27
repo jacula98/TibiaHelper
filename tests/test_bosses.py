@@ -89,7 +89,7 @@ def test_bad_or_unknown_boss_is_skipped_not_fatal():
 
 def test_author_adds_boss_and_app_reads_it(data_file):
     data = author.load_data(data_file)
-    author.upsert_boss(data, {"monster": "drume", "requirements": "Zrób quest.", "quests": ["katana-quest"]})
+    author.upsert_boss(data, {"monster": "drume", "requirements": "Zrób quest.", "quests": [{"quest": "katana-quest", "step": 1}]})
     author.save_data(data, data_file)
     author.upsert_boss(data, {"monster": "drume", "access": "Idź na wschód."})  # podmiana, nie duplikat
     author.save_data(data, data_file)
@@ -103,7 +103,8 @@ def test_author_adds_boss_and_app_reads_it(data_file):
     "boss, message",
     [
         ({"monster": "nie-ma-takiego"}, "nie ma takiego potwora"),
-        ({"monster": "drume", "quests": ["zly-quest"]}, "nieznane questy"),
+        ({"monster": "drume", "quests": [{"quest": "zly-quest"}]}, "nieznane questy"),
+        ({"monster": "drume", "quests": [{"quest": "katana-quest", "step": 999}]}, "ma tylko"),
         ({"monster": "drume", "access": "Przez Gate of Expertise."}, "bramka lvl-owa"),
         ({"monster": "drume", "status": "reviewed"}, "reviewed_at"),
     ],
@@ -118,7 +119,7 @@ def test_author_cannot_save_broken_boss(data_file, boss, message):
 
 
 def test_route_is_saved_in_order_and_shown_escaped(data_file):
-    from tibiahelper.ui.boss_pages import route_html
+    from tibiahelper.ui.route_widgets import route_html
 
     route = [
         {"x": 32369, "y": 32241, "z": 7, "label": "Start <depot>"},
@@ -137,7 +138,7 @@ def test_route_is_saved_in_order_and_shown_escaped(data_file):
 
 def test_road_points_without_label_are_only_line_bends():
     from tibiahelper.core.models import Waypoint
-    from tibiahelper.ui.boss_pages import numbered, route_html
+    from tibiahelper.ui.route_widgets import numbered, route_html
 
     route = [
         Waypoint(x=32369, y=32241, z=7, label="Start"),
@@ -155,3 +156,26 @@ def test_route_point_outside_map_is_rejected(data_file):
     author.upsert_boss(data, {"monster": "drume", "route": [{"x": 1, "y": 1, "z": 7, "label": "X"}]})
     with pytest.raises(author.AuthorError, match="route"):
         author.save_data(data, data_file)
+
+
+def test_required_quest_is_red_until_steps_are_ticked(tmp_path):
+    from tibiahelper.core.models import Quest, QuestRequirement
+    from tibiahelper.core.progress import ProgressStore
+    from tibiahelper.ui import theme
+    from tibiahelper.ui.quest_picker import requirements_html
+
+    theme._set_colors(theme.THEMES[theme.DEFAULT_THEME])  # kolory bez uruchamiania Qt
+    quest = Quest(
+        id="q", name="Quest <b>", min_level=0, premium=False, source_url=WIKI + "Q",
+        steps=[{"text": "a"}, {"text": "b"}, {"text": "c"}],
+    )
+    progress = ProgressStore(tmp_path / "progress.json")
+    up_to_two = [QuestRequirement(quest="q", step=2)]
+    assert not progress.requirement_met(quest, 2)
+    assert theme.BAD in requirements_html(up_to_two, {"q": quest}, progress)
+
+    progress.set_step("q", 0, True)
+    progress.set_step("q", 1, True)
+    assert progress.requirement_met(quest, 2) and not progress.requirement_met(quest)
+    html = requirements_html(up_to_two, {"q": quest}, progress)
+    assert theme.GOOD in html and "Quest &lt;b&gt;" in html and "do kroku 2" in html

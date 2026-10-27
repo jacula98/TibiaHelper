@@ -35,6 +35,11 @@ class ProgressStore:
         """
         return sum(1 for i in self._done.get(quest.id, set()) if i < len(quest.steps))
 
+    def requirement_met(self, quest: Quest, step: int | None = None) -> bool:
+        """Czy gracz odhaczył quest cały (step None) albo wszystkie kroki do `step` (numer od 1)."""
+        needed = len(quest.steps) if step is None else min(step, len(quest.steps))
+        return set(range(needed)) <= self._done.get(quest.id, set())
+
     def set_step(self, quest_id: str, step_index: int, done: bool) -> None:
         steps = self._done.setdefault(quest_id, set())
         if done:
