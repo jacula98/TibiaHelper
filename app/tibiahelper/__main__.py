@@ -62,7 +62,7 @@ def main() -> int:
     _install_qt_translator(app, language)
     apply_theme(app, load_settings(settings_file()).theme)
     # Ikona okna i paska zadań. SVG skaluje się do każdego rozmiaru (16 px, 32 px...).
-    app.setWindowIcon(icon("logo.svg"))
+    app.setWindowIcon(icon("logo"))
 
     def visible(result: LoadResult) -> list:
         return result.quests if args.show_drafts else result.visible_quests

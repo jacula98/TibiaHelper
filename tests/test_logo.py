@@ -17,3 +17,14 @@ def test_logo_ico_has_windows_sizes():
     # Szerokość 0 w nagłówku ICO oznacza 256 px.
     sizes = {data[6 + 16 * i] or 256 for i in range(count)}
     assert {16, 32, 48, 256} <= sizes
+
+
+def test_icon_calls_use_names_without_extension():
+    # theme.icon sam dokleja „.svg”: icon("logo.svg") szukałoby „logo.svg.svg” i dawało pustą ikonę.
+    import re
+
+    app_dir = ASSETS.parent.parent
+    for path in app_dir.rglob("*.py"):
+        for name in re.findall(r'\bicon\("([^"]+)"\)', path.read_text(encoding="utf-8")):
+            assert not name.endswith(".svg"), f"{path.name}: icon({name!r})"
+            assert (ASSETS / f"{name}.svg").exists(), f"{path.name}: brak {name}.svg"
