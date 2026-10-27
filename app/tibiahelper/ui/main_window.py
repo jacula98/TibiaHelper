@@ -206,6 +206,12 @@ class MainWindow(QMainWindow):
     def _set_theme(self, key: str) -> None:
         self._settings.theme = key
         apply_theme(QApplication.instance(), key)
+        # Strony potwora i przedmiotu mają kolory wpisane w tekst HTML, więc otwartą budujemy od nowa.
+        current = self._stack.currentWidget()
+        if current is self._monster_page and self._monster_page.monster is not None:
+            self._monster_page.show_monster(self._monster_page.monster)
+        elif current is self._item_page and self._item_page.item is not None:
+            self._item_page.show_item(self._item_page.item)
 
     def _save_settings(self) -> None:
         self._settings.geometry = bytes(self.saveGeometry().toBase64()).decode("ascii")
