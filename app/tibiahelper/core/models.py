@@ -7,7 +7,7 @@ dane tą samą walidacją. Nie importuje niczego z PySide6.
 from datetime import datetime
 from typing import Any, Literal, get_args
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 # Najnowsza wersja formatu pliku, którą ta wersja aplikacji rozumie.
 # Podbijamy ją tylko przy zmianach niekompatybilnych wstecz.
@@ -16,7 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 # 5-6: obrazki przedmiotów i NPC, 7: przedmioty (Item) i NPC (Npc) do zakładki „Przedmioty”,
 # 8: potwory eventowe i niedostępne, 9: bossy (Boss) i klasa w Bosstiary,
 # 10: miejsca huntów (Hunt) do zakładki „Hunt/Bestiary zones”
-SCHEMA_VERSION = 10
+SCHEMA_VERSION = 11
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -66,6 +66,17 @@ class Waypoint(MapPoint):
     """Punkt trasy (np. do bossa). Bez podpisu = zwykły punkt drogi: tylko zgięcie linii, bez kropki."""
 
     label: str | None = Field(default=None, min_length=1)
+    # Zakręty drogi od poprzedniego punktu (x, y na tym samym piętrze), policzone w trybie autora
+    # po kratkach, którymi da się przejść. Pusta lista = prosta linia (np. zmiana piętra).
+    path: list[tuple[int, int]] = Field(default_factory=list, max_length=5000)
+
+    @field_validator("path")
+    @classmethod
+    def _path_on_map(cls, path: list[tuple[int, int]]) -> list[tuple[int, int]]:
+        for x, y in path:
+            if not (MAP_X_MIN <= x <= MAP_X_MAX and MAP_Y_MIN <= y <= MAP_Y_MAX):
+                raise ValueError(f"zakręt drogi poza mapą: {x}, {y}")
+        return path
 
 
 class LootItem(_Model):

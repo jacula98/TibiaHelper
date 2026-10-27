@@ -22,8 +22,10 @@ Publikacja: wyślij ten plik Claude w czacie projektu.
 **Bossy.** W trybie autora zakładka „Bossy” pokazuje wszystkie bossy z bazy potworów („Tylko dodane” zawęża
 listę). Otwórz bossa i kliknij „✏ Edytuj”: wpisz wymagania, zaznacz questy z wymagań (u graczy są klikalne),
 jak dojść i jak bić. Trasę dodajesz przyciskiem „📍 Dodaj punkt”: otwiera się mapa (piętro zmieniasz strzałkami).
-Przy zaznaczonym „Szybkie klikanie drogi” każdy klik to kolejny punkt drogi, a linia łączy je po kolei, więc
-klikasz wzdłuż ulic i korytarzy. Ważne miejsca (start, schody, sala bossa) dodaj z odznaczoną opcją: wtedy
+Przy zaznaczonym „Szybkie klikanie drogi” każdy klik to kolejny punkt drogi. Między punktami na tym samym piętrze
+edytor sam liczy drogę po kratkach, którymi da się przejść (mapa przejść z tibiamaps, pobierana raz na piętro), więc
+linia omija ściany. Wystarczy kliknąć start, zakręty w ważnych miejscach i cel. Gdy pod listą pojawi się
+„Nie znalazłem przejścia…”, dodaj punkt pośredni (np. przy drzwiach). Zapis czeka, aż droga się policzy. Ważne miejsca (start, schody, sala bossa) dodaj z odznaczoną opcją: wtedy
 podajesz podpis i rodzaj (np. „przejście” przy schodach). Gracz widzi listę podpisanych punktów i mapę z linią.
 Kolejność zmieniają „↑”/„↓”. HP, exp, loot, żywioły, klasa w Bosstiary i cooldown są z TibiaWiki, więc ich nie wpisujesz.
 Gracze widzą bossa dopiero po zaznaczeniu „Gotowy: pokaż graczom”.

@@ -436,6 +436,10 @@ class BossEditor(QDialog):
         return boss
 
     def _save(self) -> None:
+        if self._route.is_busy():
+            # Zapis teraz dałby na tych odcinkach prostą linię zamiast drogi po mapie.
+            QMessageBox.information(self, "Edytor", "Droga po mapie jeszcze się liczy. Spróbuj za chwilę.")
+            return
         try:
             data = author.load_data(self._data_file)
             author.upsert_boss(data, self.boss_dict())
