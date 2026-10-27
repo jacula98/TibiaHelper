@@ -240,7 +240,7 @@ class QuestView(QWidget):
         if counts:
             credits += " · " + tr("obrazki potworów © CipSoft")
         source = QLabel(
-            tr("Źródło:") + f' <a href="{escape(quest.source_url, quote=True)}">TibiaWiki</a>{escape(credits)}'
+            escape(tr("Źródło:")) + f' <a href="{escape(quest.source_url, quote=True)}">TibiaWiki</a>{escape(credits)}'
         )
         source.setObjectName("muted")
         source.setWordWrap(True)

@@ -17,6 +17,7 @@ from pathlib import Path
 
 log = logging.getLogger(__name__)
 
+# Obok kodu, jak ui/assets. W .exe: --add-data "app/tibiahelper/i18n;tibiahelper/i18n".
 TRANSLATIONS_DIR = Path(__file__).resolve().parent.parent / "i18n"
 DEFAULT_LANGUAGE = "pl"
 # Kod -> nazwa w tym języku (gracz szuka swojego języka po jego własnej nazwie).
@@ -69,7 +70,7 @@ def tr(text: str, **values: object) -> str:
         return translated
     try:
         return translated.format(**values)
-    except (KeyError, IndexError, ValueError):
+    except (KeyError, IndexError, ValueError, TypeError, AttributeError):
         # Literówka w tłumaczeniu (np. {m} zamiast {n}): lepiej pokazać polski tekst niż się wywrócić.
         return text.format(**values)
 

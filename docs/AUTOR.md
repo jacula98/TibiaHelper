@@ -60,7 +60,8 @@ Polski tekst jest kluczem, a tłumaczenia są w `app/tibiahelper/i18n/<język>.j
 (`en`, `pt_BR`, `de`, `sv`). Zmienne: `tr("Wersja: {n}", n=3)`, w tłumaczeniu też `{n}`.
 Stałe modułu (np. nazwy sortowania) oznaczamy `N_("...")` i tłumaczymy przy pokazaniu: `tr(stała)`.
 Test `tests/test_i18n.py` nie przepuści nowego tekstu bez tłumaczenia we wszystkich językach.
-Tryb autora (edytor) zostaje po polsku. Przy budowaniu .exe trzeba dołączyć folder `i18n/`.
+Tryb autora (edytor) zostaje po polsku. Przy budowaniu .exe folder trzeba dołączyć pod tą samą ścieżką
+co w kodzie (jak `ui/assets`): `--add-data "app/tibiahelper/i18n;tibiahelper/i18n"`.
 
 ## Nowa wersja programu (Release)
 

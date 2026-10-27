@@ -102,3 +102,10 @@ def test_missing_or_broken_file_gives_empty_catalog(tmp_path):
 def test_n_does_not_translate():
     set_language("en")
     assert N_("Ustawienia") == "Ustawienia"
+
+
+def test_odd_placeholder_in_translation_falls_back(tmp_path, monkeypatch):
+    (tmp_path / "en.json").write_text('{"Wersja: {n}": "Version: {n.x}"}', encoding="utf-8")
+    monkeypatch.setattr(i18n, "TRANSLATIONS_DIR", tmp_path)
+    set_language("en")
+    assert tr("Wersja: {n}", n=2) == "Wersja: 2"

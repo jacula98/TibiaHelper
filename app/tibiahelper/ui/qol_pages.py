@@ -1,6 +1,7 @@
 """Zakładka „Quality of life”: drobne ułatwienia (minimapa Tibii, loot filter i ceny, UI i hotkeye)."""
 
 import threading
+from html import escape
 from pathlib import Path
 
 from PySide6.QtCore import QObject, Qt, Signal
@@ -85,7 +86,7 @@ class MinimapPage(QWidget):
         )
         info.setObjectName("muted")
         source = QLabel(
-            tr("Źródło:") + f' <a href="{TIBIA_MAPS_URL}" style="color: {theme.ACCENT};">tibiamaps.io</a>',
+            escape(tr("Źródło:")) + f' <a href="{TIBIA_MAPS_URL}" style="color: {theme.ACCENT};">tibiamaps.io</a>',
             openExternalLinks=True,
         )
 
@@ -171,7 +172,7 @@ class LootSettingsPage(QWidget):
         )
         info.setObjectName("muted")
         source = QLabel(
-            tr("Źródło:") + f' <a href="{YUUKICIU_URL}" style="color: {theme.ACCENT};">Yuukiciu</a> (YouTube)',
+            escape(tr("Źródło:")) + f' <a href="{YUUKICIU_URL}" style="color: {theme.ACCENT};">Yuukiciu</a> (YouTube)',
             openExternalLinks=True,
         )
 
