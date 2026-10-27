@@ -1,6 +1,6 @@
 [project]
 name = "tibiahelper"
-version = "0.1.0"  # to samo co __version__ w app/tibiahelper/__init__.py
+version = "1.0.0"  # to samo co __version__ w app/tibiahelper/__init__.py
 description = "Poradniki questów Tibii w małym oknie obok gry"
 requires-python = ">=3.12"
 license = { text = "MIT" }

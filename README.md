@@ -45,7 +45,12 @@ do przeglądarki.
 
 ## Jak uruchomić
 
-Gotowy plik `.exe` pojawi się przy pierwszym wydaniu. Na razie potrzebny jest Python 3.12+ (Windows):
+Pobierz `TibiaHelper.exe` z [najnowszego wydania](https://github.com/jacula98/TibiaHelper/releases/latest)
+i uruchom go. Instalacja nie jest potrzebna. Windows może przy pierwszym uruchomieniu pokazać ostrzeżenie
+„System Windows ochronił ten komputer”, bo plik nie ma płatnego podpisu. Kliknij wtedy „Więcej informacji” →
+„Uruchom mimo to”. Nowe poradniki program pobiera sam, a o nowej wersji programu informuje paskiem u góry.
+
+Ze źródeł (Python 3.12+):
 
 ```
 pip install -r requirements.txt
