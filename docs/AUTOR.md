@@ -41,6 +41,7 @@ python -m generator import-all                   # wszystkie potwory + brakując
 python -m generator spawns                       # miejsca występowania potworów (TibiaRoute)
 python -m generator items                        # przedmioty: ceny, kto kupuje/sprzedaje, obrazki (po import-all)
 python -m generator npcs                         # NPC z pozycjami i obrazkami (pinezki, „komu sprzedać”)
+python -m generator hunts                        # miejsca huntów (Hunt/Bestiary zones); trasa i uwagi autora zostają
 python -m generator monster "Skeleton"           # dodaj/odśwież jednego potwora
 python -m generator add-draft "Katana Quest"     # pobiera stronę + /Spoiler, dodaje quest jako draft
 python -m generator fetch "Katana Quest" --refresh   # pobierz ponownie stronę i /Spoiler

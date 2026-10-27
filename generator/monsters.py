@@ -165,6 +165,7 @@ def make_monster(page: WikiPage, image_url: str | None, monster_id: str | None =
         "bestiary_class": _text(info.get("bestiaryclass", "")) or None,
         "bestiary_level": _text(info.get("bestiarylevel", "")) or None,
         "bosstiary_class": _bosstiary_class(info),
+        "very_rare": _text(info.get("occurrence", "")).strip().lower() == "very rare",
         "cooldown_hours": cooldown_hours(info.get("cooldown", "")),
         "abilities": _abilities(info.get("abilities", "")),
         "loot": _loot(info.get("loot", "")),

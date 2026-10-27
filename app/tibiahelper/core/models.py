@@ -14,8 +14,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 # 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters),
 # 4: szczegóły potworów (loot, umiejętności, miejsca) do zakładki „Potwory”,
 # 5-6: obrazki przedmiotów i NPC, 7: przedmioty (Item) i NPC (Npc) do zakładki „Przedmioty”,
-# 8: potwory eventowe i niedostępne, 9: bossy (Boss) i klasa w Bosstiary
-SCHEMA_VERSION = 9
+# 8: potwory eventowe i niedostępne, 9: bossy (Boss) i klasa w Bosstiary,
+# 10: miejsca huntów (Hunt) do zakładki „Hunt/Bestiary zones”
+SCHEMA_VERSION = 10
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -151,6 +152,8 @@ class Monster(_Model):
     bestiary_class: str | None = None
     bestiary_level: str | None = None
     bosstiary_class: BosstiaryClass | None = None
+    # „Very Rare” w Bestiary: wystarczy 2/3/5 killi zamiast setek.
+    very_rare: bool = False
     cooldown_hours: float | None = Field(default=None, ge=0)  # po ilu godzinach można bić bossa znowu
     abilities: list[str] = Field(default_factory=list)
     loot: list[LootItem] = Field(default_factory=list)
@@ -273,6 +276,47 @@ class Boss(_Model):
         return self.status == "reviewed"
 
 
+# Wiki podaje zalecany poziom osobno dla knightów, paladynów i magów (druid i sorcerer razem).
+Vocation = Literal["knight", "paladin", "mage"]
+
+
+class HuntArea(_Model):
+    """Część miejsca huntu (np. piętro) i potwory, które tam są."""
+
+    name: str | None = None  # None = całe miejsce
+    monsters: list[str] = Field(default_factory=list)  # id potworów
+
+
+class Hunt(_Model):
+    """Miejsce huntu z TibiaWiki („Hunting Places”) i to, co dopisze autor (trasa, uwagi)."""
+
+    id: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+    name: str = Field(min_length=1)
+    source_url: str
+    wiki_revision: int | None = Field(default=None, ge=1)
+    city: str | None = None
+    location: str | None = None  # opis z wiki, po angielsku
+    levels: dict[Vocation, int] = Field(default_factory=dict)  # zalecany poziom
+    exp_stars: int | None = Field(default=None, ge=1, le=5)
+    loot_stars: int | None = Field(default=None, ge=1, le=5)
+    best_loot: list[str] = Field(default_factory=list)
+    areas: list[HuntArea] = Field(default_factory=list)
+    entrance: MapPoint | None = None
+    # Od autora (generator ich nie nadpisuje):
+    route: list[Waypoint] = Field(default_factory=list)
+    notes: str | None = None
+
+    @model_validator(mode="after")
+    def _check_url(self) -> "Hunt":
+        if not self.source_url.startswith(WIKI_URL_PREFIX):
+            raise ValueError(f"source_url musi zaczynać się od {WIKI_URL_PREFIX}")
+        return self
+
+    def monster_ids(self) -> list[str]:
+        """Potwory ze wszystkich części, bez powtórzeń, w kolejności z wiki."""
+        return list(dict.fromkeys(m for area in self.areas for m in area.monsters))
+
+
 class QuestFileHeader(_Model):
     """Nagłówek pliku. Questy celowo są tu surowe (list[Any]).
 
@@ -289,4 +333,5 @@ class QuestFileHeader(_Model):
     items: list[Any] = Field(default_factory=list)
     npcs: list[Any] = Field(default_factory=list)
     bosses: list[Any] = Field(default_factory=list)
+    hunts: list[Any] = Field(default_factory=list)
     quests: list[Any]
