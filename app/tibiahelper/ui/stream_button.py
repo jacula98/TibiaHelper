@@ -2,7 +2,7 @@
 
 import threading
 
-from PySide6.QtCore import QObject, Qt, QTimer, QUrl, Signal
+from PySide6.QtCore import QEasingCurve, QObject, Qt, QTimer, QUrl, QVariantAnimation, Signal
 from PySide6.QtGui import QColor, QDesktopServices, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import QToolButton
 
@@ -11,6 +11,7 @@ from ..core.i18n import tr
 
 LIVE_COLOR = "#53c43b"  # zieleń podobna do Kick
 OFF_COLOR = "#8b9099"
+PULSE_MS = 2400  # jeden cykl ramki: przygaśnięcie i powrót
 
 
 class _Result(QObject):
@@ -29,6 +30,14 @@ class StreamButton(QToolButton):
         self._result = _Result(self)
         self._result.checked.connect(self.set_live)
         self._busy = False
+
+        # Gdy stream trwa, zielona ramka płynnie przygasa i wraca (krycie 25% -> 100% -> 25%).
+        self._pulse = QVariantAnimation(self, duration=PULSE_MS, loopCount=-1)
+        self._pulse.setKeyValueAt(0.0, 0.25)
+        self._pulse.setKeyValueAt(0.5, 1.0)
+        self._pulse.setKeyValueAt(1.0, 0.25)
+        self._pulse.setEasingCurve(QEasingCurve.Type.InOutSine)
+        self._pulse.valueChanged.connect(self._set_border)
         self.set_live(None)
 
         # Pierwsze sprawdzenie od razu, potem co kilka minut.
@@ -48,11 +57,23 @@ class StreamButton(QToolButton):
         self._busy = False
         self.setIcon(_dot(LIVE_COLOR if live else OFF_COLOR))
         if live:
+            # Sprawdzenie co 3 minuty nie restartuje trwającej animacji (bez skoku jasności).
+            if self._pulse.state() != QVariantAnimation.State.Running:
+                self._pulse.start()
             self.setToolTip(tr("Stream trwa na Kick. Kliknij, żeby oglądać."))
-        elif live is False:
+            return
+        # Bez streamu animacja stoi (nie zużywa procesora), a ramka wraca do koloru z motywu.
+        self._pulse.stop()
+        self.setStyleSheet("")
+        if live is False:
             self.setToolTip(tr("Stream offline. Kliknij, żeby otworzyć kanał na Kick."))
         else:
             self.setToolTip(tr("Nie udało się sprawdzić, czy stream trwa. Kliknij, żeby otworzyć kanał na Kick."))
+
+    def _set_border(self, opacity: float) -> None:
+        # Tylko ramka: tło, zaokrąglenie i odstępy zostają z motywu (style się łączą).
+        color = QColor(LIVE_COLOR)
+        self.setStyleSheet(f"border: 2px solid rgba({color.red()}, {color.green()}, {color.blue()}, {opacity:.2f});")
 
 
 def _dot(color: str) -> QIcon:
