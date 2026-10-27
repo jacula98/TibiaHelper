@@ -65,3 +65,20 @@ def test_level_and_query_combined():
         "Katana Quest",
         "Desert Dungeon Quest",
     ]
+
+
+def test_search_finds_mission_inside_bigger_quest():
+    # Na wiki „The Curse Spreads” to misja w „Grimvale Quest”, nie osobna strona.
+    grimvale = Quest.model_validate(
+        {
+            "id": "grimvale-quest",
+            "name": "Grimvale Quest",
+            "min_level": 0,
+            "premium": True,
+            "source_url": "https://tibia.fandom.com/wiki/Grimvale_Quest",
+            "steps": [{"text": "[The Curse of the Full Moon] Start"}, {"text": "[The Curse Spreads] Go to Vengoth."}],
+        }
+    )
+    assert names(filter_quests([*QUESTS, grimvale], query="curse spreads")) == ["Grimvale Quest"]
+    # Słowa muszą być w jednej misji, a nie rozrzucone po różnych.
+    assert filter_quests([grimvale], query="spreads moon") == []

@@ -5,6 +5,7 @@ Nie piszemy pełnego parsera MediaWiki: potrzebujemy tylko pól z
 w osobnej linii "| klucz = wartość".
 """
 
+import html
 import re
 
 _LINK = re.compile(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]")  # [[Cel|tekst]] lub [[Cel]]
@@ -17,7 +18,8 @@ def strip_markup(text: str) -> str:
     text = _LINK.sub(r"\1", text)
     text = _TEMPLATE.sub("", text)
     text = text.replace("'''", "").replace("''", "")
-    return " ".join(text.split())
+    # Wiki zapisuje np. apostrof jako &#39; ("A Father&#39;s Burden Quest").
+    return " ".join(html.unescape(text).split())
 
 
 def parse_infobox(wikitext: str, template: str = "Infobox Quest") -> dict[str, str]:
