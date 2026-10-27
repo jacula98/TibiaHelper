@@ -67,6 +67,14 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
 - Listy `items` (przedmioty) i `npcs` (NPC z pozycjami) są w `data/quests.json`. W edytorze zaznacz imię
   NPC w tekście kroku i kliknij „👤 NPC”: pinezka stanie tam, gdzie stoi ten NPC.
 
+## Raporty graczy (formularz Google)
+
+Przyciski „📨 Wyślij…” otwierają formularz z wpisanym polem „Boss/Hunt place” (dla miejsc: `Hunt: <nazwa>`) i datą.
+Numery pól (`entry.*`) i adres arkusza są w `app/tibiahelper/core/reports.py`. Zmiana tytułu pytania ich nie zmienia,
+ale usunięcie pytania i dodanie nowego już tak. Wtedy popraw stałe w tym pliku.
+Program czyta arkusz sam, więc żadna komenda generatora nie jest potrzebna. Spam albo testowe wpisy usuń w arkuszu
+(Odpowiedzi w formularzu → usuń); zniknie u graczy przy następnym odświeżeniu (do 15 minut).
+
 ## Tłumaczenia interfejsu
 
 Każdy tekst widoczny dla gracza piszemy w kodzie po polsku w `tr("...")` (z `core/i18n.py`).

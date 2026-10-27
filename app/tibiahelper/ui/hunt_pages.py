@@ -31,11 +31,12 @@ from ..core import author
 from ..core.hunts import ALL_CITIES, ANY_VOCATION, SORTS, VOCATIONS, bestiary, filter_hunts, hunt_level, sort_hunts, stars
 from ..core.i18n import tr
 from ..core.issues import hunt_issue_url
-from ..core.reports import hunt_report_url
 from ..core.models import Hunt, Item, Monster, Waypoint
 from ..core.monsters import download_missing, sprite_path
+from ..core.reports import hunt_report_url, hunt_subject
 from . import theme
 from .map_window import MapPanel
+from .report_list import ReportFeed, ReportList
 from .route_widgets import ROUTE_LINK_PREFIX, RouteEditor, numbered, route_html
 from .sprites import display_sprite
 from .theme import report_button
@@ -189,6 +190,8 @@ class HuntPage(QWidget):
         column.addWidget(self._route_list)
         column.addWidget(self._map)
         column.addWidget(self._bottom)
+        self._reports = ReportList()
+        column.addWidget(self._reports)
         column.addStretch(1)
         self._scroll = QScrollArea(widgetResizable=True)
         self._scroll.setFrameShape(QScrollArea.Shape.NoFrame)
@@ -219,8 +222,12 @@ class HuntPage(QWidget):
     def set_back_text(self, text: str) -> None:
         self._back.setText(text)
 
+    def set_report_feed(self, feed: ReportFeed) -> None:
+        self._reports.set_feed(feed)
+
     def show_hunt(self, hunt: Hunt) -> None:
         self.hunt = hunt
+        self._reports.set_subject(hunt_subject(hunt))
         self._route = numbered(hunt.route)
         self._render()
         self._scroll.verticalScrollBar().setValue(0)

@@ -79,3 +79,8 @@ def bundled_qol_dir() -> Path:
 def boosted_file() -> Path:
     """Dzisiejszy boosted potwór i boss (z TibiaWiki), żeby nie pytać wiki przy każdym starcie."""
     return user_data_dir() / "boosted.json"
+
+
+def reports_file() -> Path:
+    """Ostatnie raporty graczy (z arkusza formularza), żeby nie pobierać ich przy każdym starcie."""
+    return user_data_dir() / "reports.json"

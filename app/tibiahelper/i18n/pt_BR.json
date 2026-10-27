@@ -220,5 +220,12 @@
   "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "o botão Stream verifica na {kick} a cada poucos minutos se o autor está ao vivo",
   "📨 Wyślij loot z bossa": "📨 Enviar loot do boss",
   "📨 Wyślij Hunt Analyzer": "📨 Enviar Hunt Analyzer",
-  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Abre um formulário no navegador (sem conta). Cole seu relatório lá."
+  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Abre um formulário no navegador (sem conta). Cole seu relatório lá.",
+  "OSTATNIE RAPORTY GRACZY": "ÚLTIMOS RELATÓRIOS DE JOGADORES",
+  "Wczytuję…": "Carregando…",
+  "Brak raportów. Wyślij pierwszy przyciskiem 📨 na dole.": "Nenhum relatório ainda. Envie o primeiro com o botão 📨 abaixo.",
+  "Pokaż więcej ({count})": "Mostrar mais ({count})",
+  "anonim": "anônimo",
+  "Raporty wysyłają gracze. Nikt ich nie sprawdza.": "Os relatórios são enviados por jogadores e não são verificados.",
+  "ostatnie raporty graczy z {form} (publiczny arkusz, najwyżej co 15 minut, przy otwarciu bossa albo miejsca)": "últimos relatórios de jogadores do {form} (planilha pública, no máximo a cada 15 minutos, ao abrir um boss ou local)"
 }

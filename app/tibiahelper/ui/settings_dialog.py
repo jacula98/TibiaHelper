@@ -97,6 +97,11 @@ class SettingsDialog(QDialog):
                 "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje",
                 kick='<a href="https://kick.com/jackyykick">kick.com</a>',
             )
+            + "<br>• "
+            + tr(
+                "ostatnie raporty graczy z {form} (publiczny arkusz, najwyżej co 15 minut, przy otwarciu bossa albo miejsca)",
+                form='<a href="https://docs.google.com/forms/d/e/1FAIpQLSdhU_EixKIDQvsA7Di0v8rWw1YeaPniMr8g02s3kUylfg_p6Q/viewform">Formularzy Google</a>',
+            )
         )
         sources.setObjectName("muted")
         sources.setWordWrap(True)

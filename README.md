@@ -58,6 +58,13 @@ python -m tibiahelper
 Kliknij „Zgłoś błąd” (z logo GitHuba) pod questem. Otworzy się zgłoszenie z nazwą questa
 i wersją danych, wystarczy dopisać, co jest nie tak. Potrzebne jest darmowe konto GitHub.
 
+## Raporty z lootu i Hunt Analyzer
+
+Pod bossem jest przycisk „📨 Wyślij loot z bossa”, a pod miejscem huntu „📨 Wyślij Hunt Analyzer”. Otwiera
+formularz Google z wpisaną nazwą; wklejasz loot albo analyzer i klikasz „Prześlij”. Konto nie jest potrzebne.
+Ostatnie raporty innych graczy widać na tej samej stronie (5 najnowszych, „Pokaż więcej” rozwija kolejne).
+Raportów nikt nie sprawdza.
+
 ## Gdzie program zapisuje dane
 
 Wszystko jest w `%APPDATA%\TibiaHelper`: postęp questów, ustawienia okna, pobrane poradniki,

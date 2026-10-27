@@ -15,6 +15,7 @@ from .core.paths import (
     cached_data_file,
     cached_spawns_file,
     progress_file,
+    reports_file,
     settings_file,
 )
 from .core.i18n import set_language, tr
@@ -103,6 +104,7 @@ def main() -> int:
 
     window.show()
     window.start_boosted(boosted_file())
+    window.start_reports(reports_file())
     if error:
         QMessageBox.warning(window, "TibiaHelper", tr("Nie udało się wczytać questów.") + f"\n\n{error}")
 
