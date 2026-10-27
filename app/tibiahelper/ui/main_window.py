@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import author
+from ..core.i18n import tr
 from ..core.items import build_drops
 from ..core.models import Item, Monster, Npc, Quest
 from ..core.paths import bundled_qol_dir, items_dir, maps_dir, npcs_dir, sprites_dir
@@ -171,7 +172,7 @@ class MainWindow(QMainWindow):
         name.setObjectName("appName")
         gear = QToolButton(text="⚙")
         gear.setObjectName("icon")
-        gear.setToolTip("Ustawienia")
+        gear.setToolTip(tr("Ustawienia"))
         gear.setCursor(Qt.CursorShape.PointingHandCursor)
         gear.clicked.connect(self._open_settings)
 
@@ -182,8 +183,9 @@ class MainWindow(QMainWindow):
         return header
 
     def _open_settings(self) -> None:
-        dialog = SettingsDialog(self._settings.opacity, self._data_version, self)
+        dialog = SettingsDialog(self._settings.opacity, self._data_version, self._settings.language, self)
         dialog.opacity_changed.connect(self._set_opacity)
+        dialog.language_changed.connect(self._set_language)
         dialog.exec()
         # Zapis po zamknięciu dialogu, a nie przy każdym ruchu suwaka.
         self._save_settings()
@@ -191,6 +193,10 @@ class MainWindow(QMainWindow):
     def _set_opacity(self, opacity: float) -> None:
         self._settings.opacity = opacity
         self.setWindowOpacity(opacity)
+
+    def _set_language(self, language: str) -> None:
+        # Tylko zapis: nowy język działa od następnego uruchomienia (teksty są już w oknach).
+        self._settings.language = language
 
     def _save_settings(self) -> None:
         self._settings.geometry = bytes(self.saveGeometry().toBase64()).decode("ascii")
@@ -249,11 +255,11 @@ class MainWindow(QMainWindow):
     def _show_detail(self, kind: str, target: object) -> None:
         previous_kind, previous = self._history[-1]
         if previous_kind == "monster":
-            back = "← Potwór"
+            back = tr("← Potwór")
         elif previous_kind == "item":
-            back = "← Przedmiot"
+            back = tr("← Przedmiot")
         else:
-            back = "← Quest" if previous is self._quest_view else "← Lista"
+            back = tr("← Quest") if previous is self._quest_view else tr("← Lista")
         page = self._monster_page if kind == "monster" else self._item_page
         page.set_back_text(back)
         if kind == "monster":
@@ -285,9 +291,9 @@ class UpdateBanner(QFrame):
         self._on_accept: Callable[[], None] | None = None
 
         self._text = QLabel(wordWrap=True)
-        later = QPushButton("Później")
+        later = QPushButton(tr("Później"))
         later.clicked.connect(self.hide)
-        accept = QPushButton("Zaktualizuj")
+        accept = QPushButton(tr("Zaktualizuj"))
         accept.setObjectName("primary")
         accept.clicked.connect(self._accept)
 
@@ -302,7 +308,7 @@ class UpdateBanner(QFrame):
 
     def show_offer(self, data_version: int, on_accept: Callable[[], None]) -> None:
         self._on_accept = on_accept
-        self._text.setText(f"Są nowsze poradniki (wersja {data_version}). Zaktualizować?")
+        self._text.setText(tr("Są nowsze poradniki (wersja {n}). Zaktualizować?", n=data_version))
         self.show()
 
     def _accept(self) -> None:
@@ -319,9 +325,9 @@ class ReleaseBanner(QFrame):
         self.setObjectName("banner")
         self._url = ""
         self._text = QLabel(wordWrap=True)
-        later = QPushButton("Później")
+        later = QPushButton(tr("Później"))
         later.clicked.connect(self.hide)
-        download = QPushButton("Pobierz")
+        download = QPushButton(tr("Pobierz"))
         download.setObjectName("primary")
         download.clicked.connect(self._download)
 
@@ -337,8 +343,11 @@ class ReleaseBanner(QFrame):
     def show_release(self, version: str, url: str) -> None:
         self._url = url
         self._text.setText(
-            f"Jest nowa wersja programu ({version}). Pobierz ją z GitHuba: nowe zakładki "
-            "i poprawki przychodzą tylko z nową wersją."
+            tr(
+                "Jest nowa wersja programu ({version}). Pobierz ją z GitHuba: nowe zakładki "
+                "i poprawki przychodzą tylko z nową wersją.",
+                version=version,
+            )
         )
         self.show()
 

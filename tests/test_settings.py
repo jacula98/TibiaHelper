@@ -30,3 +30,18 @@ def test_wrong_geometry_type_is_ignored(tmp_path):
     path = tmp_path / "settings.json"
     path.write_text('{"opacity": 0.5, "geometry": 123}', encoding="utf-8")
     assert load_settings(path) == Settings(opacity=0.5, geometry=None)
+
+
+def test_language_round_trip(tmp_path):
+    path = tmp_path / "settings.json"
+    save_settings(path, Settings(language="de"))
+    assert load_settings(path).language == "de"
+
+
+def test_unknown_language_gives_polish(tmp_path):
+    path = tmp_path / "settings.json"
+    for value in ('"klingon"', "[1]", "null"):
+        path.write_text(f'{{"opacity": 0.5, "language": {value}}}', encoding="utf-8")
+        settings = load_settings(path)
+        # Zły język nie kasuje reszty ustawień.
+        assert settings.language == "pl" and settings.opacity == 0.5

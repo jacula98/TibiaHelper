@@ -53,6 +53,16 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
 - Listy `items` (przedmioty) i `npcs` (NPC z pozycjami) są w `data/quests.json`. W edytorze zaznacz imię
   NPC w tekście kroku i kliknij „👤 NPC”: pinezka stanie tam, gdzie stoi ten NPC.
 
+## Tłumaczenia interfejsu
+
+Każdy tekst widoczny dla gracza piszemy w kodzie po polsku w `tr("...")` (z `core/i18n.py`).
+Polski tekst jest kluczem, a tłumaczenia są w `app/tibiahelper/i18n/<język>.json`
+(`en`, `pt_BR`, `de`, `sv`). Zmienne: `tr("Wersja: {n}", n=3)`, w tłumaczeniu też `{n}`.
+Stałe modułu (np. nazwy sortowania) oznaczamy `N_("...")` i tłumaczymy przy pokazaniu: `tr(stała)`.
+Test `tests/test_i18n.py` nie przepuści nowego tekstu bez tłumaczenia we wszystkich językach.
+Tryb autora (edytor) zostaje po polsku. Przy budowaniu .exe folder trzeba dołączyć pod tą samą ścieżką
+co w kodzie (jak `ui/assets`): `--add-data "app/tibiahelper/i18n;tibiahelper/i18n"`.
+
 ## Nowa wersja programu (Release)
 
 Aktualizacja w programie pobiera tylko dane (`data/quests.json`, `data/spawns.json`). Nowy kod

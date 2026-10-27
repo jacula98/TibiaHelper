@@ -11,6 +11,8 @@ from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QColor, QIcon, QPalette
 from PySide6.QtWidgets import QApplication, QPushButton
 
+from ..core.i18n import tr
+
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
 BACKGROUND = "#17181c"
@@ -171,9 +173,9 @@ def icon(name: str) -> QIcon:
 
 def report_button() -> QPushButton:
     """Przycisk „Zgłoś błąd” (logo GitHuba), ten sam przy queście i przy potworze."""
-    button = QPushButton(" Zgłoś błąd")
+    button = QPushButton(" " + tr("Zgłoś błąd"))
     button.setIcon(icon("github.svg"))
     button.setIconSize(QSize(16, 16))
-    button.setToolTip("Otwiera zgłoszenie na GitHubie (potrzebne darmowe konto GitHub)")
+    button.setToolTip(tr("Otwiera zgłoszenie na GitHubie (potrzebne darmowe konto GitHub)"))
     button.setCursor(Qt.CursorShape.PointingHandCursor)
     return button
