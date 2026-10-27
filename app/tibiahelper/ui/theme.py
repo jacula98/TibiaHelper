@@ -156,7 +156,7 @@ QWidget {{
 }}
 QLabel, QCheckBox {{ background: transparent; }}
 QLabel#title {{ font-size: 18px; font-weight: 600; }}
-QLabel#appName {{ font-size: 15px; font-weight: 600; color: {t.accent}; }}
+QLabel#appName {{ font-size: 20px; font-weight: 600; color: {t.accent}; }}
 QLabel#muted {{ color: {t.muted}; }}
 QLabel#warning {{ color: {t.warning}; }}
 QLabel#sectionTitle {{ color: {t.muted}; font-size: 11px; font-weight: 600; }}

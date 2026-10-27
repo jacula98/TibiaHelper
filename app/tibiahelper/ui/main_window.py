@@ -36,7 +36,7 @@ from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
 from .settings_dialog import SettingsDialog
-from .theme import apply_theme
+from .theme import apply_theme, icon
 
 
 class MainWindow(QMainWindow):
@@ -170,6 +170,8 @@ class MainWindow(QMainWindow):
         self._release_banner.show_release(version, url)
 
     def _build_header(self) -> QHBoxLayout:
+        logo = QLabel()
+        logo.setPixmap(icon("logo-mark.svg").pixmap(42, 42))
         name = QLabel("TibiaHelper")
         name.setObjectName("appName")
         gear = QToolButton(text="⚙")
@@ -179,6 +181,8 @@ class MainWindow(QMainWindow):
         gear.clicked.connect(self._open_settings)
 
         header = QHBoxLayout()
+        header.setSpacing(8)
+        header.addWidget(logo)
         header.addWidget(name)
         header.addStretch(1)
         header.addWidget(gear)
