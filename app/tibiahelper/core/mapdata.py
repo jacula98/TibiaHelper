@@ -9,6 +9,7 @@ i trzymamy w %APPDATA%/TibiaHelper/maps, więc później działa bez internetu.
 import logging
 import urllib.request
 from collections.abc import Callable
+from typing import Literal
 from pathlib import Path
 
 from .i18n import tr
@@ -18,10 +19,12 @@ from .storage import write_bytes_atomic
 log = logging.getLogger(__name__)
 
 # Pierwszy adres jest polecany przez autorów; drugi to ten sam plik bezpośrednio z repo.
+# layer: "map" (kolory jak minimapa) albo "path" (gdzie da się chodzić; do liczenia tras w trybie autora).
 FLOOR_URLS = (
-    "https://tibiamaps.github.io/tibia-map-data/floor-{z:02d}-map.png",
-    "https://raw.githubusercontent.com/tibiamaps/tibia-map-data/gh-pages/floor-{z:02d}-map.png",
+    "https://tibiamaps.github.io/tibia-map-data/floor-{z:02d}-{layer}.png",
+    "https://raw.githubusercontent.com/tibiamaps/tibia-map-data/gh-pages/floor-{z:02d}-{layer}.png",
 )
+Layer = Literal["map", "path"]
 TIMEOUT_SECONDS = 20
 MAX_BYTES = 10 * 1024 * 1024  # piętro ma ok. 0,5-1 MB
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
@@ -41,8 +44,8 @@ def floor_label(z: int) -> str:
     return f"{GROUND_FLOOR - z:+d}"
 
 
-def floor_path(maps_dir: Path, z: int) -> Path:
-    return maps_dir / f"floor-{z:02d}-map.png"
+def floor_path(maps_dir: Path, z: int, layer: Layer = "map") -> Path:
+    return maps_dir / f"floor-{z:02d}-{layer}.png"
 
 
 def _download(url: str) -> bytes:
@@ -54,7 +57,7 @@ def _download(url: str) -> bytes:
     return data
 
 
-def ensure_floor(maps_dir: Path, z: int, fetch: Fetch = _download) -> Path:
+def ensure_floor(maps_dir: Path, z: int, fetch: Fetch = _download, layer: Layer = "map") -> Path:
     """Ścieżka do PNG piętra; pobiera go, jeśli jeszcze go nie ma.
 
     Rzuca OSError albo ValueError, gdy żaden adres nie zadziałał.
@@ -62,12 +65,12 @@ def ensure_floor(maps_dir: Path, z: int, fetch: Fetch = _download) -> Path:
     """
     if not 0 <= z <= 15:
         raise ValueError(f"Nie ma piętra {z}")
-    path = floor_path(maps_dir, z)
+    path = floor_path(maps_dir, z, layer)
     if path.exists():
         return path
     last_error: Exception = OSError("brak adresów")
     for template in FLOOR_URLS:
-        url = template.format(z=z)
+        url = template.format(z=z, layer=layer)
         try:
             data = fetch(url)
             # Zapisujemy tylko prawdziwy PNG, a nie np. stronę błędu z HTML.

@@ -405,6 +405,10 @@ class HuntEditor(QDialog):
         layout.addWidget(buttons)
 
     def _save(self) -> None:
+        if self._route.is_busy():
+            # Zapis teraz dałby na tych odcinkach prostą linię zamiast drogi po mapie.
+            QMessageBox.information(self, "Edytor", "Droga po mapie jeszcze się liczy. Spróbuj za chwilę.")
+            return
         try:
             data = author.load_data(self._data_file)
             hunt = next((h for h in data.get("hunts", []) if h.get("id") == self._hunt_id), None)

@@ -381,10 +381,19 @@ class MapPanel(QWidget):
         pens = (QPen(QColor(0, 0, 0, 200), 1.6), QPen(QColor(theme.ACCENT), 0.8))
         for start, end in zip(self._points, self._points[1:]):
             if start.z == end.z == z:
-                (x1, y1), (x2, y2) = to_pixel(start.x, start.y), to_pixel(end.x, end.y)
+                # Przez zakręty drogi (Waypoint.path), jeśli są; inaczej prosto.
+                tiles = [(start.x, start.y), *getattr(end, "path", []), (end.x, end.y)]
+                line = QPainterPath()
+                for index, (x, y) in enumerate(tiles):
+                    px, py = to_pixel(x, y)
+                    point = QPointF(px + 0.5, py + 0.5)
+                    if index == 0:
+                        line.moveTo(point)
+                    else:
+                        line.lineTo(point)
                 # Rysowana przed kropkami, więc leży nad mapą, ale pod nimi i pod podpisami.
                 for pen in pens:
-                    scene.addLine(x1 + 0.5, y1 + 0.5, x2 + 0.5, y2 + 0.5, pen)
+                    scene.addPath(line, pen)
 
     def _draw_spawns(self, scene: QGraphicsScene, z: int) -> None:
         # Jedna ścieżka zamiast setek osobnych elementów: scena rysuje i przewija się szybciej.
