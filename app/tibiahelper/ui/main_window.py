@@ -20,14 +20,16 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import author
+from ..core.bosses import boss_entries
 from ..core.i18n import tr
 from ..core.items import build_drops
-from ..core.models import Item, Monster, Npc, Quest
+from ..core.models import Boss, Item, Monster, Npc, Quest
 from ..core.paths import bundled_qol_dir, items_dir, maps_dir, npcs_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
+from .boss_pages import BossEditor, BossListPage, BossPage
 from .home_page import HomePage
 from .item_pages import ItemListPage, ItemPage
 from .monster_pages import MonsterListPage, MonsterPage
@@ -73,7 +75,13 @@ class MainWindow(QMainWindow):
         self._loot_settings = LootSettingsPage(bundled_qol_dir())
         self._minimap = MinimapPage()
         self._ui_hotkeys = UiHotkeysPage(bundled_qol_dir() / "clientoptions.json")
+        self._boss_list = BossListPage(sprites_dir(), author_mode=author_file is not None)
+        self._boss_page = BossPage(sprites_dir(), author_mode=author_file is not None)
+        self._monsters: dict[str, Monster] = {}
+        self._quest_names: dict[str, str] = {}
         pages = (
+            self._boss_list,
+            self._boss_page,
             self._monster_list,
             self._monster_page,
             self._item_list,
@@ -117,6 +125,13 @@ class MainWindow(QMainWindow):
         self._minimap.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._qol.ui_requested.connect(lambda: self._stack.setCurrentWidget(self._ui_hotkeys))
         self._ui_hotkeys.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
+        self._home.bosses_requested.connect(lambda: self._stack.setCurrentWidget(self._boss_list))
+        self._boss_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._boss_list.boss_selected.connect(self._open_boss)
+        self._boss_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._boss_list))
+        self._boss_page.monster_requested.connect(lambda m: self._open_detail("monster", m))
+        self._boss_page.quest_requested.connect(self._open_quest)
+        self._boss_page.edit_requested.connect(self._edit_boss)
         self._monster_list.monster_selected.connect(lambda m: self._open_detail("monster", m))
         self._quest_view.monster_requested.connect(lambda m: self._open_detail("monster", m))
         self._item_list.item_selected.connect(lambda i: self._open_detail("item", i))
@@ -145,9 +160,13 @@ class MainWindow(QMainWindow):
         monsters: dict[str, Monster] | None = None,
         items: dict[str, Item] | None = None,
         npcs: dict[str, Npc] | None = None,
+        bosses: list[Boss] | None = None,
     ) -> None:
         monsters, items, npcs = monsters or {}, items or {}, npcs or {}
         self._data_version = data_version
+        self._monsters = monsters
+        self._boss_list.set_data(monsters, bosses or [])
+        self._boss_page.set_quests(quests, data_version)
         self._quest_view.set_npcs(npcs)
         self._monster_page.set_items(items)
         self._monster_page.set_data_version(data_version)
@@ -250,10 +269,42 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Edytor", str(exc))
             return
         # W trybie autora widać też szkice.
-        self.set_quests(result.quests, result.data_version, result.monsters, result.items, result.npcs)
+        self.set_quests(
+            result.quests, result.data_version, result.monsters, result.items, result.npcs, result.bosses
+        )
         quest = next((q for q in result.quests if q.id == quest_id), None)
         if quest is not None:
             self._open_quest(quest)
+
+    def _open_boss(self, entry) -> None:
+        self._boss_page.show_boss(entry)
+        self._stack.setCurrentWidget(self._boss_page)
+
+    def _edit_boss(self, entry) -> None:
+        if self._author_file is None:
+            return
+        try:
+            raw = author.load_data(self._author_file)
+        except (OSError, ValueError) as exc:
+            QMessageBox.warning(self, "Edytor", f"Nie można wczytać {self._author_file}:\n{exc}")
+            return
+        quests = {q["id"]: q.get("name", q["id"]) for q in raw.get("quests", []) if isinstance(q, dict) and "id" in q}
+        editor = BossEditor(entry, self._author_file, quests, self)
+        editor.saved.connect(self._reload_after_boss_edit)
+        editor.exec()
+
+    def _reload_after_boss_edit(self, monster_id: str) -> None:
+        try:
+            result = load_quest_file(self._author_file)
+        except QuestFileError as exc:
+            QMessageBox.warning(self, "Edytor", str(exc))
+            return
+        self.set_quests(
+            result.quests, result.data_version, result.monsters, result.items, result.npcs, result.bosses
+        )
+        entry = next((e for e in boss_entries(result.monsters, result.bosses, True) if e.monster.id == monster_id), None)
+        if entry is not None:
+            self._open_boss(entry)
 
     def _open_quest(self, quest: Quest) -> None:
         self._quest_view.show_quest(quest)
@@ -278,7 +329,7 @@ class MainWindow(QMainWindow):
         elif previous_kind == "item":
             back = tr("← Przedmiot")
         else:
-            back = tr("← Quest") if previous is self._quest_view else tr("← Lista")
+            back = {self._quest_view: tr("← Quest"), self._boss_page: tr("← Boss")}.get(previous, tr("← Lista"))
         page = self._monster_page if kind == "monster" else self._item_page
         page.set_back_text(back)
         if kind == "monster":

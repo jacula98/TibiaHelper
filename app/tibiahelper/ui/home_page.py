@@ -11,6 +11,7 @@ class HomePage(QWidget):
     monsters_requested = Signal()
     items_requested = Signal()
     qol_requested = Signal()
+    bosses_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -22,12 +23,15 @@ class HomePage(QWidget):
         quests.clicked.connect(self.quests_requested)
         layout.addWidget(quests)
 
-        # Strefy huntów i bossy dojdą w kolejnych etapach; do tego czasu przyciski są nieaktywne.
+        # Strefy huntów dojdą w kolejnym etapie; do tego czasu przycisk jest nieaktywny.
         # „Hunt/Bestiary zones” bez tłumaczenia: to nazwa, której gracze używają w każdym języku.
-        for text in ("⚔  Hunt/Bestiary zones", "💀  " + tr("Bossy")):
-            button = _menu_button(text, tr("Wkrótce"))
-            button.setEnabled(False)
-            layout.addWidget(button)
+        zones = _menu_button("⚔  Hunt/Bestiary zones", tr("Wkrótce"))
+        zones.setEnabled(False)
+        layout.addWidget(zones)
+
+        bosses = _menu_button("💀  " + tr("Bossy"), tr("Wymagania, dojście, jak bić i Bosstiary"))
+        bosses.clicked.connect(self.bosses_requested)
+        layout.addWidget(bosses)
 
         items = _menu_button("🎒  " + tr("Przedmioty"), tr("Komu sprzedać, gdzie kupić, z czego wypada"))
         items.clicked.connect(self.items_requested)

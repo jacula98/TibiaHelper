@@ -13,8 +13,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 # Podbijamy ją tylko przy zmianach niekompatybilnych wstecz.
 # 2: punkty na mapie w krokach (Step.markers), 3: potwory (Monster, Step.monsters),
 # 4: szczegóły potworów (loot, umiejętności, miejsca) do zakładki „Potwory”,
-# 5-6: obrazki przedmiotów i NPC, 7: przedmioty (Item) i NPC (Npc) do zakładki „Przedmioty”
-SCHEMA_VERSION = 8
+# 5-6: obrazki przedmiotów i NPC, 7: przedmioty (Item) i NPC (Npc) do zakładki „Przedmioty”,
+# 8: potwory eventowe i niedostępne, 9: bossy (Boss) i klasa w Bosstiary
+SCHEMA_VERSION = 9
 
 WIKI_URL_PREFIX = "https://tibia.fandom.com/wiki/"
 
@@ -36,6 +37,9 @@ SPRITE_URL_PREFIX = "https://static.wikia.nocookie.net/tibia/images/"
 
 # Rzadkość dropu tak, jak zapisuje ją TibiaWiki.
 Rarity = Literal["always", "common", "uncommon", "semi-rare", "rare", "very rare"]
+
+# Kategorie bossów w Bosstiary (od nich zależy, ile killi trzeba do kolejnych poziomów).
+BosstiaryClass = Literal["Bane", "Archfoe", "Nemesis"]
 
 
 class _Model(BaseModel):
@@ -140,6 +144,8 @@ class Monster(_Model):
     unavailable: bool = False
     bestiary_class: str | None = None
     bestiary_level: str | None = None
+    bosstiary_class: BosstiaryClass | None = None
+    cooldown_hours: float | None = Field(default=None, ge=0)  # po ilu godzinach można bić bossa znowu
     abilities: list[str] = Field(default_factory=list)
     loot: list[LootItem] = Field(default_factory=list)
     location: str | None = None
@@ -233,6 +239,32 @@ class Quest(_Model):
         return list(totals.items())
 
 
+class Boss(_Model):
+    """Boss do zakładki „Bossy”, dodany przez autora.
+
+    Dane podstawowe (HP, exp, żywioły, loot, obrazek) są w potworze o id `monster`,
+    więc się nie dublują. Tu jest tylko to, co pisze autor, po polsku.
+    """
+
+    monster: str = Field(pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+    requirements: str | None = None  # co trzeba mieć, żeby go bić (np. zrobiony quest)
+    quests: list[str] = Field(default_factory=list)  # id questów z wymagań (klikalne w programie)
+    access: str | None = None  # jak dojść
+    strategy: str | None = None  # jak bić
+    status: QuestStatus = "draft"
+    reviewed_at: datetime | None = None
+
+    @model_validator(mode="after")
+    def _check_reviewed(self) -> "Boss":
+        if self.status == "reviewed" and self.reviewed_at is None:
+            raise ValueError("boss 'reviewed' musi mieć reviewed_at")
+        return self
+
+    @property
+    def is_visible(self) -> bool:
+        return self.status == "reviewed"
+
+
 class QuestFileHeader(_Model):
     """Nagłówek pliku. Questy celowo są tu surowe (list[Any]).
 
@@ -248,4 +280,5 @@ class QuestFileHeader(_Model):
     # Przedmioty i NPC: też surowe, każdy wpis sprawdzany osobno w repository.py.
     items: list[Any] = Field(default_factory=list)
     npcs: list[Any] = Field(default_factory=list)
+    bosses: list[Any] = Field(default_factory=list)
     quests: list[Any]
