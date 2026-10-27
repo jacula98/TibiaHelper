@@ -48,6 +48,7 @@ def test_format_cooldown():
     assert format_cooldown(0.5) == "30 min"
     assert format_cooldown(336) == "14 dni"
     assert format_cooldown(68) == "68 h"
+    assert format_cooldown(cooldown_hours("15 seconds")) == "14 s"  # 0.004 h po zaokrągleniu w generatorze
 
 
 def test_player_sees_only_reviewed_bosses_author_sees_all():
