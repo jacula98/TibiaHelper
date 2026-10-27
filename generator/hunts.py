@@ -10,6 +10,7 @@ import re
 from tibiahelper.core.models import Hunt
 
 from . import templates
+from .bulk import _unique_id
 from .quests import slugify, source_url
 from .wiki_api import WikiPage
 from .wikitext import BLOCK, strip_markup
@@ -120,8 +121,12 @@ def build(pages: dict[str, WikiPage], data: dict) -> list[dict]:
         if title.startswith(("User:", "Template:")):
             continue  # brudnopisy edytorów wiki
         page = pages[title]
-        hunt = make_hunt(page, monster_ids, old.get(source_url(page.title)))
-        if hunt is None or hunt["id"] in taken:
+        previous = old.get(source_url(page.title))
+        if previous is None:
+            # Nowe miejsce: id z tytułu, a przy kolizji (np. różnica tylko w interpunkcji) „-2”, „-3”.
+            previous = {"id": _unique_id(slugify(page.title), taken | {h["id"] for h in old.values()})}
+        hunt = make_hunt(page, monster_ids, previous)
+        if hunt is None:
             continue
         taken.add(hunt["id"])
         hunts.append(hunt)
