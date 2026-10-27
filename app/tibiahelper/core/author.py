@@ -11,7 +11,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .models import SCHEMA_VERSION, Boss, Monster, Quest
+from .models import SCHEMA_VERSION, Boss, Hunt, Monster, Quest
 from .storage import write_bytes_atomic
 from .terminology import find_forbidden
 
@@ -79,6 +79,24 @@ def check_boss(boss: dict, monster_ids: set[str], quest_ids: set[str]) -> Boss:
     return model
 
 
+def check_hunt(hunt: dict, monster_ids: set[str]) -> Hunt:
+    """Walidacja miejsca huntu: poprawne pola, znane potwory, bez angielskiej nazwy bramki w uwagach."""
+    try:
+        model = Hunt.model_validate(hunt)
+    except ValidationError as exc:
+        raise AuthorError(f"Hunt {hunt.get('id', '?')!r} ma błędy: {_problems(exc)}") from exc
+    unknown = sorted(set(model.monster_ids()) - monster_ids)
+    if unknown:
+        raise AuthorError(f"Hunt {model.id!r}: nieznane potwory {unknown}.")
+    # Tylko to, co pisze autor: opis z wiki jest po angielsku i może mieć oryginalną nazwę.
+    forbidden = find_forbidden(json.dumps([model.notes, [p.label for p in model.route]], ensure_ascii=False))
+    if forbidden:
+        raise AuthorError(
+            f"Zamień {forbidden[0]!r} na „bramka lvl-owa” (odmienione w zdaniu, np. „przez bramkę lvl-ową”)."
+        )
+    return model
+
+
 def upsert_boss(data: dict, boss: dict) -> None:
     """Dodaje bossa albo podmienia tego z tym samym potworem. Lista posortowana po id potwora."""
     bosses = data.setdefault("bosses", [])
@@ -115,6 +133,12 @@ def save_data(data: dict, path: Path) -> None:
         if model.monster in boss_ids:
             raise AuthorError(f"Boss {model.monster!r} jest w pliku dwa razy.")
         boss_ids.add(model.monster)
+    hunt_ids: set[str] = set()
+    for hunt in data.get("hunts", []):
+        model = check_hunt(hunt, monster_ids)
+        if model.id in hunt_ids:
+            raise AuthorError(f"Hunt {model.id!r} jest w pliku dwa razy.")
+        hunt_ids.add(model.id)
     # Plik z potworami wymaga nowszej aplikacji: starsza dostanie jasny komunikat.
     data["schema_version"] = max(data["schema_version"], SCHEMA_VERSION)
     data["data_version"] += 1

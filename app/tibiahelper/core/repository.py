@@ -13,7 +13,7 @@ from pathlib import Path
 
 from pydantic import ValidationError
 
-from .models import SCHEMA_VERSION, Boss, Item, Monster, Npc, Quest, QuestFileHeader
+from .models import SCHEMA_VERSION, Boss, Hunt, Item, Monster, Npc, Quest, QuestFileHeader
 
 log = logging.getLogger(__name__)
 
@@ -34,6 +34,7 @@ class LoadResult:
     npcs: dict[str, Npc] = field(default_factory=dict)
     # Bossy dodane przez autora (też szkice; graczom pokazujemy tylko visible_bosses).
     bosses: list[Boss] = field(default_factory=list)
+    hunts: list[Hunt] = field(default_factory=list)
 
     @property
     def visible_bosses(self) -> list[Boss]:
@@ -88,6 +89,7 @@ def parse_quest_data(raw: object) -> LoadResult:
     items = _parse_named(header.items, Item, "przedmiot", errors)
     npcs = _parse_named(header.npcs, Npc, "NPC", errors)
     bosses = _parse_bosses(header.bosses, monsters, errors)
+    hunts = _parse_hunts(header.hunts, monsters, errors)
 
     for message in errors:
         log.warning(message)
@@ -100,7 +102,29 @@ def parse_quest_data(raw: object) -> LoadResult:
         items=items,
         npcs=npcs,
         bosses=bosses,
+        hunts=hunts,
     )
+
+
+def _parse_hunts(raw_hunts: list, monsters: dict[str, Monster], errors: list[str]) -> list[Hunt]:
+    hunts: list[Hunt] = []
+    seen: set[str] = set()
+    for index, raw in enumerate(raw_hunts):
+        try:
+            hunt = Hunt.model_validate(raw)
+        except ValidationError as exc:
+            errors.append(f"hunt #{index}: {exc}")
+            continue
+        if hunt.id in seen:
+            errors.append(f"hunt #{index} ({hunt.id}): zduplikowane id, pominięto")
+            continue
+        seen.add(hunt.id)
+        # Nieznany potwór to tylko brak kafelka, więc miejsce zostaje (jak w questach).
+        unknown = set(hunt.monster_ids()) - monsters.keys()
+        if unknown:
+            errors.append(f"hunt #{index} ({hunt.id}): nieznane potwory {sorted(unknown)}")
+        hunts.append(hunt)
+    return hunts
 
 
 def _parse_bosses(raw_bosses: list, monsters: dict[str, Monster], errors: list[str]) -> list[Boss]:

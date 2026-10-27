@@ -11,6 +11,7 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator spawns                   # miejsca występowania potworów z TibiaRoute
     python -m generator npcs                     # NPC z pozycjami i obrazkami (pinezki, „komu sprzedać”)
     python -m generator items                    # przedmioty: ceny, kto kupuje/sprzedaje, obrazki
+    python -m generator hunts                    # miejsca huntów (Hunt/Bestiary zones)
 """
 
 import argparse
@@ -22,7 +23,7 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import bulk, cache, items, monsters, npcs, quests, quests_file, spawns  # noqa: E402
+from . import bulk, cache, hunts, items, monsters, npcs, quests, quests_file, spawns  # noqa: E402
 from tibiahelper.core import author  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
 from .wikitext import infobox_position, mapper_coords  # noqa: E402
@@ -64,6 +65,9 @@ def main(argv: list[str] | None = None) -> int:
 
     items_cmd = commands.add_parser("items", help="pobierz przedmioty (ceny, NPC, obrazki) do data/quests.json")
     items_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
+
+    hunts_cmd = commands.add_parser("hunts", help="pobierz miejsca huntów (Hunting Places) do data/quests.json")
+    hunts_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -149,6 +153,14 @@ def main(argv: list[str] | None = None) -> int:
             quests_file.save(data)
             traded = sum(bool(i.get("sell_to") or i.get("buy_from")) for i in data["items"])
             print(f"Przedmioty: {len(data['items'])}, z NPC (kupno/sprzedaż): {traded}")
+
+        elif args.command == "hunts":
+            pages = bulk.load_pages(client, client.embedded_in("Infobox Hunt"), args.refresh)
+            data = quests_file.load()
+            data["hunts"] = hunts.build(pages, data)
+            quests_file.save(data)
+            with_monsters = sum(bool(h.get("areas")) for h in data["hunts"])
+            print(f"Miejsca huntów: {len(data['hunts'])}, z potworami: {with_monsters}")
 
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)
