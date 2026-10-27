@@ -28,6 +28,10 @@ podajesz podpis i rodzaj (np. „przejście” przy schodach). Gracz widzi list�
 Kolejność zmieniają „↑”/„↓”. HP, exp, loot, żywioły, klasa w Bosstiary i cooldown są z TibiaWiki, więc ich nie wpisujesz.
 Gracze widzą bossa dopiero po zaznaczeniu „Gotowy: pokaż graczom”.
 
+**Hunt/Bestiary zones.** Miejsca są z TibiaWiki (`python -m generator hunts`) i gracze widzą je od razu.
+Na stronie miejsca „✏ Edytuj” dodaje uwagi i trasę (tak samo jak przy bossie: do miejsca albo po miejscu).
+Ponowne pobranie z wiki nie rusza uwag ani trasy.
+
 Inne opcje: `--show-drafts` (podgląd szkiców bez edycji), `--no-update` (tylko pliki z repo, bez kopii z GitHuba).
 
 ## Generator danych
