@@ -48,9 +48,9 @@ def filter_entries(entries: list[BossEntry], text: str, boss_class: str) -> list
 
 
 def format_cooldown(hours: float) -> str:
-    """20 -> "20 h", 0.5 -> "30 min", 336 -> "14 dni", 0.004 -> "14 s"."""
+    """20 -> "20 h", 0.5 -> "30 min", 336 -> "14 dni", 0.0042 -> "15 s"."""
     if hours * 60 < 1:
-        # Np. „15 seconds” z wiki (0.004 h): w minutach wyszłoby „0 min”.
+        # Np. „15 seconds” z wiki (0.0042 h): w minutach wyszłoby „0 min”.
         return f"{max(1, round(hours * 3600))} s"
     if hours < 1:
         return f"{round(hours * 60)} min"

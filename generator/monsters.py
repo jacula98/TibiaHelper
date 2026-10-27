@@ -128,7 +128,7 @@ def cooldown_hours(value: str) -> float | None:
     if match is None:
         return None
     number, unit = float(match.group(1)), (match.group(2) or "hour").rstrip("s")
-    hours = round(number * _UNIT_HOURS[unit], 3)
+    hours = round(number * _UNIT_HOURS[unit], 4)
     # 0 na wiki to brak cooldownu albo brak danych; i tak nic graczowi nie mówi.
     return hours or None
 

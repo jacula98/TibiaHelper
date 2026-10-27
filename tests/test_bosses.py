@@ -33,7 +33,7 @@ def data_file(tmp_path):
 def test_wiki_fields_for_bosses():
     assert cooldown_hours("20") == 20
     assert cooldown_hours("24 hours") == 24
-    assert cooldown_hours("10 minutes") == pytest.approx(0.167, abs=0.001)
+    assert cooldown_hours("10 minutes") == pytest.approx(0.1667, abs=0.0001)
     assert cooldown_hours("14 days") == 336
     assert cooldown_hours("0") is None
     assert cooldown_hours("") is None
@@ -48,7 +48,7 @@ def test_format_cooldown():
     assert format_cooldown(0.5) == "30 min"
     assert format_cooldown(336) == "14 dni"
     assert format_cooldown(68) == "68 h"
-    assert format_cooldown(cooldown_hours("15 seconds")) == "14 s"  # 0.004 h po zaokrągleniu w generatorze
+    assert format_cooldown(cooldown_hours("15 seconds")) == "15 s"
 
 
 def test_player_sees_only_reviewed_bosses_author_sees_all():
