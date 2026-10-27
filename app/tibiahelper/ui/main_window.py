@@ -23,7 +23,7 @@ from ..core import author
 from ..core.bosses import boss_entries
 from ..core.i18n import tr
 from ..core.items import build_drops
-from ..core.models import Boss, Item, Monster, Npc, Quest
+from ..core.models import Boss, Hunt, Item, Monster, Npc, Quest
 from ..core.paths import bundled_qol_dir, items_dir, maps_dir, npcs_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
@@ -31,6 +31,7 @@ from ..core.progress import ProgressStore
 from ..core.settings import load_settings, save_settings
 from .boss_pages import BossEditor, BossListPage, BossPage
 from .home_page import HomePage
+from .hunt_pages import HuntEditor, HuntListPage, HuntPage
 from .item_pages import ItemListPage, ItemPage
 from .monster_pages import MonsterListPage, MonsterPage
 from .qol_pages import LootSettingsPage, MinimapPage, QolPage, UiHotkeysPage
@@ -77,9 +78,13 @@ class MainWindow(QMainWindow):
         self._ui_hotkeys = UiHotkeysPage(bundled_qol_dir() / "clientoptions.json")
         self._boss_list = BossListPage(sprites_dir(), author_mode=author_file is not None)
         self._boss_page = BossPage(sprites_dir(), maps_dir(), progress, author_mode=author_file is not None)
+        self._hunt_list = HuntListPage()
+        self._hunt_page = HuntPage(sprites_dir(), maps_dir(), author_mode=author_file is not None)
         self._monsters: dict[str, Monster] = {}
         self._quest_names: dict[str, str] = {}
         pages = (
+            self._hunt_list,
+            self._hunt_page,
             self._boss_list,
             self._boss_page,
             self._monster_list,
@@ -125,6 +130,13 @@ class MainWindow(QMainWindow):
         self._minimap.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._qol.ui_requested.connect(lambda: self._stack.setCurrentWidget(self._ui_hotkeys))
         self._ui_hotkeys.back_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
+        self._home.hunts_requested.connect(lambda: self._stack.setCurrentWidget(self._hunt_list))
+        self._hunt_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._hunt_list.hunt_selected.connect(self._open_hunt)
+        self._hunt_page.back_requested.connect(lambda: self._stack.setCurrentWidget(self._hunt_list))
+        self._hunt_page.monster_requested.connect(lambda m: self._open_detail("monster", m))
+        self._hunt_page.item_requested.connect(lambda i: self._open_detail("item", i))
+        self._hunt_page.edit_requested.connect(self._edit_hunt)
         self._home.bosses_requested.connect(lambda: self._stack.setCurrentWidget(self._boss_list))
         self._boss_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._boss_list.boss_selected.connect(self._open_boss)
@@ -161,12 +173,15 @@ class MainWindow(QMainWindow):
         items: dict[str, Item] | None = None,
         npcs: dict[str, Npc] | None = None,
         bosses: list[Boss] | None = None,
+        hunts: list[Hunt] | None = None,
     ) -> None:
         monsters, items, npcs = monsters or {}, items or {}, npcs or {}
         self._data_version = data_version
         self._monsters = monsters
         self._boss_list.set_data(monsters, bosses or [])
         self._boss_page.set_quests(quests, data_version)
+        self._hunt_list.set_hunts(hunts or [])
+        self._hunt_page.set_data(monsters, items, data_version)
         self._quest_view.set_npcs(npcs)
         self._monster_page.set_items(items)
         self._monster_page.set_data_version(data_version)
@@ -270,11 +285,35 @@ class MainWindow(QMainWindow):
             return
         # W trybie autora widać też szkice.
         self.set_quests(
-            result.quests, result.data_version, result.monsters, result.items, result.npcs, result.bosses
+            result.quests, result.data_version, result.monsters, result.items, result.npcs, result.bosses, result.hunts
         )
         quest = next((q for q in result.quests if q.id == quest_id), None)
         if quest is not None:
             self._open_quest(quest)
+
+    def _open_hunt(self, hunt: Hunt) -> None:
+        self._hunt_page.show_hunt(hunt)
+        self._stack.setCurrentWidget(self._hunt_page)
+
+    def _edit_hunt(self, hunt: Hunt) -> None:
+        if self._author_file is None:
+            return
+        editor = HuntEditor(hunt, self._author_file, maps_dir(), self)
+        editor.saved.connect(self._reload_after_hunt_edit)
+        editor.exec()
+
+    def _reload_after_hunt_edit(self, hunt_id: str) -> None:
+        try:
+            result = load_quest_file(self._author_file)
+        except QuestFileError as exc:
+            QMessageBox.warning(self, "Edytor", str(exc))
+            return
+        self.set_quests(
+            result.quests, result.data_version, result.monsters, result.items, result.npcs, result.bosses, result.hunts
+        )
+        hunt = next((h for h in result.hunts if h.id == hunt_id), None)
+        if hunt is not None:
+            self._open_hunt(hunt)
 
     def _open_boss(self, entry) -> None:
         self._boss_page.show_boss(entry)
@@ -300,7 +339,7 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "Edytor", str(exc))
             return
         self.set_quests(
-            result.quests, result.data_version, result.monsters, result.items, result.npcs, result.bosses
+            result.quests, result.data_version, result.monsters, result.items, result.npcs, result.bosses, result.hunts
         )
         entry = next((e for e in boss_entries(result.monsters, result.bosses, True) if e.monster.id == monster_id), None)
         if entry is not None:
@@ -329,7 +368,11 @@ class MainWindow(QMainWindow):
         elif previous_kind == "item":
             back = tr("← Przedmiot")
         else:
-            back = {self._quest_view: tr("← Quest"), self._boss_page: tr("← Boss")}.get(previous, tr("← Lista"))
+            back = {
+                self._quest_view: tr("← Quest"),
+                self._boss_page: tr("← Boss"),
+                self._hunt_page: tr("← Hunt"),
+            }.get(previous, tr("← Lista"))
         page = self._monster_page if kind == "monster" else self._item_page
         page.set_back_text(back)
         if kind == "monster":
