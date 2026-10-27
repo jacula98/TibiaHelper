@@ -268,7 +268,7 @@ class MapPanel(QWidget):
         self._focus = focus
         self._title.setText(title)
         self._title.setToolTip(title)
-        self._legend.setText(focus.label)
+        self._legend.setText(focus.label or "")  # punkt drogi nie ma podpisu
         self._set_floor(focus.z)
 
     def recenter(self) -> None:
