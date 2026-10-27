@@ -217,5 +217,8 @@
   "Stream trwa na Kick. Kliknij, żeby oglądać.": "Live på Kick nu. Klicka för att titta.",
   "Stream offline. Kliknij, żeby otworzyć kanał na Kick.": "Streamen är offline. Klicka för att öppna Kick-kanalen.",
   "Nie udało się sprawdzić, czy stream trwa. Kliknij, żeby otworzyć kanał na Kick.": "Kunde inte kontrollera om streamen är live. Klicka för att öppna Kick-kanalen.",
-  "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "Stream-knappen kollar på {kick} med några minuters mellanrum om författaren sänder"
+  "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "Stream-knappen kollar på {kick} med några minuters mellanrum om författaren sänder",
+  "📨 Wyślij loot z bossa": "📨 Skicka bossloot",
+  "📨 Wyślij Hunt Analyzer": "📨 Skicka Hunt Analyzer",
+  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Öppnar ett formulär i webbläsaren (inget konto behövs). Klistra in din rapport där."
 }

@@ -31,6 +31,7 @@ from ..core import author
 from ..core.hunts import ALL_CITIES, ANY_VOCATION, SORTS, VOCATIONS, bestiary, filter_hunts, hunt_level, sort_hunts, stars
 from ..core.i18n import tr
 from ..core.issues import hunt_issue_url
+from ..core.reports import hunt_report_url
 from ..core.models import Hunt, Item, Monster, Waypoint
 from ..core.monsters import download_missing, sprite_path
 from . import theme
@@ -196,11 +197,21 @@ class HuntPage(QWidget):
 
         report = report_button()
         report.clicked.connect(self._report_issue)
+        # Raport z gry (loot, Hunt Analyzer) idzie przez formularz Google, nie przez GitHub:
+        # gracz nie potrzebuje konta, a autor dostaje odpowiedzi w arkuszu.
+        send = QPushButton(tr("📨 Wyślij Hunt Analyzer"))
+        send.setToolTip(tr("Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport."))
+        send.setCursor(Qt.CursorShape.PointingHandCursor)
+        send.clicked.connect(self._send_report)
+        bottom = QHBoxLayout()
+        bottom.addWidget(send)
+        bottom.addStretch(1)
+        bottom.addWidget(report)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(top)
         layout.addWidget(self._scroll, 1)
-        layout.addWidget(report, 0, Qt.AlignmentFlag.AlignRight)
+        layout.addLayout(bottom)
 
     def set_data(self, monsters: dict[str, Monster], items: dict[str, Item], data_version: int) -> None:
         self._monsters, self._items, self._data_version = monsters, items, data_version
@@ -269,6 +280,10 @@ class HuntPage(QWidget):
     def _report_issue(self) -> None:
         if self.hunt is not None:
             QDesktopServices.openUrl(QUrl(hunt_issue_url(self.hunt, self._data_version)))
+
+    def _send_report(self) -> None:
+        if self.hunt is not None:
+            QDesktopServices.openUrl(QUrl(hunt_report_url(self.hunt)))
 
 
 def hunt_header_html(hunt: Hunt) -> str:

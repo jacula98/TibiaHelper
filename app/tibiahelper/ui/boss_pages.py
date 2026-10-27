@@ -43,6 +43,7 @@ from ..core.bosses import (
 )
 from ..core.i18n import tr
 from ..core.issues import monster_issue_url
+from ..core.reports import boss_report_url
 from ..core.models import Boss, Monster, Quest, Waypoint
 from ..core.monsters import download_missing, sprite_path
 from ..core.progress import ProgressStore
@@ -206,11 +207,21 @@ class BossPage(QWidget):
 
         report = report_button()
         report.clicked.connect(self._report_issue)
+        # Raport z gry (loot, Hunt Analyzer) idzie przez formularz Google, nie przez GitHub:
+        # gracz nie potrzebuje konta, a autor dostaje odpowiedzi w arkuszu.
+        send = QPushButton(tr("📨 Wyślij loot z bossa"))
+        send.setToolTip(tr("Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport."))
+        send.setCursor(Qt.CursorShape.PointingHandCursor)
+        send.clicked.connect(self._send_report)
+        bottom = QHBoxLayout()
+        bottom.addWidget(send)
+        bottom.addStretch(1)
+        bottom.addWidget(report)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addLayout(top)
         layout.addWidget(scroll, 1)
-        layout.addWidget(report, 0, Qt.AlignmentFlag.AlignRight)
+        layout.addLayout(bottom)
 
     def set_quests(self, quests: list[Quest], data_version: int) -> None:
         # Tylko questy z listy (graczom: przejrzane), więc link nie prowadzi do ukrytego szkicu.
@@ -276,6 +287,10 @@ class BossPage(QWidget):
     def _report_issue(self) -> None:
         if self.entry is not None:
             QDesktopServices.openUrl(QUrl(monster_issue_url(self.entry.monster, self._data_version)))
+
+    def _send_report(self) -> None:
+        if self.entry is not None:
+            QDesktopServices.openUrl(QUrl(boss_report_url(self.entry.monster)))
 
 
 def boss_html(entry: BossEntry, quests: dict[str, Quest], progress: ProgressStore) -> str:

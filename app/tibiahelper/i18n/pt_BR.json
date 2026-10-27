@@ -217,5 +217,8 @@
   "Stream trwa na Kick. Kliknij, żeby oglądać.": "Ao vivo na Kick agora. Clique para assistir.",
   "Stream offline. Kliknij, żeby otworzyć kanał na Kick.": "Stream offline. Clique para abrir o canal na Kick.",
   "Nie udało się sprawdzić, czy stream trwa. Kliknij, żeby otworzyć kanał na Kick.": "Não foi possível verificar se a stream está ao vivo. Clique para abrir o canal na Kick.",
-  "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "o botão Stream verifica na {kick} a cada poucos minutos se o autor está ao vivo"
+  "przycisk Stream co kilka minut sprawdza na {kick}, czy autor nadaje": "o botão Stream verifica na {kick} a cada poucos minutos se o autor está ao vivo",
+  "📨 Wyślij loot z bossa": "📨 Enviar loot do boss",
+  "📨 Wyślij Hunt Analyzer": "📨 Enviar Hunt Analyzer",
+  "Otwiera formularz w przeglądarce (bez konta). Wklej tam swój raport.": "Abre um formulário no navegador (sem conta). Cole seu relatório lá."
 }
