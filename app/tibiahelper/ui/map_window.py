@@ -7,6 +7,7 @@ w edytorze autora do wskazania miejsca kliknięciem.
 
 import logging
 import threading
+from collections.abc import Callable
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QPointF, QRectF, Qt, Signal
@@ -124,6 +125,8 @@ class MapPanel(QWidget):
     point_picked = Signal(int, int, int)
     # Kliknięty „×” (tylko gdy panel ma przycisk zamknięcia).
     close_requested = Signal()
+    # Tryb wolny (np. Exiva finder): każde kliknięcie w mapę jako x, y, z w grze.
+    tile_clicked = Signal(int, int, int)
 
     def __init__(self, maps_dir: Path, closable: bool = False, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -138,6 +141,10 @@ class MapPanel(QWidget):
         self._loading: set[int] = set()
         # Tryb trasy (boss): kolejne punkty na tym samym piętrze łączy linia.
         self._route = False
+        # Tryb wolny: kto używa panelu, sam rysuje swoją warstwę (overlay) i obsługuje kliknięcia.
+        self._free = False
+        self._overlay: Callable[[QGraphicsScene, int], None] | None = None
+        self._hold_view = False  # po pierwszym rysowaniu zmiana piętra nie przesuwa mapy
 
         self._loader = _FloorLoader()
         self._loader.loaded.connect(self._on_floor_loaded)
@@ -226,10 +233,55 @@ class MapPanel(QWidget):
         self._legend.setText("Zmień piętro strzałkami, jeśli miejsce jest wyżej albo pod ziemią.")
         self._set_floor(start.z)
 
+    def start_free(self, title: str, legend: str, start: MapPoint, overlay: Callable[[QGraphicsScene, int], None]) -> None:
+        """Tryb wolny: overlay(scene, z) dorysowuje swoje rzeczy, kliknięcia idą sygnałem tile_clicked."""
+        self._spawns = []
+        self._picking = False
+        self._route = False
+        self._points = []
+        self._free = True
+        self._overlay = overlay
+        self._hold_view = False
+        self._focus = start
+        self._title.setText(title)
+        self._legend.setText(legend)
+        self._set_floor(start.z)
+
+    @property
+    def floor(self) -> int:
+        return self._floor
+
+    def set_legend(self, text: str) -> None:
+        self._legend.setText(text)
+
+    def redraw(self) -> None:
+        """Rysuje piętro jeszcze raz (np. po zmianie warstwy), bez ruszania widoku."""
+        path = floor_path(self._maps_dir, self._floor)
+        if path.exists():
+            self._draw(self._floor, path, keep_view=True)
+
+    def fit_rect(self, rect: QRectF) -> None:
+        """Pokazuje cały prostokąt (piksele mapy), ale nie przybliża ani nie oddala ponad limit."""
+        self._view.fitInView(rect, Qt.AspectRatioMode.KeepAspectRatio)
+        zoom = self._view.transform().m11()
+        limited = max(MIN_ZOOM, min(START_ZOOM, zoom))
+        if limited != zoom:
+            self._view.scale(limited / zoom, limited / zoom)
+        self._view.centerOn(rect.center())
+
+    def go_to_floor(self, z: int) -> None:
+        self._set_floor(z)
+
     def _on_map_clicked(self, scene_x: float, scene_y: float) -> None:
-        if not self._picking or self._view.scene().sceneRect().isEmpty():
+        if self._view.scene().sceneRect().isEmpty():
             return
         x, y = MAP_X_MIN + int(scene_x), MAP_Y_MIN + int(scene_y)
+        if self._free:
+            if 0 <= scene_x < self._view.scene().sceneRect().width() and 0 <= scene_y < self._view.scene().sceneRect().height():
+                self.tile_clicked.emit(x, y, self._floor)
+            return
+        if not self._picking:
+            return
         try:
             picked = MapPoint(x=x, y=y, z=self._floor, label="wybrane miejsce")
         except ValueError:
@@ -364,9 +416,12 @@ class MapPanel(QWidget):
             label.setZValue(2)
 
         self._draw_spawns(scene, z)
+        if self._overlay is not None:
+            self._overlay(scene, z)
 
-        if keep_view:
+        if keep_view or self._hold_view:
             return  # po kliknięciu w trybie wybierania mapa zostaje tam, gdzie była
+        self._hold_view = self._free
         self._view.resetTransform()
         zoom = SPAWN_ZOOM if self._spawns else START_ZOOM
         self._view.scale(zoom, zoom)
