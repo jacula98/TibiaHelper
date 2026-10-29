@@ -387,13 +387,19 @@ class FinderPage(QWidget):
     def _draw_star(self, scene: QGraphicsScene, x: int, y: int) -> None:
         px, py = to_pixel(x, y)
         center = QPointF(px + 0.5, py + 0.5)
-        star = _MapButton(_star_path(), QColor(STAR_COLOR), lambda pos: self._show_menu(None, pos))
+        # Ostatni wybór z tego miejsca zostaje zielony (jak obszar), żeby było widać, co już kliknięto.
+        last = self._readings[-1] if self._readings else None
+        chosen = "none"
+        if last is not None and (last.x, last.y, last.z) == self._position:
+            chosen = last.direction  # None = gwiazdka („next to you” itd.)
+        star_color = QColor(AREA_COLOR if chosen is None else STAR_COLOR)
+        star = _MapButton(_star_path(), star_color, lambda pos: self._show_menu(None, pos))
         star.setToolTip("next to you / above you / below you")
         star.setPos(center)
         scene.addItem(star)
-        arrow_color = QColor(255, 255, 255, 210)
         for direction in DIRECTIONS:
-            arrow = _MapButton(_arrow_path(direction), arrow_color, lambda pos, d=direction: self._show_menu(d, pos))
+            color = QColor(AREA_COLOR) if direction == chosen else QColor(255, 255, 255, 210)
+            arrow = _MapButton(_arrow_path(direction), color, lambda pos, d=direction: self._show_menu(d, pos))
             arrow.setPos(center)
             scene.addItem(arrow)
 
