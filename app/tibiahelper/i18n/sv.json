@@ -274,11 +274,12 @@
   "Ładunki: <b>{n}</b> (bicie w dummy: {h} h {m} min)": "Laddningar: <b>{n}</b> (träning på dummyn: {h} tim {m} min)",
   "← Narzędzia": "← Verktyg",
   "Cena 1 Tibia Coina:": "Pris för 1 Tibia Coin:",
-  "Cena TC na Markecie zmienia się codziennie: wpisz aktualną z gry. Zielona cena NPC: w Store taniej, czerwona: u NPC taniej. Ceny Store z TibiaWiki.": "TC-priset på Market ändras varje dag: ange det aktuella från spelet. Grönt NPC-pris: billigare i Store, rött: billigare hos NPC. Store-priser från TibiaWiki.",
+  "Cena TC na Markecie zmienia się codziennie: wpisz aktualną z gry. Na zielono tańsza cena za sztukę: w Store albo u NPC. Ceny Store z TibiaWiki.": "TC-priset på Market ändras varje dag: ange det aktuella från spelet. Det billigare styckpriset är grönt: i Store eller hos NPC. Store-priser från TibiaWiki.",
   "Inne": "Övrigt",
   "NPC: {gold} gp": "NPC: {gold} gp",
   "Wszystkie": "Alla",
   "napełnia {n} · {coins} TC": "fyller {n} · {coins} TC",
   "x{n} · {coins} TC": "x{n} · {coins} TC",
-  "{gold} gp / szt.": "{gold} gp / st."
+  "{gold} gp / szt.": "{gold} gp / st.",
+  "Store: {gold} gp": "Store: {gold} gp"
 }

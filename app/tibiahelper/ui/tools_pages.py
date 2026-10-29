@@ -128,11 +128,12 @@ class StorePricePage(QWidget):
         box_layout.addStretch(1)
         scroll = QScrollArea(widgetResizable=True)
         scroll.setFrameShape(QScrollArea.Shape.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scroll.setWidget(box)
         info = QLabel(
             tr(
                 "Cena TC na Markecie zmienia się codziennie: wpisz aktualną z gry. "
-                "Zielona cena NPC: w Store taniej, czerwona: u NPC taniej. Ceny Store z TibiaWiki."
+                "Na zielono tańsza cena za sztukę: w Store albo u NPC. Ceny Store z TibiaWiki."
             ),
             wordWrap=True,
         )
@@ -185,17 +186,27 @@ def _offer_row(row: StoreRow) -> QFrame:
     details.setObjectName("muted")
     gold = QLabel(f"<b>{format_gold(row.gold)} gp</b>")
     gold.setAlignment(Qt.AlignmentFlag.AlignRight)
-    per_unit = tr("{gold} gp / szt.", gold=_per_unit(row.per_unit)) if row.offer.amount > 1 else ""
+    per_unit = escape(tr("{gold} gp / szt.", gold=_per_unit(row.per_unit))) if row.offer.amount > 1 else ""
     if row.npc_per_unit is not None:
-        color = theme.GOOD if row.cheaper_in_store else theme.BAD
+        # Tańsza cena (za sztukę) na zielono, droższa na czerwono; przy równych obie bez koloru.
+        store = escape(tr("Store: {gold} gp", gold=_per_unit(row.per_unit)))
         npc = escape(tr("NPC: {gold} gp", gold=format_gold(row.npc_per_unit)))
-        per_unit = f"{per_unit}  <span style='color: {color};'>{npc}</span>".strip()
+        if row.per_unit != row.npc_per_unit:
+            store_color, npc_color = (theme.GOOD, theme.BAD) if row.cheaper_in_store else (theme.BAD, theme.GOOD)
+            store = f"<span style='color: {store_color};'>{store}</span>"
+            npc = f"<span style='color: {npc_color};'>{npc}</span>"
+        per_unit = f"{store}  {npc}"
     unit = QLabel(per_unit)
     unit.setAlignment(Qt.AlignmentFlag.AlignRight)
     grid.addWidget(name, 0, 0)
-    grid.addWidget(details, 1, 0)
     grid.addWidget(gold, 0, 1)
-    grid.addWidget(unit, 1, 1)
+    # Ceny za sztukę (Store i NPC) w osobnej linii pod spodem: w wąskim oknie nie mieszczą się obok nazwy.
+    if row.npc_per_unit is not None:
+        grid.addWidget(details, 1, 0, 1, 2)
+        grid.addWidget(unit, 2, 0, 1, 2)
+    else:
+        grid.addWidget(details, 1, 0)
+        grid.addWidget(unit, 1, 1)
     grid.setColumnStretch(0, 1)
     return frame
 
