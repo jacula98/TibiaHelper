@@ -1,6 +1,6 @@
 """Zakładka „Narzędzia”: cena ze Store, podział lootu, stamina i skille (logika w core/calculators.py).
 
-Pomocnik raidów i world change jest w raid_pages.py.
+Pomocnik raidów i world change jest w raid_pages.py, a Exiva finder w finder_pages.py.
 """
 
 from datetime import datetime, timedelta
@@ -54,6 +54,7 @@ class ToolsPage(QWidget):
     stamina_requested = Signal()
     skills_requested = Signal()
     raids_requested = Signal()
+    finder_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -81,6 +82,10 @@ class ToolsPage(QWidget):
         raids = _small_button("📯  " + tr("Raidy i world change"), tr("Wklej komunikat z gry: co się dzieje i za ile kolejna fala"))
         raids.clicked.connect(self.raids_requested)
         layout.addWidget(raids)
+
+        finder = _small_button("🧭  " + tr("Exiva finder"), tr("Gdzie jest fiendish potwór: kierunki z exivy na mapie"))
+        finder.clicked.connect(self.finder_requested)
+        layout.addWidget(finder)
         layout.addStretch(1)
 
 
