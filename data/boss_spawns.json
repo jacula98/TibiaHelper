@@ -1,6 +1,6 @@
 {
  "version": 1,
- "source": "TibiaWiki (spawntype), CC BY-SA 4.0",
+ "source": "TibiaWiki (spawntype, wykresy Spawn Frequency z danymi GuildStats.eu), CC BY-SA 4.0",
  "bosses": [
   {
    "monster": "abomination"
@@ -12,7 +12,11 @@
    "monster": "apprentice-sheng"
   },
   {
-   "monster": "arachir-the-ancient-one"
+   "monster": "arachir-the-ancient-one",
+   "respawn_days": [
+    6,
+    9
+   ]
   },
   {
    "monster": "arthom-the-hunter"
@@ -27,6 +31,13 @@
    "monster": "battlemaster-zunzu"
   },
   {
+   "monster": "big-bad-one",
+   "respawn_days": [
+    6,
+    11
+   ]
+  },
+  {
    "monster": "big-boss-trolliver"
   },
   {
@@ -39,7 +50,11 @@
    "monster": "burster"
   },
   {
-   "monster": "captain-jones"
+   "monster": "captain-jones",
+   "respawn_days": [
+    6,
+    10
+   ]
   },
   {
    "monster": "chizzoron-the-distorter"
@@ -48,16 +63,31 @@
    "monster": "clavius"
   },
   {
+   "monster": "countess-sorrow",
+   "respawn_days": [
+    14,
+    21
+   ]
+  },
+  {
    "monster": "cublarc-the-plunderer"
   },
   {
    "monster": "deadeye-devious"
   },
   {
-   "monster": "dharalion"
+   "monster": "dharalion",
+   "respawn_days": [
+    5,
+    8
+   ]
   },
   {
-   "monster": "diblis-the-fair"
+   "monster": "diblis-the-fair",
+   "respawn_days": [
+    10,
+    16
+   ]
   },
   {
    "monster": "diseased-bill"
@@ -69,10 +99,17 @@
    "monster": "diseased-fred"
   },
   {
-   "monster": "dracola"
+   "monster": "dracola",
+   "respawn_days": [
+    14,
+    21
+   ]
   },
   {
    "monster": "dreadful-disruptor"
+  },
+  {
+   "monster": "elvira-hammerthrust"
   },
   {
    "monster": "enraged-morshabaal"
@@ -81,37 +118,86 @@
    "monster": "evil-eye"
   },
   {
-   "monster": "ferumbras"
+   "monster": "fernfang",
+   "respawn_days": [
+    20,
+    27
+   ]
+  },
+  {
+   "monster": "ferumbras",
+   "respawn_days": [
+    162,
+    176
+   ]
   },
   {
    "monster": "flamecaller-zazrak"
   },
   {
-   "monster": "frog-prince"
+   "monster": "frog-prince",
+   "respawn_days": [
+    12,
+    18
+   ]
   },
   {
    "monster": "furious-morshabaal"
   },
   {
-   "monster": "gaz-haragoth"
+   "monster": "gaz-haragoth",
+   "respawn_days": [
+    13,
+    28
+   ]
   },
   {
-   "monster": "general-murius"
+   "monster": "general-murius",
+   "respawn_days": [
+    6,
+    9
+   ]
+  },
+  {
+   "monster": "ghazbaran",
+   "respawn_days": [
+    162,
+    176
+   ]
   },
   {
    "monster": "glitterscale"
   },
   {
+   "monster": "gravelord-oshuran",
+   "respawn_days": [
+    7,
+    11
+   ]
+  },
+  {
    "monster": "grorlam"
   },
   {
-   "monster": "hairman-the-huge"
+   "monster": "hairman-the-huge",
+   "respawn_days": [
+    5,
+    10
+   ]
   },
   {
-   "monster": "handmaiden"
+   "monster": "handmaiden",
+   "respawn_days": [
+    14,
+    21
+   ]
   },
   {
-   "monster": "hatebreeder"
+   "monster": "hatebreeder",
+   "respawn_days": [
+    6,
+    9
+   ]
   },
   {
    "monster": "heoni"
@@ -126,10 +212,31 @@
    "monster": "horned-fox"
   },
   {
-   "monster": "imperor"
+   "monster": "imperor",
+   "respawn_days": [
+    14,
+    21
+   ]
+  },
+  {
+   "monster": "jesse-the-wicked"
   },
   {
    "monster": "lethal-lissy"
+  },
+  {
+   "monster": "man-in-the-cave",
+   "respawn_days": [
+    12,
+    16
+   ]
+  },
+  {
+   "monster": "massacre",
+   "respawn_days": [
+    14,
+    21
+   ]
   },
   {
    "monster": "mean-masher"
@@ -141,13 +248,38 @@
    "monster": "moonspawn-juggernaut"
   },
   {
+   "monster": "morgaroth",
+   "respawn_days": [
+    169,
+    177
+   ]
+  },
+  {
+   "monster": "mornenion"
+  },
+  {
    "monster": "morshabaal"
   },
   {
-   "monster": "munster"
+   "monster": "mr-punish",
+   "respawn_days": [
+    14,
+    21
+   ]
   },
   {
-   "monster": "ocyakao"
+   "monster": "munster",
+   "respawn_days": [
+    1,
+    7
+   ]
+  },
+  {
+   "monster": "ocyakao",
+   "respawn_days": [
+    16,
+    26
+   ]
   },
   {
    "monster": "old-whopper"
@@ -156,19 +288,38 @@
    "monster": "old-widow"
   },
   {
-   "monster": "omrafir"
+   "monster": "omrafir",
+   "respawn_days": [
+    14,
+    28
+   ]
   },
   {
    "monster": "oodok-witchmaster"
   },
   {
-   "monster": "orshabaal"
+   "monster": "orshabaal",
+   "respawn_days": [
+    161,
+    177
+   ]
   },
   {
-   "monster": "pale-count"
+   "monster": "pale-count",
+   "respawn_days": [
+    16,
+    30
+   ]
   },
   {
-   "monster": "plasmother"
+   "monster": "plasmother",
+   "respawn_days": [
+    14,
+    21
+   ]
+  },
+  {
+   "monster": "robby-the-reckless"
   },
   {
    "monster": "ron-the-ripper"
@@ -192,16 +343,27 @@
    "monster": "rukor-zad"
   },
   {
-   "monster": "sir-valorcrest"
+   "monster": "sir-valorcrest",
+   "respawn_days": [
+    5,
+    9
+   ]
   },
   {
-   "monster": "smuggler-baron-silvertoe"
+   "monster": "smuggler-baron-silvertoe",
+   "respawn_days": [
+    9,
+    14
+   ]
   },
   {
    "monster": "stonecracker"
   },
   {
    "monster": "sugar-mommy"
+  },
+  {
+   "monster": "teleskor"
   },
   {
    "monster": "thul"
@@ -228,10 +390,18 @@
    "monster": "warlord-ruzad"
   },
   {
-   "monster": "weakened-shlorg"
+   "monster": "weakened-shlorg",
+   "respawn_days": [
+    13,
+    29
+   ]
   },
   {
-   "monster": "welter"
+   "monster": "welter",
+   "respawn_days": [
+    16,
+    29
+   ]
   },
   {
    "monster": "white-pale"
@@ -246,7 +416,14 @@
    "monster": "yaga-the-crone"
   },
   {
-   "monster": "zevelon-duskbringer"
+   "monster": "zarabustor"
+  },
+  {
+   "monster": "zevelon-duskbringer",
+   "respawn_days": [
+    6,
+    10
+   ]
   },
   {
    "monster": "zomba"
@@ -255,10 +432,113 @@
    "monster": "zugurosh"
   },
   {
-   "monster": "zulazza-the-corruptor"
+   "monster": "zulazza-the-corruptor",
+   "respawn_days": [
+    7,
+    20
+   ]
   },
   {
-   "monster": "zushuka"
+   "monster": "zushuka",
+   "respawn_days": [
+    19,
+    29
+   ]
   }
+ ],
+ "worlds": [
+  "Aethera",
+  "Antica",
+  "Astera",
+  "Belobra",
+  "Blumera",
+  "Bona",
+  "Bravoria",
+  "Calmera",
+  "Cantabra",
+  "Celebra",
+  "Celesta",
+  "Citra",
+  "Collabra",
+  "Descubra",
+  "Dia",
+  "Dracobra",
+  "Eclipta",
+  "Epoca",
+  "Escura",
+  "Etebra",
+  "Ferobra",
+  "Firmera",
+  "Floribra",
+  "Gentebra",
+  "Gladera",
+  "Gladibra",
+  "Harmonia",
+  "Havera",
+  "Honbra",
+  "Hostera",
+  "Idyllia",
+  "Ignibra",
+  "Ignitera",
+  "Inabra",
+  "Issobra",
+  "Jadebra",
+  "Junera",
+  "Kalanta",
+  "Kalibra",
+  "Kalimera",
+  "Kanda",
+  "Karmeya",
+  "Lobera",
+  "Luminera",
+  "Lutabra",
+  "Luzibra",
+  "Maligna",
+  "Menera",
+  "Monstera",
+  "Monza",
+  "Mystera",
+  "Nefera",
+  "Nevia",
+  "Noctalia",
+  "Oceanis",
+  "Ombra",
+  "Opulera",
+  "Ourobra",
+  "Pacera",
+  "Peloria",
+  "Penumbra",
+  "Premia",
+  "Quelibra",
+  "Quidera",
+  "Quintera",
+  "Rasteibra",
+  "Refugia",
+  "Retalia",
+  "Secura",
+  "Serdebra",
+  "Solidera",
+  "Sombra",
+  "Sonira",
+  "Stralis",
+  "Talera",
+  "Tempestera",
+  "Terribra",
+  "Thyria",
+  "Tornabra",
+  "Unebra",
+  "Ustebra",
+  "Venebra",
+  "Victoris",
+  "Vunira",
+  "Wintera",
+  "Xybra",
+  "Xyla",
+  "Xymera",
+  "Yonabra",
+  "Yovera",
+  "Yubra",
+  "Zuna",
+  "Zunera"
  ]
 }

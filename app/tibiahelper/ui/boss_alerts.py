@@ -1,8 +1,8 @@
 """Powiadomienia o bossach: „boss na serwerze” (statystyki z TibiaData) i timery respawnu.
 
 BossWatcher co jakiś czas sprawdza statystyki wybranego świata (w wątku w tle) i timery
-ustawione przez gracza. Powiadomienie pokazuje dymek Windows (ikona w zasobniku obok zegara)
-z krótkim dźwiękiem oraz pasek w oknie programu. Klik w jedno albo drugie otwiera bossa.
+ustawione przez gracza. Powiadomienie to okienko w programie (nad grą) z krótkim dźwiękiem.
+Przycisk „Pokaż bossa” otwiera bossa w zakładce Bossy.
 """
 
 import threading
@@ -13,13 +13,12 @@ from pathlib import Path
 from PySide6.QtCore import QObject, Qt, QTimer, Signal
 from PySide6.QtWidgets import (
     QApplication,
+    QDialog,
     QFrame,
     QHBoxLayout,
     QLabel,
     QPushButton,
     QSpinBox,
-    QSystemTrayIcon,
-    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -28,7 +27,6 @@ from ..core.boss_timers import BossTimer, due_warnings, format_left, load_timers
 from ..core.boss_watch import Sighting, WatchedBoss, WatchResult, check_world, is_current
 from ..core.i18n import tr
 from ..core.models import Monster
-from .theme import icon
 
 # Statystyki zmieniają się raz na dobę: co 30 minut sprawdzamy tylko, czy zaczął się nowy dzień
 # (TibiaData pytamy dopiero wtedy). Timery sprawdzamy co minutę, bo to tylko liczenie.
@@ -53,8 +51,7 @@ class _Signals(QObject):
 
 
 class BossWatcher(QObject):
-    boss_requested = Signal(str)  # id potwora do otwarcia w zakładce Bossy
-    alert = Signal(str, str)  # (tekst paska w oknie, id potwora do otwarcia)
+    alert = Signal(str, str, str)  # (tytuł, tekst, id potwora do otwarcia)
     changed = Signal()  # nowe statystyki albo zmiana timerów: strona bossa odświeża się
 
     def __init__(self, watch_cache: Path, timers_file: Path, parent: QObject | None = None) -> None:
@@ -68,8 +65,6 @@ class BossWatcher(QObject):
         self._world: str | None = None
         self._result: WatchResult | None = None
         self._busy = False
-        self._tray_target: str | None = None
-        self._tray: QSystemTrayIcon | None = None
         self._signals = _Signals(self)
         self._signals.result.connect(self._on_result)
         self._stats_timer = QTimer(self, interval=STATS_EVERY_MS)
@@ -182,55 +177,53 @@ class BossWatcher(QObject):
     # --- powiadomienie ---
 
     def _notify(self, title: str, text: str, monster_id: str) -> None:
-        # Krótki dźwięk systemu (na Windows ten sam co przy komunikatach) i dymek w zasobniku.
+        # Krótki dźwięk systemu (na Windows ten sam co przy komunikatach); okienko pokazuje główne okno.
         QApplication.beep()
-        self.alert.emit(f"{title}: {text}".replace("\n", "; "), monster_id)
-        tray = self._ensure_tray()
-        if tray is not None:
-            self._tray_target = monster_id
-            tray.showMessage(title, text, QSystemTrayIcon.MessageIcon.Information, 15000)
-
-    def _ensure_tray(self) -> QSystemTrayIcon | None:
-        if self._tray is None and QSystemTrayIcon.isSystemTrayAvailable():
-            self._tray = QSystemTrayIcon(icon("logo"), self)
-            self._tray.setToolTip("TibiaHelper")
-            self._tray.messageClicked.connect(self._on_tray_clicked)
-            self._tray.show()
-        return self._tray
-
-    def _on_tray_clicked(self) -> None:
-        if self._tray_target is not None:
-            self.boss_requested.emit(self._tray_target)
+        self.alert.emit(title, text, monster_id)
 
 
-class AlertBanner(QFrame):
-    """Pasek w oknie: „Bossy na Antica: Tyrn…” + Pokaż / ×. Działa też, gdy dymki Windows są wyłączone."""
+class AlertPopup(QDialog):
+    """Okienko „Bossy na Antica…” nad oknem programu, z przyciskami Pokaż bossa / Zamknij.
+
+    Bez blokowania programu (nie modalne) i zawsze na wierzchu, jak całe okno, żeby nie schowało się pod grą.
+    """
 
     open_requested = Signal(str)  # id potwora
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self.setObjectName("banner")
+        self.setWindowTitle("TibiaHelper")
+        self.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
+        self.setModal(False)
+        self.setMinimumWidth(300)
         self._target = ""
         # PlainText: nazwy bossów są z danych, więc nie dajemy Qt zgadywać, czy to HTML.
+        self._title = QLabel(wordWrap=True, textFormat=Qt.TextFormat.PlainText)
+        self._title.setObjectName("sectionTitle")
         self._text = QLabel(wordWrap=True, textFormat=Qt.TextFormat.PlainText)
-        close = QToolButton(text="✕")
-        close.setObjectName("icon")  # ten sam wygląd co trybik ⚙
-        close.setToolTip(tr("Zamknij"))
+        close = QPushButton(tr("Zamknij"))
         close.clicked.connect(self.hide)
-        show = QPushButton(tr("Pokaż"))
+        show = QPushButton(tr("Pokaż bossa"))
         show.setObjectName("primary")
+        show.setDefault(True)
         show.clicked.connect(self._open)
-        layout = QHBoxLayout(self)
-        layout.addWidget(self._text, 1)
-        layout.addWidget(show)
-        layout.addWidget(close)
-        self.hide()
+        buttons = QHBoxLayout()
+        buttons.addStretch(1)
+        buttons.addWidget(close)
+        buttons.addWidget(show)
+        layout = QVBoxLayout(self)
+        layout.addWidget(self._title)
+        layout.addWidget(self._text)
+        layout.addLayout(buttons)
 
-    def show_alert(self, text: str, monster_id: str) -> None:
+    def show_alert(self, title: str, text: str, monster_id: str) -> None:
+        # Nowe powiadomienie, gdy stare jest jeszcze otwarte: podmieniamy treść zamiast drugiego okienka.
         self._target = monster_id
+        self._title.setText(title)
         self._text.setText(text)
+        self.adjustSize()
         self.show()
+        self.raise_()
 
     def _open(self) -> None:
         self.hide()
@@ -291,7 +284,8 @@ class BossTimerBox(QFrame):
         self._min.setValue(low)
         self._max.setValue(high)
         self._hint.setText(
-            "" if self._watcher.has_known_respawn(monster_id)
+            tr("Okno respawnu z wykresów TibiaWiki (dane GuildStats.eu). Możesz je zmienić.")
+            if self._watcher.has_known_respawn(monster_id)
             else tr("Okno respawnu nie jest znane: wpisz je sam (np. z opisu bossa na wiki).")
         )
         self.refresh()
