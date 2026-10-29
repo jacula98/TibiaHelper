@@ -13,8 +13,10 @@ from tibiahelper.core.calculators import (
     skill_plan,
     skill_points_needed,
     split_loot,
-    store_price,
+    store_rows,
 )
+from tibiahelper.core.items import cheapest_buy_price
+from tibiahelper.core.models import Item, Trade
 
 ANALYZER = """Session data: From 2026-10-29, 10:00:00 to 2026-10-29, 11:00:00
 Session: 01:00h
@@ -69,14 +71,36 @@ def test_format_gold():
     assert format_gold(-5_000) == "-5,000"
 
 
-def test_store_price_gold_and_money():
-    price = store_price(750, 40_000, 39.99, 250)
-    assert price.gold == 30_000_000
-    assert price.money == pytest.approx(119.97)
+def test_store_rows_example_from_jacek():
+    # 1 TC = 1000 gp, 125 Health Potion za 6 TC: 6000 gp, czyli 48 gp za sztukę.
+    row = next(r for r in store_rows(1000, {}) if r.offer.name == "Health Potion" and r.offer.amount == 125)
+    assert row.gold == 6000
+    assert row.per_unit == 48
+    assert row.npc_per_unit is None and row.cheaper_in_store is None
 
 
-def test_store_price_without_pack_has_no_money():
-    assert store_price(250, 40_000).money is None
+def test_store_rows_filter_and_npc_comparison():
+    rows = store_rows(1000, {"Health Potion": 50, "Cure Poison Rune (Item)": 40}, "casks")
+    assert {r.offer.category for r in rows} == {"casks"}
+    cask = next(r for r in rows if r.offer.name == "Health Cask")
+    # Cask napełnia 1000 potionów za 5 TC: 5 gp za potion, a NPC chce 50 gp.
+    assert cask.per_unit == 5 and cask.npc_per_unit == 50 and cask.cheaper_in_store
+    rune = next(r for r in store_rows(1000, {"Cure Poison Rune (Item)": 40}, "runes") if r.offer.name == "Cure Poison Rune")
+    assert rune.npc_per_unit == 40 and rune.cheaper_in_store is False
+
+
+def test_store_exercise_weapons_use_npc_price():
+    lasting = next(r for r in store_rows(10_000, {}, "other") if r.offer.name == "Lasting Exercise Weapon")
+    assert lasting.gold == 7_200_000 and lasting.npc_per_unit == 10_000_000
+
+
+def test_cheapest_buy_price():
+    item = Item(
+        name="Health Potion", source_url="https://tibia.fandom.com/wiki/Health_Potion", price=50,
+        buy_from=[Trade(npc="A"), Trade(npc="B", price=45)],
+    )
+    assert cheapest_buy_price(item) == 45
+    assert cheapest_buy_price(Item(name="X", source_url="https://tibia.fandom.com/wiki/X")) is None
 
 
 def test_parse_party_analyzer():

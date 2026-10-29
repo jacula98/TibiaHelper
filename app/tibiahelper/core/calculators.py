@@ -1,7 +1,8 @@
 """Kalkulatory z zakładki „Narzędzia”: cena ze Store, podział lootu, stamina i skille. Bez Qt, żeby łatwo testować.
 
-Store: przedmiot kosztuje X Tibia Coins (TC). TC kupuje się w grze na Markecie za gold
-albo w sklepie za prawdziwe pieniądze, więc liczymy obie ceny.
+Store: potiony, runy, caski i kegi kosztują w Store Tibia Coins (TC), a TC kupuje się na Markecie
+za gold. Gracz wpisuje cenę 1 TC, a my liczymy cenę paczki w gp i cenę jednej sztuki
+(np. 125 Health Potion za 6 TC przy 1000 gp za TC: 6000 gp, czyli 48 gp za sztukę).
 
 Party: gracz kopiuje w kliencie Party Hunt Analyzer (przycisk „Copy to clipboard”) i wkleja tekst.
 Wygląda on mniej więcej tak (wcięcia to tabulatory albo spacje):
@@ -59,20 +60,6 @@ def parse_gold(text: str) -> int | None:
 def format_gold(value: int) -> str:
     """Kwota jak w kliencie Tibii: 1,234,567."""
     return f"{value:,}"
-
-
-@dataclass(frozen=True)
-class StorePrice:
-    gold: int  # ile goldów kosztują potrzebne TC na Markecie
-    money: float | None  # ile to prawdziwych pieniędzy (None, gdy gracz nie podał ceny paczki)
-
-
-def store_price(coins: int, coin_gold: int, pack_price: float = 0, pack_coins: int = 0) -> StorePrice:
-    """Cena przedmiotu za `coins` TC: w goldzie (1 TC = `coin_gold`) i w pieniądzach (paczka TC za `pack_price`)."""
-    money = None
-    if pack_price > 0 and pack_coins > 0:
-        money = round(coins * pack_price / pack_coins, 2)
-    return StorePrice(gold=coins * coin_gold, money=money)
 
 
 @dataclass(frozen=True)
@@ -279,3 +266,105 @@ def skill_plan(
         count = math.ceil(charges / weapon.charges)
         weapons.append(WeaponPlan(weapon, count, count * weapon.gold, count * weapon.coins))
     return SkillPlan(points, charges, charges * SECONDS_PER_CHARGE, weapons)
+
+
+# --- Store (ceny z TibiaWiki, strony „Store/Potions”, „Store/Runes”, „Store/Casks”, „Store/Kegs”) ---
+STORE_CATEGORIES = ("potions", "kegs", "casks", "runes", "other")
+CASK_FILLS = 1000  # cask (do domu) napełnia 1000 pustych fiolek
+KEG_FILLS = 500  # keg (do plecaka) napełnia 500 fiolek
+
+
+@dataclass(frozen=True)
+class StoreOffer:
+    name: str  # nazwa z gry (tak też szukamy ceny u NPC)
+    amount: int  # ile sztuk dostajesz (dla casku i kegu: ile potionów napełnia)
+    coins: int
+    category: str
+    unit: str = ""  # przedmiot liczony „za sztukę”, gdy inny niż name (cask -> potion)
+
+    @property
+    def unit_name(self) -> str:
+        return self.unit or self.name
+
+
+def _potion_packs(name: str, small: tuple[int, int], big: tuple[int, int]) -> list[StoreOffer]:
+    # Każdy potion jest w Store w dwóch paczkach: mniejszej i większej (np. 100 i 250 sztuk).
+    return [StoreOffer(name, small[0], small[1], "potions"), StoreOffer(name, big[0], big[1], "potions")]
+
+
+def _refill(kind: str, fills: int, category: str, prices: dict[str, int]) -> list[StoreOffer]:
+    return [
+        StoreOffer(f"{potion.replace(' Potion', '')} {kind}", fills, coins, category, unit=potion)
+        for potion, coins in prices.items()
+    ]
+
+
+STORE_OFFERS: tuple[StoreOffer, ...] = (
+    *_potion_packs("Health Potion", (125, 6), (300, 11)),
+    *_potion_packs("Strong Health Potion", (100, 10), (250, 21)),
+    *_potion_packs("Great Health Potion", (100, 18), (250, 41)),
+    *_potion_packs("Ultimate Health Potion", (100, 29), (250, 68)),
+    *_potion_packs("Supreme Health Potion", (100, 47), (250, 113)),
+    *_potion_packs("Mana Potion", (125, 6), (300, 12)),
+    *_potion_packs("Strong Mana Potion", (100, 7), (250, 17)),
+    *_potion_packs("Great Mana Potion", (100, 11), (250, 26)),
+    *_potion_packs("Ultimate Mana Potion", (100, 33), (250, 79)),
+    *_potion_packs("Great Spirit Potion", (100, 18), (250, 41)),
+    *_potion_packs("Ultimate Spirit Potion", (100, 33), (250, 79)),
+    *_refill("Keg", KEG_FILLS, "kegs", {
+        "Health Potion": 26, "Strong Health Potion": 53, "Great Health Potion": 103,
+        "Ultimate Health Potion": 175, "Supreme Health Potion": 288, "Mana Potion": 26,
+        "Strong Mana Potion": 43, "Great Mana Potion": 66, "Ultimate Mana Potion": 202,
+        "Great Spirit Potion": 105, "Ultimate Spirit Potion": 202,
+    }),
+    *_refill("Cask", CASK_FILLS, "casks", {
+        "Health Potion": 5, "Strong Health Potion": 11, "Great Health Potion": 22,
+        "Ultimate Health Potion": 36, "Supreme Health Potion": 59, "Mana Potion": 5,
+        "Strong Mana Potion": 9, "Great Mana Potion": 14, "Ultimate Mana Potion": 42,
+        "Great Spirit Potion": 22, "Ultimate Spirit Potion": 42,
+    }),
+    *(StoreOffer(f"{name} Rune", 250, coins, "runes") for name, coins in (
+        ("Animate Dead", 75), ("Avalanche", 12), ("Chameleon", 42), ("Convince Creature", 16),
+        ("Cure Poison", 13), ("Disintegrate", 5), ("Energy Bomb", 40), ("Energy Field", 8),
+        ("Energy Wall", 17), ("Explosion", 6), ("Fireball", 6), ("Fire Bomb", 29), ("Fire Field", 6),
+        ("Fire Wall", 12), ("Great Fireball", 12), ("Icicle", 6), ("Intense Healing", 19),
+        ("Magic Wall", 23), ("Paralyse", 140), ("Poison Bomb", 17), ("Poison Wall", 10),
+        ("Soulfire", 9), ("Stone Shower", 7), ("Sudden Death", 28), ("Thunderstorm", 9),
+        ("Ultimate Healing", 35), ("Wild Growth", 32),
+    )),
+    # Exercise weapons: każdy rodzaj (miecz, łuk, różdżka…) kosztuje tyle samo, więc jeden wiersz na wielkość.
+    *(StoreOffer(f"{w.name} Exercise Weapon" if w.name != "Exercise" else "Exercise Weapon", 1, w.coins, "other")
+      for w in EXERCISE_WEAPONS),
+)
+# Ceny broni treningowych u NPC (na wiki nie ma jednego przedmiotu „Exercise Weapon”).
+NPC_PRICE_OVERRIDES = {
+    ("Exercise Weapon" if w.name == "Exercise" else f"{w.name} Exercise Weapon"): w.gold for w in EXERCISE_WEAPONS
+}
+
+
+@dataclass(frozen=True)
+class StoreRow:
+    offer: StoreOffer
+    gold: int  # cena całej paczki w gp
+    per_unit: float  # gp za jedną sztukę
+    npc_per_unit: int | None  # najtańsza cena za sztukę u NPC (None = NPC tego nie sprzedaje)
+
+    @property
+    def cheaper_in_store(self) -> bool | None:
+        if self.npc_per_unit is None:
+            return None
+        return self.per_unit < self.npc_per_unit
+
+
+def store_rows(coin_gold: int, npc_prices: dict[str, int], category: str | None = None) -> list[StoreRow]:
+    """Oferty ze Store przeliczone na gp przy cenie 1 TC = `coin_gold` (category None = wszystkie)."""
+    rows = []
+    for offer in STORE_OFFERS:
+        if category is not None and offer.category != category:
+            continue
+        gold = offer.coins * coin_gold
+        name = offer.unit_name
+        # Runy, które są też czarem, mają na wiki dopisek „(Item)”, np. „Cure Poison Rune (Item)”.
+        npc = NPC_PRICE_OVERRIDES.get(name, npc_prices.get(name, npc_prices.get(f"{name} (Item)")))
+        rows.append(StoreRow(offer, gold, gold / offer.amount, npc))
+    return rows

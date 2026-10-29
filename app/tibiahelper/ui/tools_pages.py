@@ -6,10 +6,12 @@ from html import escape
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import (
+    QButtonGroup,
     QCheckBox,
     QComboBox,
-    QDoubleSpinBox,
     QFormLayout,
+    QFrame,
+    QGridLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -25,17 +27,20 @@ from ..core.calculators import (
     BONUS_STAMINA,
     LOW_STAMINA,
     MAX_STAMINA,
+    StoreRow,
     format_gold,
     format_minutes,
     offline_minutes_needed,
-    parse_gold,
     parse_party_analyzer,
     parse_stamina,
     skill_plan,
     split_loot,
-    store_price,
+    store_rows,
 )
-from ..core.i18n import tr
+from ..core.i18n import N_, tr
+from ..core.items import cheapest_buy_price
+from ..core.models import Item
+from . import theme
 from .qol_pages import _small_button, _top_bar
 
 
@@ -71,39 +76,63 @@ class ToolsPage(QWidget):
         layout.addStretch(1)
 
 
+# Kategorie Store (klucze z core/calculators.py) -> napis na przycisku. None = wszystkie.
+_STORE_FILTERS = (
+    (None, N_("Wszystkie")),
+    ("potions", "Potions"),
+    ("kegs", "Kegs"),
+    ("casks", "Casks"),
+    ("runes", "Runes"),
+    ("other", N_("Inne")),
+)
+
+
 class StorePricePage(QWidget):
     back_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self._npc_prices: dict[str, int] = {}
+        self._category: str | None = None
         title = QLabel(tr("Cena ze Store"))
         title.setObjectName("title")
 
-        # QSpinBox zamiast wolnego tekstu: gracz nie wpisze liter, a wynik liczy się od razu.
-        self._coins = QSpinBox(maximum=1_000_000, singleStep=25, value=250, suffix=" TC")
-        self._coin_gold = QSpinBox(maximum=10_000_000, singleStep=1_000, value=40_000, suffix=" gp")
+        # QSpinBox zamiast wolnego tekstu: gracz nie wpisze liter, a lista liczy się od razu.
+        self._coin_gold = QSpinBox(minimum=1, maximum=10_000_000, singleStep=1_000, value=40_000, suffix=" gp")
         self._coin_gold.setGroupSeparatorShown(True)
-        self._pack_price = QDoubleSpinBox(maximum=100_000, decimals=2, value=0)
-        self._pack_coins = QSpinBox(maximum=1_000_000, singleStep=250, value=250, suffix=" TC")
-        # Cena przedmiotu na Markecie jest opcjonalna, więc pole tekstowe (puste = brak porównania).
-        self._market = QLineEdit(placeholderText=tr("np. 9kk albo 9,000,000"))
-        for spin in (self._coins, self._coin_gold, self._pack_price, self._pack_coins):
-            spin.valueChanged.connect(self._update)
-        self._market.textChanged.connect(self._update)
-
+        self._coin_gold.valueChanged.connect(self._refresh)
         form = QFormLayout()
-        form.addRow(tr("Cena w Store:"), self._coins)
-        form.addRow(tr("1 TC na Markecie:"), self._coin_gold)
-        form.addRow(tr("Cena paczki TC:"), self._pack_price)
-        form.addRow(tr("TC w paczce:"), self._pack_coins)
-        form.addRow(tr("Ta rzecz na Markecie:"), self._market)
+        form.addRow(tr("Cena 1 Tibia Coina:"), self._coin_gold)
 
-        self._result = QLabel(wordWrap=True)
-        self._result.setTextFormat(Qt.TextFormat.RichText)
+        # Filtry jako przełączane przyciski w grupie: zawsze zaznaczony dokładnie jeden.
+        chips = QHBoxLayout()
+        chips.setSpacing(3)
+        group = QButtonGroup(self)
+        for index, (key, label) in enumerate(_STORE_FILTERS):
+            chip = QPushButton(tr(label))
+            chip.setObjectName("chip")
+            chip.setCheckable(True)
+            chip.setChecked(index == 0)
+            chip.setCursor(Qt.CursorShape.PointingHandCursor)
+            chip.clicked.connect(lambda _=False, k=key: self._set_category(k))
+            group.addButton(chip)
+            chips.addWidget(chip)
+        chips.addStretch(1)
+
+        self._rows = QVBoxLayout()
+        self._rows.setSpacing(6)
+        box = QWidget()
+        box_layout = QVBoxLayout(box)
+        box_layout.setContentsMargins(0, 0, 0, 0)
+        box_layout.addLayout(self._rows)
+        box_layout.addStretch(1)
+        scroll = QScrollArea(widgetResizable=True)
+        scroll.setFrameShape(QScrollArea.Shape.NoFrame)
+        scroll.setWidget(box)
         info = QLabel(
             tr(
-                "Ceny TC na Markecie zmieniają się codziennie: sprawdź aktualną w grze. "
-                "Cenę paczki wpisz w swojej walucie, tak jak w sklepie Tibii (0 = nie licz)."
+                "Cena TC na Markecie zmienia się codziennie: wpisz aktualną z gry. "
+                "Zielona cena NPC: w Store taniej, czerwona: u NPC taniej. Ceny Store z TibiaWiki."
             ),
             wordWrap=True,
         )
@@ -111,32 +140,69 @@ class StorePricePage(QWidget):
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(10)
+        layout.setSpacing(8)
         layout.addLayout(_top_bar(tr("← Narzędzia"), self.back_requested))
         layout.addWidget(title)
         layout.addLayout(form)
-        layout.addWidget(self._result)
+        layout.addLayout(chips)
+        layout.addWidget(scroll, 1)
         layout.addWidget(info)
-        layout.addStretch(1)
-        self._update()
+        self._refresh()
 
-    def _update(self) -> None:
-        price = store_price(
-            self._coins.value(), self._coin_gold.value(), self._pack_price.value(), self._pack_coins.value()
-        )
-        lines = [tr("W goldzie: <b>{gold} gp</b>", gold=format_gold(price.gold))]
-        if price.money is not None:
-            lines.append(tr("W pieniądzach: <b>{money}</b>", money=f"{price.money:.2f}"))
-        market = parse_gold(self._market.text())
-        if market is not None and market > 0 and price.gold > 0:
-            diff = market - price.gold
-            if diff > 0:
-                lines.append(tr("Taniej przez Store o {gold} gp.", gold=format_gold(diff)))
-            elif diff < 0:
-                lines.append(tr("Taniej na Markecie o {gold} gp.", gold=format_gold(-diff)))
-            else:
-                lines.append(tr("Tyle samo w Store i na Markecie."))
-        self._result.setText("<br>".join(lines))
+    def set_items(self, items: dict[str, Item]) -> None:
+        """Ceny u NPC do porównania (najtańszy NPC dla każdego przedmiotu)."""
+        self._npc_prices = {name: p for name, item in items.items() if (p := cheapest_buy_price(item))}
+        self._refresh()
+
+    def _set_category(self, category: str | None) -> None:
+        self._category = category
+        self._refresh()
+
+    def _refresh(self) -> None:
+        while self._rows.count():
+            widget = self._rows.takeAt(0).widget()
+            if widget is not None:
+                # hide() od razu: deleteLater() usuwa widżet dopiero w pętli zdarzeń, a do tego czasu byłby widoczny.
+                widget.hide()
+                widget.deleteLater()
+        for row in store_rows(self._coin_gold.value(), self._npc_prices, self._category):
+            self._rows.addWidget(_offer_row(row))
+
+
+def _offer_row(row: StoreRow) -> QFrame:
+    frame = QFrame()
+    frame.setObjectName("offer")
+    grid = QGridLayout(frame)
+    grid.setContentsMargins(10, 6, 10, 6)
+    grid.setHorizontalSpacing(8)
+    grid.setVerticalSpacing(0)
+    name = QLabel(f"<b>{escape(row.offer.name)}</b>")
+    amount = tr("x{n} · {coins} TC", n=row.offer.amount, coins=row.offer.coins)
+    if row.offer.unit:
+        # Cask i keg napełniają potiony, więc „za sztukę” to cena jednego potionu.
+        amount = tr("napełnia {n} · {coins} TC", n=row.offer.amount, coins=row.offer.coins)
+    details = QLabel(amount)
+    details.setObjectName("muted")
+    gold = QLabel(f"<b>{format_gold(row.gold)} gp</b>")
+    gold.setAlignment(Qt.AlignmentFlag.AlignRight)
+    per_unit = tr("{gold} gp / szt.", gold=_per_unit(row.per_unit)) if row.offer.amount > 1 else ""
+    if row.npc_per_unit is not None:
+        color = theme.GOOD if row.cheaper_in_store else theme.BAD
+        npc = escape(tr("NPC: {gold} gp", gold=format_gold(row.npc_per_unit)))
+        per_unit = f"{per_unit}  <span style='color: {color};'>{npc}</span>".strip()
+    unit = QLabel(per_unit)
+    unit.setAlignment(Qt.AlignmentFlag.AlignRight)
+    grid.addWidget(name, 0, 0)
+    grid.addWidget(details, 1, 0)
+    grid.addWidget(gold, 0, 1)
+    grid.addWidget(unit, 1, 1)
+    grid.setColumnStretch(0, 1)
+    return frame
+
+
+def _per_unit(value: float) -> str:
+    # Poniżej 10 gp pokazujemy jedno miejsce po przecinku, inaczej pełne gp (jak 36.7 -> 37).
+    return f"{value:,.1f}" if value < 10 else format_gold(round(value))
 
 
 class PartyLootPage(QWidget):
@@ -199,6 +265,8 @@ class PartyLootPage(QWidget):
         while self._transfers.count():
             widget = self._transfers.takeAt(0).widget()
             if widget is not None:
+                # hide() od razu: deleteLater() usuwa widżet dopiero w pętli zdarzeń, a do tego czasu byłby widoczny.
+                widget.hide()
                 widget.deleteLater()
         members = parse_party_analyzer(self._input.toPlainText())
         if not self._input.toPlainText().strip():

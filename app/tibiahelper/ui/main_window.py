@@ -218,6 +218,7 @@ class MainWindow(QMainWindow):
         self._monster_page.set_items(items)
         self._monster_page.set_data_version(data_version)
         self._item_list.set_items(items)
+        self._store_price.set_items(items)
         self._item_page.set_data(npcs, monsters, build_drops(monsters), data_version)
         self._list_page.set_quests(quests)
         self._quest_view.set_data_version(data_version)

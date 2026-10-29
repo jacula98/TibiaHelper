@@ -211,6 +211,16 @@ QPushButton#submenu {{
     border-radius: {r(10)};
 }}
 QPushButton#submenu:hover {{ border-color: {t.accent}; }}
+/* Przyciski-filtry („chipy”), np. kategorie w kalkulatorze Store: zaznaczony ma kolor akcentu. */
+QPushButton#chip {{ border-radius: {r(12)}; padding: 3px 7px; font-size: 12px; }}
+QPushButton#chip:checked {{ background: {t.accent}; color: {t.on_accent}; border: none; font-weight: 600; }}
+/* Wiersz oferty w kalkulatorze Store. */
+QFrame#offer {{
+    background: {t.surface};
+    {button_border}
+    border-radius: {r(8)};
+}}
+QFrame#offer QLabel {{ background: transparent; }}
 QToolButton#icon {{ border: none; background: transparent; font-size: 18px; padding: 2px 6px; }}
 QToolButton#icon:hover {{ background: {t.surface_hover}; }}
 /* Boosted potwór i boss pod nagłówkiem: mały, płaski przycisk z obrazkiem. */
