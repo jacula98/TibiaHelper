@@ -71,6 +71,47 @@ class WikiClient:
                 return titles
             params = {**params, **data["continue"]}
 
+    def category_members(self, category: str) -> list[str]:
+        """Tytuły artykułów w kategorii, np. "Raids" -> ["Thais Raids", ...]."""
+        titles: list[str] = []
+        params = {
+            "action": "query",
+            "list": "categorymembers",
+            "cmtitle": f"Category:{category}",
+            "cmnamespace": "0",
+            "cmlimit": "500",
+            "format": "json",
+            "formatversion": "2",
+            "maxlag": "5",
+        }
+        while True:
+            data = self._request(params)
+            titles += [page["title"] for page in data.get("query", {}).get("categorymembers", [])]
+            if "continue" not in data:
+                return titles
+            params = {**params, **data["continue"]}
+
+    def links(self, title: str) -> list[str]:
+        """Linki z artykułu (do innych artykułów), np. listy miast ze strony „Raid”."""
+        params = {
+            "action": "query",
+            "prop": "links",
+            "titles": title,
+            "plnamespace": "0",
+            "pllimit": "500",
+            "format": "json",
+            "formatversion": "2",
+            "maxlag": "5",
+        }
+        found: list[str] = []
+        while True:
+            data = self._request(params)
+            for page in data.get("query", {}).get("pages", []):
+                found += [link["title"] for link in page.get("links", [])]
+            if "continue" not in data:
+                return found
+            params = {**params, **data["continue"]}
+
     def image_urls(self, files: Iterable[str]) -> dict[str, str | None]:
         """Adresy plików z wiki, np. "Skeleton.gif" -> https://static.wikia.nocookie.net/...
 

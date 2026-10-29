@@ -24,10 +24,11 @@ from ..core.bosses import BossEntry, boss_entries
 from ..core.i18n import tr
 from ..core.items import build_drops
 from ..core.models import Boss, Hunt, Item, Monster, Npc, Quest
-from ..core.paths import bundled_qol_dir, items_dir, maps_dir, npcs_dir, sprites_dir
+from ..core.paths import bundled_qol_dir, bundled_raids_file, items_dir, maps_dir, npcs_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
+from ..core.raids import load_raid_data
 from ..core.reports import Report
 from ..core.settings import load_settings, save_settings
 from .boosted_bar import BoostedBar
@@ -37,6 +38,7 @@ from .hunt_pages import HuntEditor, HuntListPage, HuntPage
 from .item_pages import ItemListPage, ItemPage
 from .monster_pages import MonsterListPage, MonsterPage
 from .qol_pages import LootSettingsPage, MinimapPage, QolPage, UiHotkeysPage
+from .raid_pages import RaidHelperPage
 from .tools_pages import PartyLootPage, SkillPage, StaminaPage, StorePricePage, ToolsPage
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
@@ -82,6 +84,9 @@ class MainWindow(QMainWindow):
         self._party_loot = PartyLootPage()
         self._stamina = StaminaPage()
         self._skills = SkillPage()
+        # Raidy i world change są tylko w pliku dołączonym do programu: zmieniają się rzadko.
+        self._raids = RaidHelperPage()
+        self._raids.set_data(load_raid_data(bundled_raids_file()))
         self._qol = QolPage()
         self._loot_settings = LootSettingsPage(bundled_qol_dir())
         self._minimap = MinimapPage()
@@ -106,6 +111,7 @@ class MainWindow(QMainWindow):
             self._party_loot,
             self._stamina,
             self._skills,
+            self._raids,
             self._qol,
             self._loot_settings,
             self._minimap,
@@ -152,6 +158,8 @@ class MainWindow(QMainWindow):
         self._stamina.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
         self._tools.skills_requested.connect(lambda: self._stack.setCurrentWidget(self._skills))
         self._skills.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
+        self._tools.raids_requested.connect(lambda: self._stack.setCurrentWidget(self._raids))
+        self._raids.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
         self._home.qol_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._qol.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._qol.loot_requested.connect(lambda: self._stack.setCurrentWidget(self._loot_settings))
