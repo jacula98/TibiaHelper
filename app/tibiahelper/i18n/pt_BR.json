@@ -274,11 +274,12 @@
   "Ładunki: <b>{n}</b> (bicie w dummy: {h} h {m} min)": "Cargas: <b>{n}</b> (treino no dummy: {h} h {m} min)",
   "← Narzędzia": "← Ferramentas",
   "Cena 1 Tibia Coina:": "Preço de 1 Tibia Coin:",
-  "Cena TC na Markecie zmienia się codziennie: wpisz aktualną z gry. Zielona cena NPC: w Store taniej, czerwona: u NPC taniej. Ceny Store z TibiaWiki.": "O preço do TC no Market muda todo dia: digite o atual do jogo. Preço do NPC em verde: mais barato na Store, em vermelho: mais barato no NPC. Preços da Store do TibiaWiki.",
+  "Cena TC na Markecie zmienia się codziennie: wpisz aktualną z gry. Na zielono tańsza cena za sztukę: w Store albo u NPC. Ceny Store z TibiaWiki.": "O preço do TC no Market muda todo dia: digite o atual do jogo. O preço por unidade mais barato fica em verde: na Store ou no NPC. Preços da Store do TibiaWiki.",
   "Inne": "Outros",
   "NPC: {gold} gp": "NPC: {gold} gp",
   "Wszystkie": "Todos",
   "napełnia {n} · {coins} TC": "enche {n} · {coins} TC",
   "x{n} · {coins} TC": "x{n} · {coins} TC",
-  "{gold} gp / szt.": "{gold} gp / un."
+  "{gold} gp / szt.": "{gold} gp / un.",
+  "Store: {gold} gp": "Store: {gold} gp"
 }
