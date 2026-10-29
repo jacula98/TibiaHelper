@@ -49,7 +49,7 @@ def sighting_text(sighting: Sighting) -> str:
 
 class _Signals(QObject):
     # Wynik z wątku w tle: Qt dostarcza sygnał w głównym wątku, gdzie wolno zmieniać okno.
-    result = Signal(object, bool)
+    result = Signal(str, object, bool)  # (świat, o który pytaliśmy, wynik, czy nowy)
 
 
 class BossWatcher(QObject):
@@ -142,15 +142,19 @@ class BossWatcher(QObject):
 
         def work() -> None:
             result, fresh = check_world(self._cache, world, names, datetime.now(timezone.utc))
-            self._signals.result.emit(result, fresh)
+            self._signals.result.emit(world, result, fresh)
 
         # daemon=True: zamknięcie programu nie czeka na pobieranie.
         threading.Thread(target=work, daemon=True, name="boss-watch").start()
 
-    def _on_result(self, result: WatchResult | None, fresh: bool) -> None:
+    def _on_result(self, world: str, result: WatchResult | None, fresh: bool) -> None:
         self._busy = False
-        if result is None or result.world != self._world:
-            return  # w międzyczasie gracz zmienił świat: sprawdzimy przy następnym tyknięciu
+        if world != self._world:
+            # W międzyczasie gracz zmienił świat: od razu pytamy o nowy, zamiast czekać 30 minut.
+            self._check_stats()
+            return
+        if result is None:
+            return
         self._result = result
         self.changed.emit()
         if fresh and result.sightings:
