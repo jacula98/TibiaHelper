@@ -9,11 +9,14 @@ from tibiahelper.core.finder import (
     direction_of,
     distance_of,
     floor_ranges,
+    candidates,
     floors_of,
     matches,
+    message,
     possible_area,
 )
-from tibiahelper.core.models import MAP_X_MAX, MAP_X_MIN, MAP_Y_MAX, MAP_Y_MIN
+from tibiahelper.core.models import MAP_X_MAX, MAP_X_MIN, MAP_Y_MAX, MAP_Y_MIN, Monster
+from tibiahelper.core.spawns import Spawns
 
 THAIS = (32369, 32241, 7)
 
@@ -106,3 +109,50 @@ def test_area_is_clipped_to_map():
 def test_floor_ranges():
     assert floor_ranges(frozenset({5, 6, 7, 10})) == [(5, 7), (10, 10)]
     assert floor_ranges(frozenset()) == []
+
+
+# --- komunikaty i podpowiedzi „co to może być” -----------------------------
+
+
+@pytest.mark.parametrize(
+    ("distance", "direction", "floor", "expected"),
+    [
+        ("beside", None, "same", "is standing next to you"),
+        ("beside", None, "up", "is above you"),
+        ("close", "NE", "same", "is to the north-east"),
+        ("close", "S", "down", "is on a lower level to the south"),
+        ("far", "W", "same", "is far to the west"),
+        ("very_far", "NW", "same", "is very far to the north-west"),
+    ],
+)
+def test_message(distance, direction, floor, expected):
+    # Teksty jak na TibiaWiki (Find Person); gracz wybiera ten, który pokazała gra.
+    assert message(distance, direction, floor) == expected
+
+
+def _monster(monster_id, level, **extra):
+    return Monster(id=monster_id, name=monster_id.title(), hp=100, exp=10, bestiary_level=level,
+                   source_url="https://tibia.fandom.com/wiki/X", **extra)
+
+
+def test_candidates_filter_and_sort():
+    x, y, z = THAIS
+    area = possible_area([Reading(x, y, z, "close", "N")])
+    inside = [(x, y - 50, 7), (x + 5, y - 60, 7)]
+    monsters = {m.id: m for m in (
+        _monster("rotworm", "Easy"),
+        _monster("dragon", "Medium"),
+        _monster("rat", "Harmless"),  # bez lootu: nie bywa fiendish
+        _monster("ferumbras", "Challenging", boss=True),
+        _monster("far-away", "Easy"),
+    )}
+    spawns = Spawns(monsters={
+        "rotworm": inside,
+        "dragon": inside[:1],
+        "rat": inside,
+        "ferumbras": inside,
+        "far-away": [(x, y + 50, 7)],  # na południe, poza obszarem
+        "unknown": inside,  # nie ma go w danych potworów
+    })
+    assert [(m.id, n) for m, n in candidates(area, spawns, monsters)] == [("rotworm", 2), ("dragon", 1)]
+    assert [m.id for m, _ in candidates(area, spawns, monsters, "Medium")] == ["dragon"]
