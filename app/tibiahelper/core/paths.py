@@ -89,3 +89,18 @@ def bundled_reports_file() -> Path:
 def cached_reports_file() -> Path:
     """reports.json pobrany z GitHuba razem z aktualizacją poradników."""
     return user_data_dir() / "reports.json"
+
+
+def bundled_boss_spawns_file() -> Path:
+    """boss_spawns.json dołączony do aplikacji: bossy ze spawnem na świecie (z TibiaWiki)."""
+    return bundled_data_file().with_name("boss_spawns.json")
+
+
+def boss_watch_file() -> Path:
+    """Ostatnie statystyki bossów z wybranego świata, żeby pytać TibiaData najwyżej raz na dobę."""
+    return user_data_dir() / "boss_watch.json"
+
+
+def boss_timers_file() -> Path:
+    """Timery „zabity” ustawione przez gracza w zakładce Bossy."""
+    return user_data_dir() / "boss_timers.json"

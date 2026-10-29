@@ -12,6 +12,7 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator npcs                     # NPC z pozycjami i obrazkami (pinezki, „komu sprzedać”)
     python -m generator items                    # przedmioty: ceny, kto kupuje/sprzedaje, obrazki
     python -m generator hunts                    # miejsca huntów (Hunt/Bestiary zones)
+    python -m generator boss-spawns              # bossy ze spawnem na świecie (powiadomienia o bossach)
 """
 
 import argparse
@@ -23,7 +24,7 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import bulk, cache, hunts, items, monsters, npcs, quests, quests_file, reports, spawns  # noqa: E402
+from . import boss_spawns, bulk, cache, hunts, items, monsters, npcs, quests, quests_file, reports, spawns  # noqa: E402
 from tibiahelper.core import author  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
 from .wikitext import infobox_position, mapper_coords  # noqa: E402
@@ -69,6 +70,9 @@ def main(argv: list[str] | None = None) -> int:
 
     hunts_cmd = commands.add_parser("hunts", help="pobierz miejsca huntów (Hunting Places) do data/quests.json")
     hunts_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
+
+    boss_cmd = commands.add_parser("boss-spawns", help="bossy ze spawnem na świecie do data/boss_spawns.json")
+    boss_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -171,6 +175,10 @@ def main(argv: list[str] | None = None) -> int:
             quests_file.save(data)
             with_monsters = sum(bool(h.get("areas")) for h in data["hunts"])
             print(f"Miejsca huntów: {len(data['hunts'])}, z potworami: {with_monsters}")
+
+        elif args.command == "boss-spawns":
+            count = boss_spawns.update(quests_file.load(), client, args.refresh)
+            print(f"Bossy ze spawnem na świecie: {count} (data/boss_spawns.json)")
 
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)

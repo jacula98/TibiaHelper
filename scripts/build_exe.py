@@ -21,6 +21,7 @@ DATA = [
     ("data/quests.json", "data"),
     ("data/spawns.json", "data"),
     ("data/reports.json", "data"),
+    ("data/boss_spawns.json", "data"),
     ("data/qol", "data/qol"),
     ("data/LICENSE-DATA.md", "data"),
     ("LICENSE", "."),

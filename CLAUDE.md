@@ -28,6 +28,9 @@ Małe okno „zawsze na wierzchu” (Windows) z uproszczonymi poradnikami quest�
   Drugi wyjątek: dzisiejszy boosted potwór i boss (`core/boosted.py`). Jedno zapytanie do API
   TibiaWiki, najwyżej raz na dzień Tibii (wynik w `boosted.json`), plus ponowne próby co godzinę,
   dopóki wiki nie pokaże nowego dnia.
+- Powiadomienia o bossach: gdy gracz wpisze świat w ustawieniach, program raz na dobę pyta TibiaData
+  (`api.tibiadata.com/v4/killstatistics/<świat>`, darmowe, bez klucza) o statystyki zabójstw.
+  Wynik w `boss_watch.json`. Tylko odczyt, bez danych gracza. Timery respawnu są tylko lokalnie (`boss_timers.json`).
 - Przycisk „Stream” co kilka minut pyta publiczne API Kick (`kick.com/api/v2/channels/jackyykick`),
   czy autor nadaje. Tylko odczyt, bez klucza i bez danych gracza.
 - Raporty graczy (loot, Hunt Analyzer) idą przez formularz Google: program tylko otwiera go w przeglądarce.

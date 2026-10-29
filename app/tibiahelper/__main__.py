@@ -110,6 +110,7 @@ def main() -> int:
 
     window.show()
     window.start_boosted(boosted_file())
+    window.start_boss_watch()
     if error:
         QMessageBox.warning(window, "TibiaHelper", tr("Nie udało się wczytać questów.") + f"\n\n{error}")
 
