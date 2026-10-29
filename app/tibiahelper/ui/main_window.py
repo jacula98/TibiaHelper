@@ -186,6 +186,7 @@ class MainWindow(QMainWindow):
         self._raids.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
         self._tools.finder_requested.connect(lambda: self._stack.setCurrentWidget(self._finder))
         self._finder.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
+        self._finder.monster_requested.connect(lambda monster: self._open_detail("monster", monster))
         self._home.qol_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._qol.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._qol.loot_requested.connect(lambda: self._stack.setCurrentWidget(self._loot_settings))
@@ -243,6 +244,7 @@ class MainWindow(QMainWindow):
         self._data_version = data_version
         self._monsters = monsters
         self._boosted.set_monsters(monsters)
+        self._finder.set_monsters(monsters)
         self._visible_bosses = {boss.monster: boss for boss in bosses or []}
         self._watcher.set_bosses(monsters, self._watched_bosses)
         self._boss_list.set_data(monsters, bosses or [])
@@ -262,6 +264,7 @@ class MainWindow(QMainWindow):
 
     def set_spawns(self, spawns: Spawns) -> None:
         self._monster_page.set_spawns(spawns)
+        self._finder.set_spawns(spawns)
 
     def offer_update(self, data_version: int, on_accept: Callable[[], None]) -> None:
         """Pokazuje pasek „są nowsze poradniki”. Dane zmieniają się dopiero po kliknięciu."""
@@ -487,6 +490,7 @@ class MainWindow(QMainWindow):
                 self._boss_page: tr("← Boss"),
                 self._hunt_page: tr("← Hunt"),
                 self._home: tr("← Menu"),  # z paska „Boosted dziś” na ekranie startowym
+                self._finder: tr("← Exiva finder"),
             }.get(previous, tr("← Lista"))
         page = self._monster_page if kind == "monster" else self._item_page
         page.set_back_text(back)

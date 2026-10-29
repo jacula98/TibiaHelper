@@ -8,6 +8,11 @@ odległość. Zasady (TibiaWiki, strona Find Person, CC BY-SA), dx i dy to róż
 - piętro mówi tylko przy 0-100 kratkach („above you”, „on a higher level to the north”),
 - kierunek to jeden z 8 wycinków po 45° (granice co 22,5° od osi).
 
+Find Fiend mówi to samo co Find Person, a gdy gracz ma ukończony Bestiary tego potwora,
+także jego trudność (Updates/12.80.11430). Fiendish bywają tylko potwory „common”, z lootem,
+spoza raidów i spoza Rookgaardu, Dawnportu, Isle of Destiny i Chyllfroestu (Fiendish Creatures).
+Dlatego z trudności i miejsc występowania (data/spawns.json) da się zgadnąć, co to może być.
+
 Jeden odczyt to więc „kawałek pierścienia” wokół gracza. Kilka odczytów z różnych miejsc
 zawęża obszar: potwór musi być w części wspólnej wszystkich kawałków.
 
@@ -20,7 +25,8 @@ import math
 from dataclasses import dataclass
 from typing import Literal
 
-from .models import MAP_X_MAX, MAP_X_MIN, MAP_Y_MAX, MAP_Y_MIN
+from .models import MAP_X_MAX, MAP_X_MIN, MAP_Y_MAX, MAP_Y_MIN, Monster
+from .spawns import Spawns
 
 Direction = Literal["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
 Distance = Literal["beside", "close", "far", "very_far"]
@@ -33,6 +39,9 @@ FLOORS = range(16)
 _ANGLES = {"E": 0, "NE": 45, "N": 90, "NW": 135, "W": 180, "SW": 225, "S": 270, "SE": 315}
 _TAN_22 = math.tan(math.pi / 8)  # granica między „wschód” a „północny wschód”
 _FAR_AWAY = 10_000.0  # dalej niż cała mapa: „very far” i ramiona wycinka nie mają końca
+
+# Trudności z Bestiary, które może podać Find Fiend. Harmless nie ma lootu, więc nie bywa fiendish.
+DIFFICULTIES = ("Trivial", "Easy", "Medium", "Hard", "Challenging")
 
 Point = tuple[float, float]
 Polygon = list[Point]
@@ -150,6 +159,50 @@ def possible_area(readings: list[Reading]) -> Area | None:
         polygons = [p for a in polygons for b in others if _area(p := _clip(a, b)) > 1e-6]
         floors &= floors_of(reading)
     return Area(tuple(polygons), floors)
+
+
+def message(distance: Distance, direction: Direction | None, floor: FloorHint = "same") -> str:
+    """Końcówka komunikatu z gry (po angielsku, jak w kliencie), np. „is far to the north-east”."""
+    if distance == "beside":
+        return {"same": "is standing next to you", "up": "is above you", "down": "is below you"}[floor]
+    where = _DIRECTION_WORDS[direction] if direction else ""
+    if distance == "close" and floor != "same":
+        return f"is on a {'higher' if floor == 'up' else 'lower'} level to the {where}"
+    prefix = {"close": "", "far": "far ", "very_far": "very far "}[distance]
+    return f"is {prefix}to the {where}"
+
+
+_DIRECTION_WORDS = {
+    "N": "north", "NE": "north-east", "E": "east", "SE": "south-east",
+    "S": "south", "SW": "south-west", "W": "west", "NW": "north-west",
+}
+
+
+def candidates(area: Area, spawns: Spawns, monsters: dict[str, Monster],
+               difficulty: str | None = None) -> list[tuple[Monster, int]]:
+    """Potwory, które mogą być tym fiendem: (potwór, ile ich miejsc jest w obszarze), najwięcej pierwsze.
+
+    Odrzucamy bossy, potwory z eventów, niedostępne, „very rare” i Harmless (nie mogą być fiendish).
+    """
+    bounds = area.bounds()
+    if bounds is None or not area.floors:
+        return []
+    x0, y0, x1, y1 = bounds
+    found: list[tuple[Monster, int]] = []
+    for monster_id, points in spawns.monsters.items():
+        monster = monsters.get(monster_id)
+        if monster is None or monster.boss or monster.event or monster.unavailable or monster.very_rare:
+            continue
+        if monster.bestiary_level == "Harmless" or (difficulty and monster.bestiary_level != difficulty):
+            continue
+        # Najpierw tani prostokąt, dopiero potem dokładne sprawdzenie w wielokątach.
+        count = sum(
+            1 for x, y, z in points if x0 <= x <= x1 and y0 <= y <= y1 and area.contains(x, y, z)
+        )
+        if count:
+            found.append((monster, count))
+    found.sort(key=lambda pair: (-pair[1], pair[0].name))
+    return found
 
 
 def floor_ranges(floors: frozenset[int]) -> list[tuple[int, int]]:

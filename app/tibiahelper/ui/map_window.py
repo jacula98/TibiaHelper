@@ -53,6 +53,9 @@ SPAWN_ICON = 22  # px na ekranie: obrazek potwora na mapie ma stały rozmiar prz
 SPAWN_ICON_CELL = 12  # kratki: jeden obrazek na taki kwadrat, żeby setki obrazków nie zlały się w plamę
 
 
+BUTTON_ITEM = "button"  # item.setData(0, BUTTON_ITEM): klik w ten element nie jest klikiem w mapę
+
+
 def spawn_icon(sprite: QImage) -> QPixmap:
     """Znacznik na mapie: obrazek potwora w kółku z fioletową obwódką (widać go na każdym tle)."""
     pixmap = QPixmap(SPAWN_ICON, SPAWN_ICON)
@@ -102,8 +105,14 @@ class MapView(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
     def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
-        self._press_pos = event.position()
+        item = self.itemAt(event.position().toPoint())
+        # Element-przycisk na mapie (np. strzałka w Exiva finderze) sam obsługuje klik: to nie klik w mapę.
+        self._press_pos = None if item is not None and item.data(0) == BUTTON_ITEM else event.position()
         super().mousePressEvent(event)
+
+    def mouseDoubleClickEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        # Szybkie dwa kliknięcia to dla nas dwa zwykłe kliknięcia (np. mapa, a zaraz potem strzałka).
+        self.mousePressEvent(event)
 
     def mouseReleaseEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
         super().mouseReleaseEvent(event)

@@ -1,74 +1,75 @@
 """Narzędzie „Exiva finder”: gdzie może być fiendish potwór albo gracz (logika w core/finder.py).
 
-Gracz klika na mapie, gdzie stoi, rzuca exiva i klika kierunek z komunikatu. Każdy kolejny
-odczyt z innego miejsca zawęża obszar. Na mapie wszystko poza możliwym obszarem jest
-przyciemnione, a sam obszar podświetlony na zielono.
+Gracz klika na mapie, gdzie stoi: pojawia się gwiazdka z 8 strzałkami. Po rzuceniu exivy klika
+strzałkę w kierunku z komunikatu i wybiera z menu tekst, który pokazała gra (np. „is far to the
+north”). Gwiazdka to komunikaty bez kierunku („next to you”, „above you”). Każdy kolejny odczyt
+z innego miejsca zawęża obszar: reszta mapy jest przyciemniona, a obszar podświetlony na zielono.
+Pod mapą lista potworów, które mają tam miejsca występowania (z trudnością z Find Fiend).
 """
 
+import math
+from collections.abc import Callable
+from html import escape
 from pathlib import Path
 
-from PySide6.QtCore import QPointF, QRectF, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QPainterPath, QPen, QPolygonF
+from PySide6.QtCore import QPoint, QPointF, QRectF, Qt, QTimer, Signal
+from PySide6.QtGui import QBrush, QColor, QCursor, QFont, QPainterPath, QPen, QPolygonF
 from PySide6.QtWidgets import (
     QButtonGroup,
     QGraphicsItem,
+    QGraphicsPathItem,
     QGraphicsScene,
     QGraphicsSimpleTextItem,
-    QGridLayout,
     QHBoxLayout,
     QLabel,
+    QMenu,
     QPushButton,
     QVBoxLayout,
     QWidget,
 )
 
-from ..core.finder import Area, Direction, Distance, FloorHint, Reading, floor_ranges, possible_area
-from ..core.i18n import N_, tr
+from ..core.finder import (
+    DIFFICULTIES,
+    DIRECTIONS,
+    Area,
+    Direction,
+    Distance,
+    FloorHint,
+    Reading,
+    candidates,
+    floor_ranges,
+    message,
+    possible_area,
+)
+from ..core.i18n import tr
 from ..core.mapdata import floor_label, to_pixel
-from ..core.models import MAP_X_MIN, MAP_Y_MIN, MapPoint
+from ..core.models import MAP_X_MIN, MAP_Y_MIN, MapPoint, Monster
+from ..core.spawns import SOURCE_NOTE, Spawns
 from . import theme
-from .map_window import MapPanel
+from .map_window import BUTTON_ITEM, MapPanel
 from .qol_pages import _top_bar
 
 START = MapPoint(x=32369, y=32241, z=7, label="Thais")  # świątynia w Thais: punkt startowy mapy
 AREA_COLOR = "#69f0ae"  # jasna zieleń: dobrze widać ją i na wodzie, i na trawie
+STAR_COLOR = "#ffd54f"
 DIM = QColor(0, 0, 0, 150)  # przyciemnienie mapy poza możliwym obszarem
 MAX_READINGS_SHOWN = 4
-MARKER = 14  # px na ekranie: znacznik gracza ma stały rozmiar przy każdym przybliżeniu
+MAX_CANDIDATES = 8  # więcej nazw nie mieści się w wąskim oknie
+# Rozmiary w pikselach ekranu: gwiazdka i strzałki są tak samo duże przy każdym przybliżeniu.
+MARKER = 14
+STAR_RADIUS = 11
+ARROW_BASE, ARROW_TIP, ARROW_HALF_WIDTH = 19, 38, 8
+_ANGLES = {"E": 0, "NE": 45, "N": 90, "NW": 135, "W": 180, "SW": 225, "S": 270, "SE": 315}
 
-# Odległość -> napis na przycisku, podpowiedź z komunikatem z gry (po angielsku, jak w kliencie).
-_DISTANCES: tuple[tuple[Distance, str, str], ...] = (
-    ("close", N_("Blisko"), "5–100: „is to the north”"),
-    ("far", N_("Daleko"), "101–250: „is far to the north”"),
-    ("very_far", N_("B. daleko"), "251+: „is very far to the north”"),
+# Komunikaty pod strzałką: (odległość, piętro, ile kratek). Kolejność jak w menu.
+_ARROW_MESSAGES: tuple[tuple[Distance, FloorHint, str], ...] = (
+    ("close", "same", "5–100"),
+    ("far", "same", "101–250"),
+    ("very_far", "same", "251+"),
+    ("close", "up", "5–100"),
+    ("close", "down", "5–100"),
 )
-_FLOORS: tuple[tuple[FloorHint, str, str], ...] = (
-    ("same", N_("To piętro"), "„is to the north”"),
-    ("up", N_("Wyżej"), "„is above you” / „is on a higher level to the north”"),
-    ("down", N_("Niżej"), "„is below you” / „is on a lower level to the north”"),
-)
-# Siatka 3 x 3 jak róża wiatrów; środek to „obok” (0–4 kratki, bez kierunku).
-_COMPASS: tuple[tuple[Direction | None, str, int, int], ...] = (
-    ("NW", "↖", 0, 0), ("N", "↑", 0, 1), ("NE", "↗", 0, 2),
-    ("W", "←", 1, 0), (None, "•", 1, 1), ("E", "→", 1, 2),
-    ("SW", "↙", 2, 0), ("S", "↓", 2, 1), ("SE", "↘", 2, 2),
-)
-DIRECTION_NAMES = {
-    "N": N_("północ"), "NE": N_("północny wschód"), "E": N_("wschód"), "SE": N_("południowy wschód"),
-    "S": N_("południe"), "SW": N_("południowy zachód"), "W": N_("zachód"), "NW": N_("północny zachód"),
-}
-DISTANCE_NAMES = {"beside": N_("obok"), "close": N_("blisko"), "far": N_("daleko"), "very_far": N_("bardzo daleko")}
-
-
-def _chip(text: str, hint: str, group: QButtonGroup, checked: bool) -> QPushButton:
-    chip = QPushButton(text)
-    chip.setObjectName("chip")
-    chip.setCheckable(True)
-    chip.setChecked(checked)
-    chip.setToolTip(hint)
-    chip.setCursor(Qt.CursorShape.PointingHandCursor)
-    group.addButton(chip)
-    return chip
+_STAR_MESSAGES: tuple[tuple[FloorHint, str], ...] = (("same", "0–4"), ("up", "0–4"), ("down", "0–4"))
 
 
 def _floors_text(area: Area) -> str:
@@ -78,87 +79,126 @@ def _floors_text(area: Area) -> str:
     return ", ".join(parts)
 
 
+class _MapButton(QGraphicsPathItem):
+    """Kształt na mapie, który działa jak przycisk (strzałka albo gwiazdka); klik otwiera menu."""
+
+    def __init__(self, path: QPainterPath, color: QColor, on_click: Callable[[QPoint], None]) -> None:
+        super().__init__(path)
+        self._color = color
+        self._on_click = on_click
+        self.setData(0, BUTTON_ITEM)  # MapView nie potraktuje tego jako kliknięcia w mapę
+        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+        self.setAcceptHoverEvents(True)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setPen(QPen(QColor("#000000"), 1.5))
+        self.setBrush(color)
+        self.setZValue(8)
+
+    def hoverEnterEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        self.setBrush(QColor(theme.ACCENT))
+
+    def hoverLeaveEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        self.setBrush(self._color)
+
+    def mousePressEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        event.accept()  # bez tego Qt oddałby klik mapie (przeciąganie)
+
+    def mouseReleaseEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
+        # Menu dopiero po obsłudze kliknięcia: wybór w menu rysuje mapę od nowa i kasuje ten element,
+        # więc nie może się to stać w trakcie jego własnej funkcji (Qt by się wysypał).
+        pos = event.screenPos()
+        QTimer.singleShot(0, lambda: self._on_click(pos))
+
+
+def _arrow_path(direction: Direction) -> QPainterPath:
+    angle = math.radians(_ANGLES[direction])
+    # Minus przy y: na ekranie y rośnie w dół, a północ jest w górze.
+    ux, uy = math.cos(angle), -math.sin(angle)
+    px, py = -uy, ux  # prostopadle do strzałki
+    path = QPainterPath()
+    path.addPolygon(QPolygonF([
+        QPointF(ux * ARROW_TIP, uy * ARROW_TIP),
+        QPointF(ux * ARROW_BASE + px * ARROW_HALF_WIDTH, uy * ARROW_BASE + py * ARROW_HALF_WIDTH),
+        QPointF(ux * ARROW_BASE - px * ARROW_HALF_WIDTH, uy * ARROW_BASE - py * ARROW_HALF_WIDTH),
+    ]))
+    path.closeSubpath()
+    return path
+
+
+def _star_path() -> QPainterPath:
+    points = []
+    for index in range(10):
+        radius = STAR_RADIUS if index % 2 == 0 else STAR_RADIUS * 0.45
+        angle = math.radians(90 + index * 36)
+        points.append(QPointF(radius * math.cos(angle), -radius * math.sin(angle)))
+    path = QPainterPath()
+    path.addPolygon(QPolygonF(points))
+    path.closeSubpath()
+    return path
+
+
 class FinderPage(QWidget):
     back_requested = Signal()
+    monster_requested = Signal(object)  # Monster: kliknięta nazwa na liście „może to być”
 
     def __init__(self, maps_dir: Path, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._position: tuple[int, int, int] | None = None
         self._readings: list[Reading] = []
         self._area: Area | None = None
-        self._distance: Distance = "close"
-        self._floor: FloorHint = "same"
+        self._difficulty: str | None = None
+        self._monsters: dict[str, Monster] = {}
+        self._spawns = Spawns()
 
         title = QLabel(tr("Exiva finder (fiendish)"))
         title.setObjectName("title")
         info = QLabel(
-            tr("1. Kliknij na mapie, gdzie stoisz. 2. Rzuć exiva (np. „exiva moe res”). "
-               "3. Wybierz odległość i piętro, kliknij strzałkę z komunikatu. Potem podejdź gdzie indziej i powtórz. "
-               "Piętro czar podaje tylko z bliska (do 100 kratek)."),
+            tr("Kliknij na mapie, gdzie stoisz. Rzuć „exiva moe res”, kliknij strzałkę w stronę z komunikatu "
+               "i wybierz tekst, który pokazała gra. Gwiazdka to „next to you”, „above you” i „below you”. "
+               "Potem podejdź gdzie indziej i powtórz."),
             wordWrap=True,
         )
         info.setObjectName("muted")
 
-        # Odległość i piętro: przełączane „chipy” (zawsze zaznaczony jeden), strzałka dodaje odczyt.
-        distances = QHBoxLayout()
-        distances.setSpacing(3)
+        # Trudność: Find Fiend podaje ją, gdy gracz ma ukończony Bestiary tego potwora.
+        chips = QHBoxLayout()
+        chips.setSpacing(3)
         group = QButtonGroup(self)
-        for index, (key, label, hint) in enumerate(_DISTANCES):
-            chip = _chip(tr(label), hint, group, index == 0)
-            chip.clicked.connect(lambda _=False, k=key: self._set_distance(k))
-            distances.addWidget(chip)
-        distances.addStretch(1)
-        floors = QHBoxLayout()
-        floors.setSpacing(3)
-        group = QButtonGroup(self)
-        for index, (key, label, hint) in enumerate(_FLOORS):
-            chip = _chip(tr(label), hint, group, index == 0)
-            chip.clicked.connect(lambda _=False, k=key: setattr(self, "_floor", k))
-            floors.addWidget(chip)
-        floors.addStretch(1)
-
-        compass = QGridLayout()
-        compass.setSpacing(2)
-        self._compass: list[QPushButton] = []
-        for direction, arrow, row, column in _COMPASS:
-            button = QPushButton(arrow)
-            button.setFixedSize(34, 28)
-            button.setCursor(Qt.CursorShape.PointingHandCursor)
-            if direction is None:
-                button.setToolTip(tr("Obok (0–4 kratki): „is standing next to you” / „above you”"))
-            else:
-                button.setToolTip(tr(DIRECTION_NAMES[direction]))
-            button.clicked.connect(lambda _=False, d=direction: self._add_reading(d))
-            compass.addWidget(button, row, column)
-            self._compass.append(button)
+        for index, level in enumerate((None, *DIFFICULTIES)):
+            chip = QPushButton(level or tr("Każda"))
+            chip.setObjectName("chip")
+            chip.setCheckable(True)
+            chip.setChecked(index == 0)
+            chip.setCursor(Qt.CursorShape.PointingHandCursor)
+            chip.setToolTip(tr("Trudność z komunikatu Find Fiend (tylko przy ukończonym Bestiary tego potwora)"))
+            chip.clicked.connect(lambda _=False, lv=level: self._set_difficulty(lv))
+            group.addButton(chip)
+            chips.addWidget(chip)
+        chips.addStretch(1)
 
         undo = QPushButton(tr("↶ Cofnij"))
         undo.clicked.connect(self._undo)
         clear = QPushButton(tr("Wyczyść"))
         clear.clicked.connect(self._clear)
-        actions = QVBoxLayout()
+        actions = QHBoxLayout()
         actions.addWidget(undo)
         actions.addWidget(clear)
         actions.addStretch(1)
 
-        choices = QVBoxLayout()
-        choices.setSpacing(4)
-        choices.addLayout(distances)
-        choices.addLayout(floors)
-        choices.addStretch(1)
-        controls = QHBoxLayout()
-        controls.addLayout(compass)
-        controls.addLayout(choices, 1)
-        controls.addLayout(actions)
-
         self._status = QLabel(wordWrap=True)
         self._history = QLabel(wordWrap=True)
         self._history.setObjectName("muted")
+        # RichText z linkami: nazwy potworów są z pliku danych, więc przechodzą przez escape.
+        self._candidates = QLabel(wordWrap=True, textFormat=Qt.TextFormat.RichText)
+        self._candidates.setTextInteractionFlags(Qt.TextInteractionFlag.LinksAccessibleByMouse)
+        self._candidates.linkActivated.connect(self._open_candidate)
 
         self._map = MapPanel(maps_dir)
         self._map.tile_clicked.connect(self._set_position)
         self._map_started = False
-        source = QLabel(tr("Zasady exivy z TibiaWiki (CC BY-SA). Mapa: tibiamaps."), wordWrap=True)
+        source = QLabel(
+            tr("Zasady exivy z TibiaWiki (CC BY-SA). Mapa: tibiamaps.") + " " + tr(SOURCE_NOTE), wordWrap=True
+        )
         source.setObjectName("muted")
 
         layout = QVBoxLayout(self)
@@ -167,11 +207,21 @@ class FinderPage(QWidget):
         layout.addLayout(_top_bar(tr("← Narzędzia"), self.back_requested))
         layout.addWidget(title)
         layout.addWidget(info)
-        layout.addLayout(controls)
+        layout.addLayout(chips)
+        layout.addLayout(actions)
         layout.addWidget(self._status)
         layout.addWidget(self._history)
+        layout.addWidget(self._candidates)
         layout.addWidget(self._map, 1)
         layout.addWidget(source)
+        self._update()
+
+    def set_monsters(self, monsters: dict[str, Monster]) -> None:
+        self._monsters = monsters
+        self._update()
+
+    def set_spawns(self, spawns: Spawns) -> None:
+        self._spawns = spawns
         self._update()
 
     def showEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
@@ -182,22 +232,38 @@ class FinderPage(QWidget):
             self._map.start_free(tr("Exiva finder"), tr("Kliknij, gdzie stoisz"), START, self._draw_overlay)
             self._update()
 
-    def _set_distance(self, distance: Distance) -> None:
-        self._distance = distance
+    def _set_difficulty(self, level: str | None) -> None:
+        self._difficulty = level
         self._update()
 
     def _set_position(self, x: int, y: int, z: int) -> None:
         self._position = (x, y, z)
         self._update()
 
-    def _add_reading(self, direction: Direction | None) -> None:
+    def _add_reading(self, distance: Distance, direction: Direction | None, floor: FloorHint) -> None:
         if self._position is None:
             return
-        distance: Distance = "beside" if direction is None else self._distance
-        # Daleko czar nie mówi o piętrze, więc wybór piętra pomijamy.
-        floor = self._floor if distance in ("beside", "close") else "same"
         self._readings.append(Reading(*self._position, distance, direction, floor))
         self._recompute(fit=True)
+
+    def _show_menu(self, direction: Direction | None, screen_pos: QPoint) -> None:
+        menu = self._menu(direction)
+        menu.exec(screen_pos if not screen_pos.isNull() else QCursor.pos())
+
+    def _menu(self, direction: Direction | None) -> QMenu:
+        """Menu z komunikatami z gry dla klikniętej strzałki (albo gwiazdki, gdy direction=None)."""
+        menu = QMenu(self)
+        title = menu.addAction(tr("Co pokazała gra?"))
+        title.setEnabled(False)
+        if direction is None:
+            options = [("beside", floor, squares) for floor, squares in _STAR_MESSAGES]
+        else:
+            options = list(_ARROW_MESSAGES)
+        for distance, floor, squares in options:
+            # Tabulator: Qt pokazuje tekst po nim w prawej kolumnie menu (tu: ile kratek).
+            action = menu.addAction(f"…{message(distance, direction, floor)}\t{squares}")
+            action.triggered.connect(lambda _=False, d=distance, f=floor: self._add_reading(d, direction, f))
+        return menu
 
     def _undo(self) -> None:
         if self._readings:
@@ -221,16 +287,13 @@ class FinderPage(QWidget):
             last = self._readings[-1]
             x0, y0, x1, y1 = min(x0, last.x), min(y0, last.y), max(x1, last.x + 1), max(y1, last.y + 1)
             rect = QRectF(x0 - MAP_X_MIN, y0 - MAP_Y_MIN, x1 - x0, y1 - y0)
-            self._map.fit_rect(rect.adjusted(-10, -10, 10, 10))
+            self._map.fit_rect(rect.adjusted(-25, -25, 25, 25))
 
     def _update(self) -> None:
-        for button in self._compass:
-            button.setEnabled(self._position is not None)
-
         if self._position is None:
             self._status.setText(tr("Kliknij na mapie, gdzie stoisz."))
         elif not self._readings:
-            self._status.setText(tr("Rzuć exiva i kliknij strzałkę z komunikatu (środek = obok)."))
+            self._status.setText(tr("Rzuć exiva i kliknij strzałkę (albo gwiazdkę) zgodnie z komunikatem."))
         elif self._area is None or self._area.empty:
             self._status.setText(
                 tr("Odczyty się wykluczają. Cofnij ostatni albo wyczyść: fiend mógł zginąć albo inny jest teraz bliżej.")
@@ -243,14 +306,11 @@ class FinderPage(QWidget):
 
         lines = []
         for number, reading in enumerate(self._readings, start=1):
-            text = tr(DISTANCE_NAMES[reading.distance])
-            if reading.direction:
-                text += ", " + tr(DIRECTION_NAMES[reading.direction])
-            if reading.floor != "same":
-                text += ", " + (tr("wyżej") if reading.floor == "up" else tr("niżej"))
+            text = f"„…{message(reading.distance, reading.direction, reading.floor)}”"
             lines.append(f"{number}. {text} ({reading.x}, {reading.y}, {floor_label(reading.z)})")
         self._history.setText("\n".join(lines[-MAX_READINGS_SHOWN:]))
         self._history.setVisible(bool(lines))
+        self._update_candidates()
         if self._position is not None:
             x, y, z = self._position
             self._map.set_legend(tr("Stoisz: x {x}, y {y}, piętro {floor}", x=x, y=y, floor=floor_label(z)))
@@ -258,6 +318,32 @@ class FinderPage(QWidget):
             self._map.set_legend(tr("Kliknij, gdzie stoisz"))
         if self._map_started:
             self._map.redraw()
+
+    def _update_candidates(self) -> None:
+        area = self._area
+        if area is None or area.empty or not self._spawns.monsters:
+            self._candidates.hide()
+            return
+        found = candidates(area, self._spawns, self._monsters, self._difficulty)
+        if not found:
+            self._candidates.setText(tr("Żaden znany potwór{level} nie występuje w tym obszarze.",
+                                        level=f" ({self._difficulty})" if self._difficulty else ""))
+        else:
+            links = ", ".join(
+                f'<a href="{escape(monster.id)}">{escape(monster.name)}</a> ({count})'
+                for monster, count in found[:MAX_CANDIDATES]
+            )
+            more = len(found) - MAX_CANDIDATES
+            text = tr("Może to być: {list}", list=links)
+            if more > 0:
+                text += " " + tr("i {n} innych", n=more)
+            self._candidates.setText(text)
+        self._candidates.show()
+
+    def _open_candidate(self, monster_id: str) -> None:
+        monster = self._monsters.get(monster_id)
+        if monster is not None:
+            self.monster_requested.emit(monster)
 
     def _draw_overlay(self, scene: QGraphicsScene, z: int) -> None:
         rect = scene.sceneRect()
@@ -293,12 +379,23 @@ class FinderPage(QWidget):
         font.setPixelSize(9)
         font.setBold(True)
         for number, reading in enumerate(self._readings, start=1):
-            if reading.z == z:
-                self._marker(scene, reading.x, reading.y, QColor("#ffd54f"), str(number), font)
-        # Obecne miejsce tylko, gdy nie leży pod numerem odczytu (inaczej zasłoniłoby numer).
-        taken = {(r.x, r.y, r.z) for r in self._readings}
-        if self._position is not None and self._position[2] == z and self._position not in taken:
-            self._marker(scene, self._position[0], self._position[1], QColor(theme.ACCENT), "", font)
+            if reading.z == z and (reading.x, reading.y, reading.z) != self._position:
+                self._marker(scene, reading.x, reading.y, QColor("#90caf9"), str(number), font)
+        if self._position is not None and self._position[2] == z:
+            self._draw_star(scene, *self._position[:2])
+
+    def _draw_star(self, scene: QGraphicsScene, x: int, y: int) -> None:
+        px, py = to_pixel(x, y)
+        center = QPointF(px + 0.5, py + 0.5)
+        star = _MapButton(_star_path(), QColor(STAR_COLOR), lambda pos: self._show_menu(None, pos))
+        star.setToolTip("next to you / above you / below you")
+        star.setPos(center)
+        scene.addItem(star)
+        arrow_color = QColor(255, 255, 255, 210)
+        for direction in DIRECTIONS:
+            arrow = _MapButton(_arrow_path(direction), arrow_color, lambda pos, d=direction: self._show_menu(d, pos))
+            arrow.setPos(center)
+            scene.addItem(arrow)
 
     @staticmethod
     def _marker(scene: QGraphicsScene, x: int, y: int, color: QColor, text: str, font: QFont) -> None:
