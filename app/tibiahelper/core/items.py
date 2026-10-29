@@ -26,6 +26,12 @@ def best_sell_price(item: Item) -> int:
     return max((effective_price(t, item.value) or 0 for t in item.sell_to), default=0)
 
 
+def cheapest_buy_price(item: Item) -> int | None:
+    """Najtaniej, za ile któryś NPC to sprzedaje (None, gdy nikt tego nie sprzedaje)."""
+    prices = [p for t in item.buy_from if (p := effective_price(t, item.price))]
+    return min(prices, default=None)
+
+
 # Nazwa -> (filtr, klucz sortowania, malejąco?). Kolejność tu = kolejność w menu.
 # Polska nazwa jest kluczem; w menu pokazujemy tr(nazwa).
 ITEM_SORTS: dict[str, tuple[Callable[[Item], bool], Callable[[Item], object], bool]] = {
