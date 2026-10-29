@@ -91,15 +91,6 @@ def load_watched(path: Path) -> dict[str, WatchedBoss]:
     return watched
 
 
-def load_worlds(path: Path) -> list[str]:
-    """Światy do listy w ustawieniach (z data/boss_spawns.json). Zły wpis pomijamy."""
-    try:
-        worlds = json.loads(path.read_text(encoding="utf-8"))["worlds"]
-    except (OSError, ValueError, KeyError, TypeError):
-        return []
-    return sorted({w for w in map(clean_world, worlds if isinstance(worlds, list) else []) if w})
-
-
 def _respawn(value: object) -> tuple[int, int] | None:
     if value is None:
         return None

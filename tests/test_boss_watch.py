@@ -5,7 +5,7 @@ import urllib.error
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from generator.boss_spawns import active_worlds, build, is_world_spawn, plotted_bosses
+from generator.boss_spawns import build, is_world_spawn
 from tibiahelper.core import boss_watch
 from tibiahelper.core.boss_timers import (
     BossTimer,
@@ -22,7 +22,6 @@ from tibiahelper.core.boss_watch import (
     clean_world,
     find_sightings,
     load_watched,
-    load_worlds,
     parse_killstats,
     stats_day,
 )
@@ -171,13 +170,6 @@ def test_build_keeps_author_respawn():
     assert build(monsters, pages, old)["bosses"] == [{"monster": "tyrn", "respawn_days": [3, 7]}]
 
 
-def test_build_adds_plotted_bosses_with_window():
-    monsters = [{"id": "ghazbaran", "name": "Ghazbaran", "boss": True, "source_url": "https://tibia.fandom.com/wiki/Ghazbaran"}]
-    pages = {"Ghazbaran": "{{Infobox Creature\n| name = Ghazbaran\n}}"}
-    assert build(monsters, pages)["bosses"] == []
-    assert build(monsters, pages, plotted={"Ghazbaran"})["bosses"] == [{"monster": "ghazbaran", "respawn_days": [162, 176]}]
-
-
 def test_timer_window_and_warning():
     timer = make_timer(NOON, 7, 3)  # odwrotna kolejność też działa
     assert (timer.min_days, timer.max_days) == (3, 7)
@@ -228,20 +220,3 @@ def test_world_in_settings(tmp_path):
 
 def test_url_has_only_world_name():
     assert boss_watch.KILLSTATS_URL.startswith("https://api.tibiadata.com/")
-
-
-def test_bundled_worlds_and_respawn_windows():
-    worlds = load_worlds(ROOT / "data" / "boss_spawns.json")
-    assert "Antica" in worlds and len(worlds) > 50
-    watched = load_watched(ROOT / "data" / "boss_spawns.json")
-    assert watched["ferumbras"].respawn_days == (162, 176)
-    assert watched["ghazbaran"].respawn_days is not None  # wiki nie ma u niego spawntype, ale ma wykres
-
-
-def test_plotted_bosses_and_worlds():
-    assert plotted_bosses("<gallery>\nSpawn Frequency - The Imperor.png|The Imperor\nFoo.png|Bar\n</gallery>") == {"The Imperor"}
-    pages = {
-        "Antica": "{{Infobox World\n| name = Antica\n| type = Open PvP\n}}",
-        "Tenebra": "{{Infobox World\n| name = Tenebra\n| offline = May 2, 2016\n}}",
-    }
-    assert active_worlds(pages) == ["Antica"]

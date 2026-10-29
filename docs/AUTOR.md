@@ -71,11 +71,9 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
   Plik jedzie tylko z nowym .exe (nie ma go w aktualizacji danych): raidy zmieniają się rzadko.
 - `data/qol/`: gotowe ustawienia „Loot filter & market” (Yuukiciu). Aplikacja dopisuje je do `lootBlackWhitelist.json` i `itemprices.json` każdej postaci. Przy wydaniu .exe ten folder musi być dołączony obok `quests.json`. `data/qol/clientoptions.json` to ustawienia UI i hotkeyów autora (z jego `conf\clientoptions.json`), bez logowania, dźwięku, grafiki i okna; aplikacja podmienia nimi tylko te części pliku gracza.
 - `data/boss_spawns.json`: bossy, o których program powiadamia, gdy na świecie gracza kogoś zabiją
-  albo zginą (statystyki z TibiaData), i lista światów do ustawień. Robi go `python -m generator boss-spawns`
-  (pole `spawntype` z wiki: „Raid” albo „Unique” bez „Triggered”, plus bossy z wykresami „Spawn Frequency”).
-  Okna respawnu są w `generator/boss_spawns.py` (`RESPAWN_DAYS`, odczytane z tych wykresów). Okno wpisane ręcznie
-  w pliku, np. `{"monster": "tyrn", "respawn_days": [3, 7]}`, komenda zostawia. Bez okna gracz wpisuje je sam przy timerze.
-  Plik przychodzi do graczy tylko z nową wersją programu.
+  albo zginą (statystyki z TibiaData). Listę robi `python -m generator boss-spawns` (pole `spawntype` z wiki:
+  „Raid” albo „Unique” bez „Triggered”). Okno respawnu wpisujesz ręcznie, np. `{"monster": "tyrn", "respawn_days": [3, 7]}`;
+  komenda go nie kasuje. Bez okna gracz wpisuje je sam przy timerze. Plik przychodzi do graczy tylko z nową wersją programu.
 - Listy `items` (przedmioty) i `npcs` (NPC z pozycjami) są w `data/quests.json`. W edytorze zaznacz imię
   NPC w tekście kroku i kliknij „👤 NPC”: pinezka stanie tam, gdzie stoi ten NPC.
 
