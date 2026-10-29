@@ -1,10 +1,9 @@
 """Ustawienia okna: przezroczystość, motyw kolorystyczny, pozycja i rozmiar oraz język.
 
 Plik JSON w %APPDATA%/TibiaHelper/settings.json:
-    {"version": 1, "opacity": 0.9, "theme": "dark", "geometry": "<base64>", "language": "pl", "world": "Antica"}
+    {"version": 1, "opacity": 0.9, "theme": "dark", "geometry": "<base64>", "language": "pl"}
 "theme" to klucz motywu z ui/theme.py (nieznany klucz = motyw domyślny).
 "geometry" to wynik QWidget.saveGeometry() zapisany jako tekst base64.
-"world" to świat (serwer) do powiadomień o bossach; brak = powiadomienia wyłączone.
 Ten moduł nie zna Qt, żeby dało się go testować bez okna.
 """
 
@@ -13,7 +12,6 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 
-from .boss_watch import clean_world
 from .i18n import DEFAULT_LANGUAGE, LANGUAGES
 from .storage import write_json_atomic
 
@@ -31,7 +29,6 @@ class Settings:
     theme: str = DEFAULT_THEME
     geometry: str | None = None
     language: str = DEFAULT_LANGUAGE
-    world: str | None = None
 
 
 def clamp_opacity(value: float) -> float:
@@ -56,9 +53,7 @@ def load_settings(path: Path) -> Settings:
         language = raw.get("language", DEFAULT_LANGUAGE)
         if not isinstance(language, str) or language not in LANGUAGES:
             language = DEFAULT_LANGUAGE
-        # Zła nazwa świata (np. wpisana ręcznie w pliku) wyłącza powiadomienia o bossach.
-        world = clean_world(raw.get("world"))
-        return Settings(opacity=opacity, theme=theme, geometry=geometry, language=language, world=world)
+        return Settings(opacity=opacity, theme=theme, geometry=geometry, language=language)
     except (OSError, ValueError, TypeError, AttributeError) as exc:
         # Ustawienia łatwo odtworzyć, więc przy błędzie po prostu startujemy od domyślnych.
         log.warning("Nie można odczytać ustawień z %s: %s", path, exc)
@@ -72,7 +67,6 @@ def save_settings(path: Path, settings: Settings) -> None:
         "theme": settings.theme,
         "geometry": settings.geometry,
         "language": settings.language,
-        "world": clean_world(settings.world),
     }
     try:
         write_json_atomic(path, data)

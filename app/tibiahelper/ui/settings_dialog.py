@@ -1,9 +1,8 @@
 """Okno ustawień otwierane trybikiem ⚙ w nagłówku."""
 
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QComboBox, QDialog, QHBoxLayout, QLabel, QLineEdit, QPushButton, QSlider, QVBoxLayout
+from PySide6.QtWidgets import QComboBox, QDialog, QHBoxLayout, QLabel, QPushButton, QSlider, QVBoxLayout
 
-from ..core.boss_watch import clean_world
 from ..core.i18n import LANGUAGES, N_, current_language, load_catalog, tr
 from ..core.settings import MAX_OPACITY, MIN_OPACITY
 from .theme import THEMES, theme_key
@@ -17,11 +16,8 @@ class SettingsDialog(QDialog):
     language_changed = Signal(str)  # kod języka, np. "en"
 
     theme_changed = Signal(str)
-    world_changed = Signal(object)  # nazwa świata albo None (powiadomienia o bossach wyłączone)
 
-    def __init__(
-        self, opacity: float, data_version: int, language: str, theme: str, world: str | None = None, parent=None
-    ) -> None:
+    def __init__(self, opacity: float, data_version: int, language: str, theme: str, parent=None) -> None:
         super().__init__(parent)
         self.setWindowTitle(tr("Ustawienia"))
         # Dialog też musi być nad grą, inaczej schowa się pod oknem Tibii.
@@ -68,18 +64,6 @@ class SettingsDialog(QDialog):
         language_row.addStretch(1)
         language_row.addWidget(self._language)
 
-        # Świat do powiadomień o bossach. Wpis zapisujemy po wyjściu z pola (Enter albo klik obok),
-        # a nie przy każdej literze, bo każda zmiana świata to zapytanie do TibiaData.
-        self._world = QLineEdit(world or "", placeholderText=tr("np. Antica"), clearButtonEnabled=True)
-        self._world.editingFinished.connect(self._on_world)
-        world_row = QHBoxLayout()
-        world_row.addWidget(QLabel(tr("Świat (bossy)")))
-        world_row.addStretch(1)
-        world_row.addWidget(self._world)
-        self._world_hint = QLabel(wordWrap=True)
-        self._world_hint.setObjectName("muted")
-        self._show_world_hint(world)
-
         version = QLabel(tr("Wersja poradników: {n}", n=data_version))
         version.setObjectName("muted")
 
@@ -115,11 +99,6 @@ class SettingsDialog(QDialog):
             )
             + "<br>• "
             + tr(
-                "bossy na wybranym świecie: statystyki zabójstw z {tibiadata} (dane z tibia.com, © CipSoft), raz na dobę",
-                tibiadata='<a href="https://tibiadata.com/">TibiaData</a>',
-            )
-            + "<br>• "
-            + tr(
                 "ostatnie raporty graczy z {form} (przychodzą razem z aktualizacją poradników)",
                 form='<a href="https://docs.google.com/forms/d/e/1FAIpQLSdhU_EixKIDQvsA7Di0v8rWw1YeaPniMr8g02s3kUylfg_p6Q/viewform">Formularzy Google</a>',
             )
@@ -140,9 +119,6 @@ class SettingsDialog(QDialog):
         layout.addWidget(self._restart)
         layout.addSpacing(8)
         layout.addLayout(theme_row)
-        layout.addSpacing(8)
-        layout.addLayout(world_row)
-        layout.addWidget(self._world_hint)
         layout.addSpacing(12)
         layout.addWidget(version)
         layout.addWidget(sources)
@@ -151,23 +127,6 @@ class SettingsDialog(QDialog):
     def _on_slider(self, percent: int) -> None:
         self._show_value(percent)
         self.opacity_changed.emit(percent / 100)
-
-    def _on_world(self) -> None:
-        text = self._world.text().strip()
-        world = clean_world(text)
-        if text and world is None:
-            self._world_hint.setText(tr("Nazwa świata to same litery, np. Antica."))
-            return
-        if world:
-            self._world.setText(world)
-        self._show_world_hint(world)
-        self.world_changed.emit(world)
-
-    def _show_world_hint(self, world: str | None) -> None:
-        self._world_hint.setText(
-            tr("Powiadomienie, gdy boss (np. Tyrn) zabije kogoś na tym świecie albo zginie.") if world
-            else tr("Wpisz świat, żeby dostawać powiadomienia o bossach.")
-        )
 
     def _on_language(self, index: int) -> None:
         code = self._language.itemData(index)

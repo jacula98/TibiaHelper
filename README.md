@@ -21,10 +21,6 @@ do przeglądarki.
 - **Zakładka „Bossy”.** Bossy opisane przez autora: wymagania (z linkiem do questa), jak dojść (z trasą na mapie) i jak bić.
   Do tego klasa w Bosstiary, ile killi trzeba do Prowess, Expertise i Mastery, cooldown oraz czym bić.
   Loot i mapa są na karcie potwora. Lista ma wyszukiwarkę i filtr klasy (Bane, Archfoe, Nemesis).
-- **Powiadomienia o bossach.** Wpisz swój świat w ustawieniach (⚙). Raz na dobę program sprawdza statystyki
-  zabójstw z tibia.com (przez darmowe TibiaData) i, jeśli boss ze spawnem na świecie (np. Tyrn) kogoś zabił
-  albo zginął, pokazuje powiadomienie z dźwiękiem. Klik otwiera bossa. Tam ustawisz timer „Zabity” z oknem
-  respawnu (np. 3–7 dni); godzinę przed początkiem okna dostaniesz drugie powiadomienie.
 - **Zakładka „Przedmioty”.** Wyszukasz dowolny przedmiot i zobaczysz, któremu NPC go sprzedać i za ile
   (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada. Quest itemy, soul core, pojemniki i przedmioty
   bez handlu z NPC są domyślnie ukryte (do pokazania przyciskiem „Filtry”). Przedmiotów z fansite'ów nie ma wcale.
