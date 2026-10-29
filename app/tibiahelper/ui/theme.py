@@ -161,13 +161,13 @@ QLabel#muted {{ color: {t.muted}; }}
 QLabel#warning {{ color: {t.warning}; }}
 QLabel#sectionTitle {{ color: {t.muted}; font-size: 11px; font-weight: 600; }}
 
-QLineEdit, QSpinBox, QComboBox {{
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {{
     background: {t.surface};
     border: 1px solid {t.border};
     border-radius: {r(8)};
     padding: 6px 8px;
 }}
-QLineEdit:focus, QSpinBox:focus, QComboBox:focus {{ border-color: {t.accent}; }}
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {{ border-color: {t.accent}; }}
 QComboBox::drop-down {{ border: none; width: 20px; }}
 QComboBox::down-arrow {{ image: url("{ASSETS_DIR.as_posix()}/chevron-down.svg"); width: 10px; height: 6px; }}
 QComboBox QAbstractItemView {{
@@ -178,10 +178,10 @@ QComboBox QAbstractItemView {{
 }}
 QToolTip {{ background: {t.surface}; color: {t.text}; border: 1px solid {t.border}; padding: 4px; }}
 /* Pole tekstowe wewnątrz QSpinBox nie dostaje drugiej ramki ani odstępów. */
-QSpinBox QLineEdit {{ border: none; padding: 0; background: transparent; }}
+QSpinBox QLineEdit, QDoubleSpinBox QLineEdit {{ border: none; padding: 0; background: transparent; }}
 /* Bez strzałek: w ciemnym motywie wyglądały źle, a level i tak się wpisuje (albo kółkiem myszy). */
-QSpinBox::up-button, QSpinBox::down-button {{ width: 0; border: none; }}
-QSpinBox::up-arrow, QSpinBox::down-arrow {{ width: 0; height: 0; }}
+QSpinBox::up-button, QSpinBox::down-button, QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {{ width: 0; border: none; }}
+QSpinBox::up-arrow, QSpinBox::down-arrow, QDoubleSpinBox::up-arrow, QDoubleSpinBox::down-arrow {{ width: 0; height: 0; }}
 
 QPushButton, QToolButton {{
     background: {button};

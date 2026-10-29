@@ -37,6 +37,7 @@ from .hunt_pages import HuntEditor, HuntListPage, HuntPage
 from .item_pages import ItemListPage, ItemPage
 from .monster_pages import MonsterListPage, MonsterPage
 from .qol_pages import LootSettingsPage, MinimapPage, QolPage, UiHotkeysPage
+from .tools_pages import PartyLootPage, SkillPage, StaminaPage, StorePricePage, ToolsPage
 from .quest_editor import QuestEditor
 from .quest_list import QuestListPage
 from .quest_view import QuestView
@@ -76,6 +77,11 @@ class MainWindow(QMainWindow):
         self._monster_page = MonsterPage(sprites_dir(), maps_dir(), items_dir())
         self._item_list = ItemListPage(items_dir())
         self._item_page = ItemPage(items_dir(), npcs_dir(), sprites_dir(), maps_dir())
+        self._tools = ToolsPage()
+        self._store_price = StorePricePage()
+        self._party_loot = PartyLootPage()
+        self._stamina = StaminaPage()
+        self._skills = SkillPage()
         self._qol = QolPage()
         self._loot_settings = LootSettingsPage(bundled_qol_dir())
         self._minimap = MinimapPage()
@@ -95,6 +101,11 @@ class MainWindow(QMainWindow):
             self._monster_page,
             self._item_list,
             self._item_page,
+            self._tools,
+            self._store_price,
+            self._party_loot,
+            self._stamina,
+            self._skills,
             self._qol,
             self._loot_settings,
             self._minimap,
@@ -131,6 +142,16 @@ class MainWindow(QMainWindow):
         self._monster_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._home.items_requested.connect(lambda: self._stack.setCurrentWidget(self._item_list))
         self._item_list.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._home.tools_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
+        self._tools.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
+        self._tools.store_requested.connect(lambda: self._stack.setCurrentWidget(self._store_price))
+        self._store_price.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
+        self._tools.party_requested.connect(lambda: self._stack.setCurrentWidget(self._party_loot))
+        self._party_loot.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
+        self._tools.stamina_requested.connect(lambda: self._stack.setCurrentWidget(self._stamina))
+        self._stamina.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
+        self._tools.skills_requested.connect(lambda: self._stack.setCurrentWidget(self._skills))
+        self._skills.back_requested.connect(lambda: self._stack.setCurrentWidget(self._tools))
         self._home.qol_requested.connect(lambda: self._stack.setCurrentWidget(self._qol))
         self._qol.back_requested.connect(lambda: self._stack.setCurrentWidget(self._home))
         self._qol.loot_requested.connect(lambda: self._stack.setCurrentWidget(self._loot_settings))

@@ -1,4 +1,4 @@
-"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Hunt/Bestiary zones, Bossy, Przedmioty, Potwory, Quality of life)."""
+"""Ekran startowy: duże przyciski jeden pod drugim (Questy, Hunt/Bestiary zones, Bossy, Przedmioty, Potwory, Narzędzia, Quality of life)."""
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QWidget
@@ -10,6 +10,7 @@ class HomePage(QWidget):
     quests_requested = Signal()
     monsters_requested = Signal()
     items_requested = Signal()
+    tools_requested = Signal()
     qol_requested = Signal()
     bosses_requested = Signal()
     hunts_requested = Signal()
@@ -40,6 +41,10 @@ class HomePage(QWidget):
         monsters = _menu_button("🐉  " + tr("Potwory"), tr("HP, exp, słabości, loot i gdzie występują"))
         monsters.clicked.connect(self.monsters_requested)
         layout.addWidget(monsters)
+
+        tools = _menu_button("🧮  " + tr("Narzędzia"), tr("Store, podział lootu, stamina i skille"))
+        tools.clicked.connect(self.tools_requested)
+        layout.addWidget(tools)
 
         qol = _menu_button("✨  Quality of life", tr("Minimapa, loot filter, UI i hotkeye"))
         qol.clicked.connect(self.qol_requested)
