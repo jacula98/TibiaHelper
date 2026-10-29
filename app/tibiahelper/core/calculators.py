@@ -45,7 +45,8 @@ def parse_gold(text: str) -> int | None:
     if not raw:
         return None
     # Bez skrótu przecinki i kropki to tylko separatory tysięcy (tak pokazuje je Tibia).
-    if not raw.endswith("k"):
+    # Przy „k” też, gdy po nich są dokładnie 3 cyfry: „1,500k” to 1,500,000, a „1.5kk” to 1,500,000.
+    if not raw.endswith("k") or re.fullmatch(r"-?\d{1,3}([.,]\d{3})+k", raw):
         raw = raw.replace(",", "").replace(".", "")
     match = _AMOUNT.match(raw)
     if not match or match.group(3) not in _SUFFIXES:
