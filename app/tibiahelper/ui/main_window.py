@@ -20,22 +20,11 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import author
-from ..core.boss_watch import load_watched
 from ..core.bosses import BossEntry, boss_entries
 from ..core.i18n import tr
 from ..core.items import build_drops
 from ..core.models import Boss, Hunt, Item, Monster, Npc, Quest
-from ..core.paths import (
-    boss_timers_file,
-    boss_watch_file,
-    bundled_boss_spawns_file,
-    bundled_qol_dir,
-    bundled_raids_file,
-    items_dir,
-    maps_dir,
-    npcs_dir,
-    sprites_dir,
-)
+from ..core.paths import bundled_qol_dir, bundled_raids_file, items_dir, maps_dir, npcs_dir, sprites_dir
 from ..core.spawns import Spawns
 from ..core.repository import QuestFileError, load_quest_file
 from ..core.progress import ProgressStore
@@ -43,7 +32,6 @@ from ..core.raids import load_raid_data
 from ..core.reports import Report
 from ..core.settings import load_settings, save_settings
 from .boosted_bar import BoostedBar
-from .boss_alerts import AlertPopup, BossWatcher
 from .boss_pages import BossEditor, BossListPage, BossPage
 from .home_page import HomePage
 from .hunt_pages import HuntEditor, HuntListPage, HuntPage
@@ -146,13 +134,6 @@ class MainWindow(QMainWindow):
         self._boosted = BoostedBar(sprites_dir())
         self._boosted.monster_requested.connect(self._open_boosted)
         self._visible_bosses: dict[str, Boss] = {}
-        # Powiadomienia o bossach na wybranym świecie i timery respawnu.
-        self._watched_bosses = load_watched(bundled_boss_spawns_file())
-        self._watcher = BossWatcher(boss_watch_file(), boss_timers_file(), self)
-        self._boss_page.set_watcher(self._watcher)
-        self._alert_popup = AlertPopup(self)
-        self._watcher.alert.connect(self._alert_popup.show_alert)
-        self._alert_popup.open_requested.connect(self._open_boss_by_id)
 
         central = QWidget()
         layout = QVBoxLayout(central)
@@ -244,7 +225,6 @@ class MainWindow(QMainWindow):
         self._boosted.set_monsters(monsters)
         self._finder.set_monsters(monsters)
         self._visible_bosses = {boss.monster: boss for boss in bosses or []}
-        self._watcher.set_bosses(monsters, self._watched_bosses)
         self._boss_list.set_data(monsters, bosses or [])
         self._boss_page.set_quests(quests, data_version)
         self._hunt_list.set_hunts(hunts or [], monsters)
@@ -284,21 +264,6 @@ class MainWindow(QMainWindow):
         """Zaczyna pobierać dzisiejszy boosted (w tle). Osobno od __init__, żeby testy nie łączyły się z siecią."""
         self._boosted.start(cache)
 
-    def start_boss_watch(self) -> None:
-        """Zaczyna sprawdzać bossy na świecie z ustawień i timery. Osobno od __init__ (testy bez sieci)."""
-        self._watcher.set_world(self._settings.world)
-        self._watcher.start()
-
-    def _open_boss_by_id(self, monster_id: str) -> None:
-        """Klik w powiadomienie: strona bossa (z opisem autora, jeśli jest) i okno na wierzch."""
-        monster = self._monsters.get(monster_id)
-        if monster is None:
-            return
-        self._open_boss(BossEntry(monster, self._visible_bosses.get(monster_id)))
-        self.showNormal()
-        self.raise_()
-        self.activateWindow()
-
     def _open_boosted(self, monster: Monster) -> None:
         # Boss opisany przez autora: jego karta z trasą i strategią. Inaczej zwykła karta potwora.
         boss = self._visible_bosses.get(monster.id)
@@ -329,15 +294,9 @@ class MainWindow(QMainWindow):
 
     def _open_settings(self) -> None:
         dialog = SettingsDialog(
-            self._settings.opacity,
-            self._data_version,
-            self._settings.language,
-            self._settings.theme,
-            self._settings.world,
-            self,
+            self._settings.opacity, self._data_version, self._settings.language, self._settings.theme, self
         )
         dialog.opacity_changed.connect(self._set_opacity)
-        dialog.world_changed.connect(self._set_world)
         dialog.language_changed.connect(self._set_language)
         dialog.theme_changed.connect(self._set_theme)
         dialog.exec()
@@ -347,10 +306,6 @@ class MainWindow(QMainWindow):
     def _set_opacity(self, opacity: float) -> None:
         self._settings.opacity = opacity
         self.setWindowOpacity(opacity)
-
-    def _set_world(self, world: object) -> None:
-        self._settings.world = world if isinstance(world, str) else None
-        self._watcher.set_world(self._settings.world)
 
     def _set_language(self, language: str) -> None:
         # Tylko zapis: nowy język działa od następnego uruchomienia (teksty są już w oknach).

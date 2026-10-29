@@ -48,7 +48,6 @@ from ..core.monsters import download_missing, sprite_path
 from ..core.progress import ProgressStore
 from ..core.reports import boss_report_url, boss_subject
 from . import theme
-from .boss_alerts import BossTimerBox, BossWatcher
 from .map_window import MapPanel
 from .monster_grid import MonsterGrid
 from .monster_pages import PAGE_SPRITE, header_html
@@ -145,8 +144,6 @@ class BossPage(QWidget):
     ) -> None:
         super().__init__(parent)
         self._sprites_dir = sprites_dir
-        self._author_mode = author_mode
-        self._timer_box: BossTimerBox | None = None
         # Postęp questów: wymagane questy są zielone, gdy gracz je odhaczył.
         self._progress = progress
         self._quests: dict[str, Quest] = {}
@@ -195,7 +192,6 @@ class BossPage(QWidget):
         column.setContentsMargins(0, 0, 4, 0)
         column.addLayout(header)
         column.addWidget(self._body)
-        self._timer_at = column.count()
         column.addWidget(self._route_list)
         column.addWidget(self._map)
         column.addWidget(self._strategy)
@@ -238,13 +234,6 @@ class BossPage(QWidget):
     def set_report_feed(self, feed: ReportFeed) -> None:
         self._reports.set_feed(feed)
 
-    def set_watcher(self, watcher: BossWatcher) -> None:
-        """Sekcja „na serwerze i timer respawnu” (powiadomienia o bossach)."""
-        self._timer_box = BossTimerBox(watcher)
-        self._column.insertWidget(self._timer_at, self._timer_box)
-        if self.entry is not None:
-            self._timer_box.show_boss(self.entry.monster.id)
-
     def show_boss(self, entry: BossEntry) -> None:
         self.entry = entry
         self._reports.set_subject(boss_subject(entry.monster))
@@ -253,8 +242,6 @@ class BossPage(QWidget):
         self._elements = ElementBars(entry.monster)
         self._column.insertWidget(self._elements_at, self._elements)
         self._render()
-        if self._timer_box is not None:
-            self._timer_box.show_boss(entry.monster.id)
         self._scroll.verticalScrollBar().setValue(0)
         self._route = numbered(entry.boss.route if entry.boss else [])
         labeled = [point for point in self._route if point.label]
@@ -279,7 +266,7 @@ class BossPage(QWidget):
         monster = self.entry.monster
         self._sprite.set_path(sprite_path(self._sprites_dir, monster.id))
         self._header.setText(header_html(monster))
-        self._body.setText(boss_html(self.entry, self._quests, self._progress, self._author_mode))
+        self._body.setText(boss_html(self.entry, self._quests, self._progress))
         self._route_list.setText(route_html(self.entry.boss.route if self.entry.boss else []))
         self._strategy.setText(strategy_html(self.entry.boss))
         self._source.setText(
@@ -313,17 +300,13 @@ class BossPage(QWidget):
             QDesktopServices.openUrl(QUrl(boss_report_url(self.entry.monster)))
 
 
-def boss_html(entry: BossEntry, quests: dict[str, Quest], progress: ProgressStore, author_mode: bool = True) -> str:
-    """Bosstiary, cooldown i opis autora. Każdy tekst z danych przechodzi przez escape.
-
-    Gracz widzi bossa bez opisu autora tylko po kliknięciu w powiadomienie „boss na serwerze”.
-    """
+def boss_html(entry: BossEntry, quests: dict[str, Quest], progress: ProgressStore) -> str:
+    """Bosstiary, cooldown i opis autora. Każdy tekst z danych przechodzi przez escape."""
     monster, boss = entry.monster, entry.boss
     parts = []
-    # Notki edytora tylko dla autora.
-    if author_mode and boss is None:
+    if boss is None:
         parts.append(_note("Nie dodany: gracze go nie widzą. Kliknij „Edytuj”, żeby dodać."))
-    elif author_mode and not boss.is_visible:
+    elif not boss.is_visible:
         parts.append(_note("Szkic: gracze go nie widzą, dopóki nie oznaczysz go jako gotowego."))
     parts.append(_section("BOSSTIARY"))
     if monster.bosstiary_class in BOSSTIARY_KILLS:
