@@ -48,6 +48,7 @@ python -m generator spawns                       # miejsca występowania potwor�
 python -m generator items                        # przedmioty: ceny, kto kupuje/sprzedaje, obrazki (po import-all)
 python -m generator npcs                         # NPC z pozycjami i obrazkami (pinezki, „komu sprzedać”)
 python -m generator hunts                        # miejsca huntów (Hunt/Bestiary zones); trasa i uwagi autora zostają
+python -m generator boss-spawns                  # bossy ze spawnem na świecie (powiadomienia o bossach)
 python -m generator raids                        # raidy i world change do data/raids.json (Narzędzia → Raidy)
 python -m generator monster "Skeleton"           # dodaj/odśwież jednego potwora
 python -m generator add-draft "Katana Quest"     # pobiera stronę + /Spoiler, dodaje quest jako draft
@@ -69,6 +70,10 @@ Wtedy: `fetch --refresh`, poprawka kroków i ponownie `review`.
 - `data/raids.json`: raidy (komunikaty i czasy fal) i world change (komunikaty Towncryera, The World Board, opis) z TibiaWiki.
   Plik jedzie tylko z nowym .exe (nie ma go w aktualizacji danych): raidy zmieniają się rzadko.
 - `data/qol/`: gotowe ustawienia „Loot filter & market” (Yuukiciu). Aplikacja dopisuje je do `lootBlackWhitelist.json` i `itemprices.json` każdej postaci. Przy wydaniu .exe ten folder musi być dołączony obok `quests.json`. `data/qol/clientoptions.json` to ustawienia UI i hotkeyów autora (z jego `conf\clientoptions.json`), bez logowania, dźwięku, grafiki i okna; aplikacja podmienia nimi tylko te części pliku gracza.
+- `data/boss_spawns.json`: bossy, o których program powiadamia, gdy na świecie gracza kogoś zabiją
+  albo zginą (statystyki z TibiaData). Listę robi `python -m generator boss-spawns` (pole `spawntype` z wiki:
+  „Raid” albo „Unique” bez „Triggered”). Okno respawnu wpisujesz ręcznie, np. `{"monster": "tyrn", "respawn_days": [3, 7]}`;
+  komenda go nie kasuje. Bez okna gracz wpisuje je sam przy timerze. Plik przychodzi do graczy tylko z nową wersją programu.
 - Listy `items` (przedmioty) i `npcs` (NPC z pozycjami) są w `data/quests.json`. W edytorze zaznacz imię
   NPC w tekście kroku i kliknij „👤 NPC”: pinezka stanie tam, gdzie stoi ten NPC.
 
