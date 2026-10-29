@@ -24,6 +24,10 @@ do przeglądarki.
 - **Zakładka „Przedmioty”.** Wyszukasz dowolny przedmiot i zobaczysz, któremu NPC go sprzedać i za ile
   (z miejscem na mapie), gdzie go kupić i z jakich potworów wypada. Quest itemy, soul core, pojemniki i przedmioty
   bez handlu z NPC są domyślnie ukryte (do pokazania przyciskiem „Filtry”). Przedmiotów z fansite'ów nie ma wcale.
+- **Zakładka „Narzędzia”.** Kalkulatory: „Cena ze Store” (ile goldów i pieniędzy kosztuje rzecz za Tibia Coins
+  i czy taniej wyjdzie Market), „Podział lootu” (wklejasz Party Hunt Analyzer, program mówi, kto komu ile przelewa,
+  i kopiuje komendę `transfer` dla bankiera), „Stamina” (ile być offline do wybranej staminy i o której będzie gotowa)
+  oraz „Skille” (ile exercise weapons i za ile do wybranego poziomu skilla).
 - **Zakładka „Quality of life”.** „TibiaMaps”: zaznaczasz, czy chcesz markery i siatkę (grid overlay),
   i klikasz „Wgraj mapę”. Program sam pobiera pełną minimapę z [tibiamaps.io](https://tibiamaps.io/) i wgrywa ją
   do Tibii (`%LOCALAPPDATA%\Tibia\packages\Tibia\minimap`, stara minimapa trafia raz do `minimap.tibiahelper-backup`).
