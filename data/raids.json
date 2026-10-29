@@ -1,0 +1,3140 @@
+{
+  "data_version": 3,
+  "raids": [
+    {
+      "id": "wasp-and-bear-raid-near-ab-dendriel",
+      "name": "Wasp and Bear Raid near Ab'Dendriel",
+      "area": "Ab'Dendriel",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Forest animals spread out close to Ab'Dendriel!"
+        }
+      ],
+      "creatures": [
+        "Bear",
+        "Wasp"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ab'Dendriel_Raids",
+      "subarea": "Ab'Dendriel Surroundings",
+      "description": "First a wave of ~30 Wasps and then a wave of ~30 Bears spawn west outside Ab'Dendriel."
+    },
+    {
+      "id": "war-wolf-raid-on-ab-dendriel",
+      "name": "War Wolf Raid on Ab'Dendriel",
+      "area": "Ab'Dendriel",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Many aggressive beasts are roaming south of Ab'Dendriel! Take care!"
+        },
+        {
+          "at": 60,
+          "message": ""
+        },
+        {
+          "at": 120,
+          "message": ""
+        },
+        {
+          "at": 180,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Wolf",
+        "War Wolf"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ab'Dendriel_Raids",
+      "subarea": "Ab'Dendriel Surroundings",
+      "description": "A total of ~70 Wolves and ~35 War Wolves spawn during this raid."
+    },
+    {
+      "id": "dragon-raid-on-draconia",
+      "name": "Dragon raid on Draconia",
+      "area": "Ab'Dendriel",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There are dragons rising in Draconia!"
+        }
+      ],
+      "creatures": [
+        "Dragon",
+        "Dragon Lord",
+        "Dragon Hatchling"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ab'Dendriel_Raids",
+      "subarea": "Draconia",
+      "description": "Spawns 4 groups consisting of 2 dragons and 3 hatchlings each, in various places on ground level. Also adds 2 dragon lords to each floor of the tower in the north part."
+    },
+    {
+      "id": "skeleton-raid-near-ankrahmun",
+      "name": "Skeleton Raid near Ankrahmun",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Some skeletons are assembling north of Ankrahmun!"
+        }
+      ],
+      "creatures": [
+        "Ghoul",
+        "Ghost",
+        "Goblin",
+        "Skeleton"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Southern Darama Desert",
+      "description": "Various undead assemble north of Ankrahmun, close to the mountain passage towards Darashia."
+    },
+    {
+      "id": "terramite-raid-near-ankrahmun",
+      "name": "Terramite Raid near Ankrahmun",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Something is moving under the surface in the sand north of Ankrahmun!"
+        },
+        {
+          "at": 600,
+          "message": "Terramites north of Ankrahmun!"
+        }
+      ],
+      "creatures": [
+        "Terramite"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Southern Darama Desert",
+      "description": "Terramites will raid the desert near the Darama Terramite Cave.<br> A total of around 100 terramites spawn during this raid. (30 after the first message and 70 after the second message in two consecutive waves seconds apart)."
+    },
+    {
+      "id": "scarab-raid-near-ankrahmun",
+      "name": "Scarab Raid near Ankrahmun",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Unusual frequent scarab sightings at the gates of Ankrahmun."
+        },
+        {
+          "at": 360,
+          "message": "Ancient scarabs are leading an attack on Ankrahmun."
+        },
+        {
+          "at": 480,
+          "message": "Ancient scarabs are leading an attack on Ankrahmun."
+        },
+        {
+          "at": 600,
+          "message": "Ancient scarabs are leading an attack on Ankrahmun."
+        }
+      ],
+      "creatures": [
+        "Larva",
+        "Scarab",
+        "Ancient Scarab"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Southern Darama Desert",
+      "description": "The sands of the Kha'labal contain many scarabs. Sometimes they will find their way to the surface and pose a great amount of danger to anyone caught in their path. During the first phase, progressively stronger waves of Larvae, followed by Scarabs, and finally one wave with Scarabs and the first one of the Ancient Scarabs appear. After this point, several waves of Scarabs and Ancient Scarabs app…"
+    },
+    {
+      "id": "nomad-raid-near-ankrahmun",
+      "name": "Nomad Raid near Ankrahmun",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Nomad scouts have been sighted close to the gates to Ankrahmun."
+        },
+        {
+          "at": 180,
+          "message": ""
+        },
+        {
+          "at": 360,
+          "message": ""
+        },
+        {
+          "at": 480,
+          "message": "The desert nomads are launching a full scale attack on Ankrahmun. Some might even have slipped through the defences!"
+        }
+      ],
+      "creatures": [
+        "Nomad (Basic)"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Southern Darama Desert",
+      "description": "From time to time the Nomads of the desert find their way to Ankrahmun and try to invade the city walls."
+    },
+    {
+      "id": "ancient-scarab-raid",
+      "name": "Ancient Scarab Raid",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Something is crawling deep in the Ankrahmun Scarab caves."
+        }
+      ],
+      "creatures": [
+        "Ancient Scarab"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Daramian Scarab Caves",
+      "description": "Deep inside the scarab cave the Ancient Scarab's population has grown."
+    },
+    {
+      "id": "gargoyle-raid-in-oasis-tomb",
+      "name": "Gargoyle Raid in Oasis Tomb",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There is something stony moving down in the Ankrahmun Rahemos tombs."
+        },
+        {
+          "at": 150,
+          "message": "Gargoyle attack in the Ankrahmun Rahemos tombs!"
+        }
+      ],
+      "creatures": [
+        "Gargoyle"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Ankrahmun Pharaoh Tombs",
+      "description": "Around 70 Gargoyles spawn on the second hunting floor, the one before the flame teleport."
+    },
+    {
+      "id": "slime-raid-in-shadow-tomb",
+      "name": "Slime Raid in Shadow Tomb",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There is something slimy going on in the Ankrahmun Mahrdis tombs."
+        },
+        {
+          "at": 300,
+          "message": "Slime attack in the Ankrahmun Mahrdis tombs!"
+        }
+      ],
+      "creatures": [
+        "Slime"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Ankrahmun Pharaoh Tombs",
+      "description": "About 35 Slimes spawn on the second hunting level, spread out over the whole floor."
+    },
+    {
+      "id": "vampire-raid-in-shadow-tomb",
+      "name": "Vampire Raid in Shadow Tomb",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Cold bodies with long teeth have lowered the temperature down in the Ankrahmun Mahrdis tombs."
+        },
+        {
+          "at": 300,
+          "message": "Cold bodies with long teeth. Many teeth. Down in the Ankrahmun Mahrdis tombs."
+        }
+      ],
+      "creatures": [],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Ankrahmun Pharaoh Tombs",
+      "description": "Vampires will raid the third and fourth floor of the Shadow Tomb."
+    },
+    {
+      "id": "bonebeast-raid-in-mountain-tomb",
+      "name": "Bonebeast Raid in Mountain Tomb",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Bonebeasts are rattling down in the Ankrahmun Dipthrah tombs."
+        },
+        {
+          "at": 500,
+          "message": "Bonebeasts roaming around in the Ankrahmun Dipthrah tombs."
+        }
+      ],
+      "creatures": [
+        "Bonebeast"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Ankrahmun Pharaoh Tombs",
+      "description": "Bonebeasts will raid the fourth floor of the Mountain Tomb. Note that to reach the fourth floor you will need to pull all the levers on the floor above. Approximately 68 bonebeasts spawn in the entire raid."
+    },
+    {
+      "id": "necromancer-raid-in-peninsula-tomb",
+      "name": "Necromancer Raid in Peninsula Tomb",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Necromancer attack in the Ankrahmun Omruc tombs!"
+        }
+      ],
+      "creatures": [
+        "Necromancer"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Ankrahmun Pharaoh Tombs"
+    },
+    {
+      "id": "cobra-raid-in-mountain-tomb",
+      "name": "Cobra Raid in Mountain Tomb",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There's something sizzling in the Ankrahmun Dipthrah tombs."
+        },
+        {
+          "at": 300,
+          "message": "Even more sizzling in the Ankrahmun Dipthrah tombs."
+        },
+        {
+          "at": 420,
+          "message": "Poison overflow in the Ankrahmun Dipthrah tombs!"
+        }
+      ],
+      "creatures": [
+        "Cobra"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Ankrahmun Pharaoh Tombs",
+      "description": "Cobras will raid the first and second floor of the Mountain Tomb. Approximately 100 cobras spawn in the entire raid."
+    },
+    {
+      "id": "vampire-raid-in-tarpit-tomb",
+      "name": "Vampire Raid in Tarpit Tomb",
+      "area": "Ankrahmun",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There's a sudden ice cold wind in the Ankrahmun Morguthis tombs!"
+        },
+        {
+          "at": 300,
+          "message": "Some vampires appeared in Ankrahmun Morguthis tombs!"
+        }
+      ],
+      "creatures": [
+        "Vampire"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Ankrahmun_Raids",
+      "subarea": "Ankrahmun Pharaoh Tombs",
+      "description": "Vampires will raid the Tarpit Tomb."
+    },
+    {
+      "id": "troll-raid-north-west-of-carlin",
+      "name": "Troll Raid North-West of Carlin",
+      "area": "Carlin",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Trolls trolling north-west of Carlin!"
+        },
+        {
+          "at": 120,
+          "message": "Even more Trolls north-west of Carlin!"
+        },
+        {
+          "at": 180,
+          "message": "Beware! Troll Champions north-west of Carlin!"
+        }
+      ],
+      "creatures": [
+        "Troll",
+        "Troll Guard",
+        "Troll Champion"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Carlin_Raids",
+      "subarea": "Carlin Surroundings",
+      "description": "A few waves of Trolls will appear between the Nordic Stronghold and the Nordic Ferry."
+    },
+    {
+      "id": "wasp-raid-north-of-carlin",
+      "name": "Wasp Raid North of Carlin",
+      "area": "Carlin",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Some wasps have been found north of Carlin. There is some loud buzzing in the air."
+        },
+        {
+          "at": 120,
+          "message": ""
+        },
+        {
+          "at": 250,
+          "message": "Buzzing madness north of Carlin! Be careful if you're allergic!"
+        },
+        {
+          "at": 300,
+          "message": "Willi Wasp the Wicked has arrived!"
+        }
+      ],
+      "creatures": [
+        "Wasp",
+        "Willi Wasp"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Carlin_Raids",
+      "subarea": "Carlin Surroundings"
+    },
+    {
+      "id": "lesser-undead-raid-on-ghostlands",
+      "name": "Lesser Undead Raid on Ghostlands",
+      "area": "Carlin",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There is a slight uneven energy in the ghostlands west of Carlin. Something is going to happen soon."
+        },
+        {
+          "at": 180,
+          "message": "Skeletons appeared in the ghostlands. Something is wrong there!"
+        },
+        {
+          "at": 280,
+          "message": "Now the ghostlands are full of ghouls! Seems like there is a massive outburst of negative energy there!"
+        },
+        {
+          "at": 600,
+          "message": ""
+        },
+        {
+          "at": 720,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Skeleton",
+        "Ghoul",
+        "Ghost",
+        "Demon Skeleton"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Carlin_Raids",
+      "subarea": "Ghostlands",
+      "description": "Five waves of weaker undead appear, the last two waves are not announced. Unannounced waves are concentrated in [https://tibia.fandom.com/wiki/Mapper?coords=125.195-124.83-7-2-1-1&mark1=125.180-124.77-7-7&mark2=125.201-124.73-7-7&mark3=125.206-124.90-7-7 these spots]."
+    },
+    {
+      "id": "undead-raid-on-ghostlands",
+      "name": "Undead Raid on Ghostlands",
+      "area": "Carlin",
+      "waves": [
+        {
+          "at": 0,
+          "message": "A disturbance in the ether stirs up the undead of the Ghostlands."
+        },
+        {
+          "at": 420,
+          "message": "The undead are reclaiming the Ghostlands once more!"
+        },
+        {
+          "at": 900,
+          "message": "The dreaded Banshees and their undead retinue are unleashed in the Ghostland."
+        },
+        {
+          "at": 1200,
+          "message": "Banshees wish to feast on the souls of the living! Fight them in the Ghostlands or abandon all hope!"
+        }
+      ],
+      "creatures": [
+        "Ghoul",
+        "Stalker",
+        "Ghost",
+        "Mummy",
+        "Demon Skeleton",
+        "Lich",
+        "Banshee"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Carlin_Raids",
+      "subarea": "Ghostlands",
+      "description": "thumb|right|A brave warrior died by many undeads monsters. There is continual unrest in the Ghostlands west of Carlin. It is inevitable that this unrest and anger will sometimes spill over into the land of the living."
+    },
+    {
+      "id": "orc-raid-in-the-woods",
+      "name": "Orc Raid in the Woods",
+      "area": "Carlin",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Some orcs are assembling in the woods between Carlin and Northport."
+        },
+        {
+          "at": 450,
+          "message": "Orcs are attacking Carlin from the north-east!"
+        }
+      ],
+      "creatures": [
+        "Orc",
+        "Orc Shaman",
+        "Orc Berserker",
+        "Orc Leader"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Carlin_Raids",
+      "subarea": "Fields of Glory"
+    },
+    {
+      "id": "amazon-raid-north-of-carlin",
+      "name": "Amazon Raid North of Carlin",
+      "area": "Carlin",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Amazons are converging north of Carlin."
+        },
+        {
+          "at": 240,
+          "message": ""
+        },
+        {
+          "at": 480,
+          "message": ""
+        },
+        {
+          "at": 720,
+          "message": "Amazon attack north of Carlin!"
+        }
+      ],
+      "creatures": [
+        "Amazon"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Carlin_Raids",
+      "subarea": "Fields of Glory",
+      "description": "Amazons will raid near the Amazon Camp (Carlin)."
+    },
+    {
+      "id": "nimmersat-s-lair-raid-north-of-carlin",
+      "name": "Nimmersat's Lair raid North of Carlin",
+      "area": "Carlin",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The dragon Nimmersatt is distracted! Help to breach its lair! Join the heist at the coast north of Carlin!"
+        }
+      ],
+      "creatures": [],
+      "source_url": "https://tibia.fandom.com/wiki/Carlin_Raids",
+      "subarea": "Ice Islands",
+      "description": "Rascalio will take you to Nimmersatt's Lair during this raid."
+    },
+    {
+      "id": "lions-west-of-darashia",
+      "name": "Lions west of Darashia",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Hungry lions scout the western Darashian desert. Travellers beware!"
+        },
+        {
+          "at": 250,
+          "message": "Packs of hungry lions stalk Darashia's western desert. Be on your guard!"
+        },
+        {
+          "at": 300,
+          "message": "Hear the roar of Zomba, king of the lions, roaming the Darashia desert!"
+        }
+      ],
+      "creatures": [
+        "Lion",
+        "Zomba"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Northern Darama Desert"
+    },
+    {
+      "id": "necromancers-and-liches-in-deeper-catacombs",
+      "name": "Necromancers and Liches in Deeper Catacombs",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "A necromancer prepares to wake the dead in a crypt below Darashia!"
+        },
+        {
+          "at": 180,
+          "message": ""
+        },
+        {
+          "at": 300,
+          "message": "How terrible! Liches have risen from their graves in the Darashian crypts!"
+        }
+      ],
+      "creatures": [
+        "Necromancer",
+        "Lich"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Northern Darama Desert",
+      "description": "This raid takes place in the Darashia Deeper Catacombs. There are 1 and then 5 Necromancers (spawn in ) and after that 4 Liches (spawn in - top left and right room and middle left and right room) per raid."
+    },
+    {
+      "id": "pirates-in-darashia",
+      "name": "Pirates in Darashia",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Pillage and plunder! Pirates have been sighted north of Darashia!"
+        },
+        {
+          "at": 60,
+          "message": ""
+        },
+        {
+          "at": 120,
+          "message": ""
+        },
+        {
+          "at": 180,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Pirate Marauder",
+        "Pirate Cutthroat",
+        "Pirate Buccaneer"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Northern Darama Desert"
+    },
+    {
+      "id": "undead-horde-west-of-darashia",
+      "name": "Undead Horde West of Darashia",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Hordes of undead invade from the west of Darashia!"
+        },
+        {
+          "at": 240,
+          "message": ""
+        },
+        {
+          "at": 360,
+          "message": ""
+        },
+        {
+          "at": 480,
+          "message": "The undead are attacking Darashia!"
+        },
+        {
+          "at": 600,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Skeleton",
+        "Ghoul",
+        "Crypt Shambler",
+        "Demon Skeleton",
+        "Mummy",
+        "Bonelord",
+        "Vampire",
+        "Bonebeast",
+        "Necromancer",
+        "Lich"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Northern Darama Desert",
+      "description": "Ever since their defeat and banishment, the Brotherhood of Bones and their Undead armies in Drefia have constantly sought vengeance upon their enemies. Even though the humans are not their primary target, they will take every opportunity to attack and kill them.<br /> Around 55 Skeletons, 51 ghouls, 38 Crypt Shamblers, 20 Demon Skeletons, 17 bonelords, 15 vampires, 9 Necromancers, 5 Mummys, 4 bon…"
+    },
+    {
+      "id": "djinn-raid",
+      "name": "Djinn Raid",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There is a sudden rise in Djinn population in Kha'zeel!"
+        },
+        {
+          "at": 300,
+          "message": "Djinnvasion in Ashta'daramai!"
+        },
+        {
+          "at": 400,
+          "message": "Djinnvasion in Mal'ouquah!"
+        }
+      ],
+      "creatures": [],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Ashta'daramai",
+      "description": "They spawn in the underground levels of the towers."
+    },
+    {
+      "id": "minotaurs-raid",
+      "name": "Minotaurs Raid",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Minotaurs call to arms in the north of Darashia!"
+        },
+        {
+          "at": 120,
+          "message": "War cries echo from the Minotaurs' retreat in Darashia's north!"
+        },
+        {
+          "at": 220,
+          "message": "Wrathful Minotaurs swarm the northern desert of Darashia!"
+        },
+        {
+          "at": 280,
+          "message": "Merciless Minotaurs sally forth from their Darashian retreat!"
+        }
+      ],
+      "creatures": [
+        "Minotaur",
+        "Minotaur Archer",
+        "Minotaur Guard"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Daramian Minotaur Pyramid",
+      "description": "Minotaurs will sometimes prepare an attack on Darashia. Ironically, they never spawn close to Darashia - the raid's southern boundary barely reaches the wasp tower south of the pyramid."
+    },
+    {
+      "id": "pale-count",
+      "name": "The Pale Count",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The Pale Count has risen from his crypt deep under Drefia. Blood will flow."
+        },
+        {
+          "at": 240,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "The Pale Count",
+        "Nightfiend",
+        "Vicious Manbat"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Drefia Vampire Crypts",
+      "description": "Once it gets to yellow health, it will respawn with full health downstairs, here:"
+    },
+    {
+      "id": "liches-in-drefia",
+      "name": "Liches in Drefia",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Mortals, beware. Liches are being summoned in Drefia's Deeper Vampire Crypts."
+        },
+        {
+          "at": 300,
+          "message": "Woe and behold! A plague of Liches threatens Drefia's Deeper Vampire Crypts."
+        }
+      ],
+      "creatures": [
+        "Lich"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Drefia Vampire Crypts",
+      "description": "25 Liches spawn in two waves in the Vampire Crypts."
+    },
+    {
+      "id": "priestess-in-drefia",
+      "name": "Priestess in Drefia",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The priestesses in Drefia call their sisters to wake dark powers. Fight their evil purpose!"
+        },
+        {
+          "at": 300,
+          "message": "The priestesses' dark chant in Drefia is almost completed - decimate their numbers to prevent the evils' awakening!"
+        }
+      ],
+      "creatures": [
+        "Priestess"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Deeper Drefia",
+      "description": "This raid occurs in the Drefia."
+    },
+    {
+      "id": "zombies-in-star-room",
+      "name": "Zombies in Star Room",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "One of the black rituals in Drefia has succeeded. Dead meat is walking the ritual halls."
+        },
+        {
+          "at": 420,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Ghoul",
+        "Zombie"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Deeper Drefia",
+      "description": "This raid takes place in the Star Room of the Necromancer Halls, under Drefia."
+    },
+    {
+      "id": "undead-raid-on-drefia",
+      "name": "Undead Raid on Drefia",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": ""
+        },
+        {
+          "at": 300,
+          "message": "Undead spirits stalk the ruins of Drefia."
+        }
+      ],
+      "creatures": [
+        "Ghost",
+        "Tarnished Spirit",
+        "Demon Skeleton"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "subarea": "Deeper Drefia"
+    },
+    {
+      "id": "mutated-pumpkin",
+      "name": "The Mutated Pumpkin",
+      "area": "Darashia",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Oh noes! It's a mutated pumpkin!"
+        },
+        {
+          "at": 14400,
+          "message": "Oh noes! It's a mutated pumpkin!"
+        },
+        {
+          "at": 28800,
+          "message": "Oh noes! It's a mutated pumpkin!"
+        },
+        {
+          "at": 43200,
+          "message": "Oh noes! It's a mutated pumpkin!"
+        },
+        {
+          "at": 57600,
+          "message": "Oh noes! It's a mutated pumpkin!"
+        },
+        {
+          "at": 72000,
+          "message": "Oh noes! It's a mutated pumpkin!"
+        }
+      ],
+      "creatures": [
+        "The Mutated Pumpkin"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Darashia_Raids",
+      "description": "This raid has occurred every year since 2008 for Halloween. It takes place right after the server saves on October 31, November 01 and November 02. Its waves are 4 hours apart and The Mutated Pumpkin spawns in each one of them."
+    },
+    {
+      "id": "orshabaal-raid-near-edron",
+      "name": "Orshabaal Raid near Edron",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Orshabaal's minions are working on his return to the World. LEAVE Edron at once, mortals."
+        },
+        {
+          "at": 200,
+          "message": "Orshabaal is about to make his way into the mortal realm. Run for your lives!"
+        },
+        {
+          "at": 400,
+          "message": "Orshabaal has been summoned from hell to plague the lands of mortals again."
+        }
+      ],
+      "creatures": [
+        "Orshabaal",
+        "Demon"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "subarea": "Edron Surroundings",
+      "description": "Orshabaal4.gif|Old screenshot."
+    },
+    {
+      "id": "morshabaal-raid-near-edron",
+      "name": "Morshabaal Raid near Edron",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Beware mortals! Orshabaal's brother, the infamous Morshabaal is out for revenge and will spread fear for his family once again!"
+        }
+      ],
+      "creatures": [
+        "Morshabaal"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "description": "Morshbaal Reflection.png Morshabaal Chain Attack.png"
+    },
+    {
+      "id": "rotrender-raid-in-azzilon",
+      "name": "Rotrender Raid in Azzilon",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Rotrender has risen again in the depths of Azzilon."
+        }
+      ],
+      "creatures": [
+        "Rotrender"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids"
+    },
+    {
+      "id": "sir-leopold-raid-in-book-world",
+      "name": "Sir Leopold Raid in Book World",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Once more, the sinister Sir Leopold leads his henchmen out of the book pages to wreak havoc."
+        },
+        {
+          "at": 600,
+          "message": ""
+        },
+        {
+          "at": 1200,
+          "message": ""
+        },
+        {
+          "at": 1800,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Sir Leopold"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "subarea": "Book World",
+      "description": "Occurs simultaneously on all worlds at Server Open."
+    },
+    {
+      "id": "monks-and-warlocks-raid",
+      "name": "Monks and Warlocks Raid",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Some monks have gathered at a stone circle northwest of Edron. They seem to be up to something."
+        },
+        {
+          "at": 180,
+          "message": "More monks have gathered at a stone circle northwest of Edron. Something terrible is going to happen!"
+        },
+        {
+          "at": 320,
+          "message": "Run! Warlocks northwest of Edron! There seems to be a very unholy gathering!"
+        }
+      ],
+      "creatures": [],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "subarea": "Edron Surroundings"
+    },
+    {
+      "id": "goblin-raid",
+      "name": "Goblin Raid",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Goblins are converging west of Edron."
+        },
+        {
+          "at": 240,
+          "message": ""
+        },
+        {
+          "at": 300,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Goblin",
+        "Goblin Assassin"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "subarea": "Edron Surroundings"
+    },
+    {
+      "id": "hunter-raid",
+      "name": "Hunter Raid",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Some hunters are roaming the woods north of Edron!"
+        },
+        {
+          "at": 360,
+          "message": "Happy hunting, hunters!"
+        }
+      ],
+      "creatures": [
+        "Hunter",
+        "Wild Warrior"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "subarea": "Edron Surroundings"
+    },
+    {
+      "id": "wyvern-raid",
+      "name": "Wyvern Raid",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Shriiiiiek! What evil intentions do the wyverns have northwest of Edron?"
+        },
+        {
+          "at": 220,
+          "message": "Wyvern attack the northwest of Edron!"
+        }
+      ],
+      "creatures": [
+        "Wyvern"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "subarea": "Edron Surroundings",
+      "description": "Around 40 wyverns spawn in two waves."
+    },
+    {
+      "id": "orc-berserker-raid-in-edron-orc-cave",
+      "name": "Orc Berserker Raid in Edron Orc cave",
+      "area": "Edron",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Deep under Edron, the orc population seems to grow rapidly. Be careful and take a rope with you!"
+        },
+        {
+          "at": 700,
+          "message": "Orc berserkers deep under Edron!"
+        }
+      ],
+      "creatures": [],
+      "source_url": "https://tibia.fandom.com/wiki/Edron_Raids",
+      "subarea": "Edron Orc Lands"
+    },
+    {
+      "id": "ghazbaran-raid-in-the-formorgar-mines",
+      "name": "Ghazbaran Raid in the Formorgar Mines",
+      "area": "Hrodmir",
+      "waves": [
+        {
+          "at": 0,
+          "message": "An ancient evil is awakening in the mines beneath Hrodmir."
+        },
+        {
+          "at": 600,
+          "message": "Demonic entities are entering the mortal realm in the Hrodmir mines."
+        },
+        {
+          "at": 1200,
+          "message": "The demonic master has revealed itself in the mines of Hrodmir."
+        }
+      ],
+      "creatures": [
+        "Ghazbaran",
+        "Demon",
+        "Fury",
+        "Juggernaut",
+        "Deathslicer"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Hrodmir_Raids",
+      "subarea": "Formorgar Mines",
+      "description": "The raid is on the sacrifices' room of the mines (last room)."
+    },
+    {
+      "id": "barbarian-raid-near-bittermor",
+      "name": "Barbarian Raid near Bittermor",
+      "area": "Hrodmir",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Barbarians are gathering at Bittermor. They seem to be up to something."
+        },
+        {
+          "at": 500,
+          "message": "The barbarian pack is roaming around in Bittermor."
+        }
+      ],
+      "creatures": [
+        "Barbarian Brutetamer",
+        "Barbarian Bloodwalker",
+        "Barbarian Skullhunter"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Hrodmir_Raids",
+      "subarea": "Bittermor",
+      "description": "Barbarians will sometimes roam around the south of Bittermor and the south-western mountains."
+    },
+    {
+      "id": "barbarian-raid-in-on-svargrond",
+      "name": "Barbarian Raid in On Svargrond",
+      "area": "Hrodmir",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Scouts report a barbarian army gathering near Svargrond."
+        },
+        {
+          "at": 0,
+          "message": "Some invaders might try to access Svargrond via the ice to the south west."
+        },
+        {
+          "at": 180,
+          "message": "Raiders are attacking Svargrond!"
+        },
+        {
+          "at": 240,
+          "message": "Raiders are attacking Svargrond!"
+        },
+        {
+          "at": 420,
+          "message": "The barbarians attacks on Svargrond are becoming more and more fierce!"
+        },
+        {
+          "at": 660,
+          "message": "The barbarians are preparing for a final assault on Svargrond. Hide or fight!"
+        }
+      ],
+      "creatures": [
+        "Barbarian Bloodwalker",
+        "Barbarian Skullhunter",
+        "Barbarian Headsplitter",
+        "Barbarian Brutetamer",
+        "Ice Witch"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Hrodmir_Raids",
+      "subarea": "Svargrond Surroundings",
+      "description": "The main attack occurs just west of the Carpet."
+    },
+    {
+      "id": "winter-wolf-raid-near-krimhorn",
+      "name": "Winter Wolf Raid near Krimhorn",
+      "area": "Hrodmir",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Packs of winter wolves have been sighted roaming the area near the barbarian camps in Svargrond!"
+        },
+        {
+          "at": 220,
+          "message": "The barbarian camp in Svargrond is being attacked by winter wolves!"
+        }
+      ],
+      "creatures": [
+        "Winter Wolf"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Hrodmir_Raids",
+      "subarea": "Krimhorn",
+      "description": "This raid occurs north of the large barbarian settlement Krimhorn, around ."
+    },
+    {
+      "id": "ice-golem-raid-in-the-formorgar-mines",
+      "name": "Ice Golem Raid in the Formorgar Mines",
+      "area": "Hrodmir",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There is a sudden rise in the ice golem population in Formorgar Mines."
+        }
+      ],
+      "creatures": [
+        "Ice Golem"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Hrodmir_Raids",
+      "subarea": "Formorgar Mines",
+      "description": "Category:Raids"
+    },
+    {
+      "id": "bat-raid-in-kazordoon",
+      "name": "Bat Raid in Kazordoon",
+      "area": "Kazordoon",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There seems to be a bat problem in the Kazordoon mines."
+        }
+      ],
+      "creatures": [
+        "Bat"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Kazordoon_Raids",
+      "subarea": "Kazordoon Underground",
+      "description": "Small amounts of Bats will appear all over the mines of Kazordoon."
+    },
+    {
+      "id": "goblin-raid-from-femor-hills",
+      "name": "Goblin Raid from Femor Hills",
+      "area": "Kazordoon",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Goblins are preparing to attack Kazordoon from Femor Hills!"
+        },
+        {
+          "at": 210,
+          "message": "Goblins attack from Femor Hills!"
+        },
+        {
+          "at": 310,
+          "message": "Goblins attack from Femor Hills!"
+        },
+        {
+          "at": 410,
+          "message": "Danger! Now the goblin leaders attack Kazordoon from Femor Hills!"
+        }
+      ],
+      "creatures": [
+        "Goblin",
+        "Goblin Leader",
+        "Goblin Assassin"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Kazordoon_Raids",
+      "subarea": "Femor Hills",
+      "description": "Goblins will attack Kazordoon from Femor Hills. They don't seem to get inside the city, however."
+    },
+    {
+      "id": "minotaur-raid-in-kazordoon-mines",
+      "name": "Minotaur Raid in Kazordoon Mines",
+      "area": "Kazordoon",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Kaplar! Flee before it is too late! Minos in the Kazordoon Mines!"
+        },
+        {
+          "at": 480,
+          "message": ""
+        }
+      ],
+      "creatures": [],
+      "source_url": "https://tibia.fandom.com/wiki/Kazordoon_Raids",
+      "subarea": "Horned Fox Lair"
+    },
+    {
+      "id": "wyvern-raid-in-gnomebase-alpha",
+      "name": "Wyvern Raid in Gnomebase Alpha",
+      "area": "Kazordoon",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There is a sudden rise in wyvern population in the mushroom gardens beneath Gnomebase Alpha."
+        },
+        {
+          "at": 400,
+          "message": "Be prepared to fight the wyvern threat in the mushroom gardens!"
+        }
+      ],
+      "creatures": [
+        "Wyvern"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Kazordoon_Raids",
+      "subarea": "Gnomegate Mushroom Gardens"
+    },
+    {
+      "id": "hunters-raid-north-of-green-claw-swamp",
+      "name": "Hunters Raid north of Green Claw Swamp",
+      "area": "Kazordoon",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Hunters on the hunt north of the Green Claw Swamp."
+        }
+      ],
+      "creatures": [
+        "Bear",
+        "Hunter"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Kazordoon_Raids",
+      "subarea": "Kazordoon Surroundings",
+      "description": "10 Bears and 15 Hunters appear in a single patch of trees between the Amazon Camp and the single Hunter spawn."
+    },
+    {
+      "id": "halloween-hare",
+      "name": "The Halloween Hare",
+      "area": "Kazordoon",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Beware, beware the halloween hare."
+        }
+      ],
+      "creatures": [
+        "The Halloween Hare"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Kazordoon_Raids",
+      "description": "This raid has occurred every year since 2005 for Halloween. It takes place right after the server save on October 31 in a single wave. The Halloween Hare spawns south of Dwarf Bridge, around ."
+    },
+    {
+      "id": "ferumbras-raid",
+      "name": "Ferumbras Raid",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The seals on Ferumbras' old citadel are glowing. Prepare for HIS return, mortals."
+        },
+        {
+          "at": 600,
+          "message": "Ferumbras' return is at hand. The Edron Academy calls for heroes to fight that evil."
+        },
+        {
+          "at": 1200,
+          "message": "Ferumbras has returned to his citadel once more. Stop him before it is too late."
+        }
+      ],
+      "creatures": [
+        "Ferumbras",
+        "Demon"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Kharos",
+      "description": "Special items:"
+    },
+    {
+      "id": "morgaroth-raid-on-goroma",
+      "name": "Morgaroth Raid on Goroma",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The ancient volcano on Goroma slowly becomes active once again."
+        },
+        {
+          "at": 360,
+          "message": "There is an evil presence at the volcano of Goroma."
+        },
+        {
+          "at": 720,
+          "message": "Evil Cultists have called an ancient evil into the volcano on Goroma. Beware of its power mortals."
+        }
+      ],
+      "creatures": [
+        "Morgaroth",
+        "Demon"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Hellgorge",
+      "description": "Special items:"
+    },
+    {
+      "id": "pirate-bosses-raid",
+      "name": "Pirate Bosses Raid",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Pirates are launching a surprise attack on Liberty Bay! Take care, they seem to be everywhere."
+        },
+        {
+          "at": 300,
+          "message": ""
+        },
+        {
+          "at": 540,
+          "message": ""
+        },
+        {
+          "at": 600,
+          "message": "Pirates have invaded the fortress."
+        }
+      ],
+      "creatures": [
+        "Ron the Ripper",
+        "Lethal Lissy",
+        "Brutus Bloodbeard",
+        "Deadeye Devious",
+        "Pirate Corsair",
+        "Pirate Buccaneer",
+        "Pirate Cutthroat",
+        "Pirate Marauder",
+        "Smuggler"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Liberty Bay Surroundings",
+      "description": "Note: Raids vary each time they happen. Not all of these creatures, including bosses, may appear in a pirate raid every time."
+    },
+    {
+      "id": "pirate-raid-on-liberty-bay",
+      "name": "Pirate Raid on Liberty Bay",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Unknown ships are sighted north of Liberty Bay."
+        },
+        {
+          "at": 240,
+          "message": "The ships that approach Liberty Bay from the north have raised the pirate flag! Hide or grab your weapons to fight."
+        },
+        {
+          "at": 480,
+          "message": "Pirates are launching an attack on Liberty Bay! Hide or fight."
+        }
+      ],
+      "creatures": [
+        "Pirate Corsair",
+        "Pirate Buccaneer",
+        "Pirate Cutthroat",
+        "Pirate Marauder",
+        "Smuggler"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Liberty Bay Surroundings",
+      "description": "Note: Raids vary each time they happen. Not all of these things may appear in a pirate raid every time. While the marker appears north of Silverhand Manor the raid is centered near the Boat. The raid may consists of multiple unannounced waves."
+    },
+    {
+      "id": "pirate-raid-on-the-plantations-of-liberty-bay",
+      "name": "Pirate Raid on the Plantations of Liberty Bay",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Sails sighted northwest of Liberty Bay."
+        },
+        {
+          "at": 300,
+          "message": "Pirates are attacking the plantations of Liberty Bay."
+        },
+        {
+          "at": 360,
+          "message": ""
+        },
+        {
+          "at": 420,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Pirate Corsair",
+        "Pirate Buccaneer",
+        "Pirate Cutthroat",
+        "Pirate Marauder",
+        "Smuggler"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Liberty Bay Surroundings"
+    },
+    {
+      "id": "quara-scout-raid-on-liberty-bay",
+      "name": "Quara Scout Raid on Liberty Bay",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Something is moving in the depths of the sea around Liberty Bay."
+        },
+        {
+          "at": 60,
+          "message": "Quaras emerged from the sea to attack Liberty Bay."
+        },
+        {
+          "at": 300,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Quara Constrictor Scout",
+        "Quara Mantassin Scout",
+        "Quara Hydromancer Scout",
+        "Quara Pincher Scout",
+        "Quara Predator Scout"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Liberty Bay Surroundings",
+      "description": "While the Active Raid Indicator in the Cyclopedia map appears in the west coast of Vandura. The Quara appear outside the docks."
+    },
+    {
+      "id": "quara-scout-raid-on-liberty-bay-plantations",
+      "name": "Quara Scout Raid on Liberty Bay Plantations",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Numerous Quara fins have been sighted in the seas around Liberty Bay."
+        }
+      ],
+      "creatures": [
+        "Quara Constrictor Scout",
+        "Quara Mantassin Scout",
+        "Quara Hydromancer Scout",
+        "Quara Pincher Scout",
+        "Quara Predator Scout"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Liberty Bay Surroundings",
+      "description": "{|class=\"wikitable\" style=\"text-align:center;\""
+    },
+    {
+      "id": "flamingo-raid-on-the-laguna-islands",
+      "name": "Flamingo Raid on the Laguna Islands",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There has been an unnatural rise in Flamingo population on the Laguna Islands."
+        },
+        {
+          "at": 600,
+          "message": "Flamingocalypse on the Laguna Islands!"
+        }
+      ],
+      "creatures": [
+        "Flamingo"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Laguna Islands",
+      "description": "Flamingos will raid all of the Laguna Islands including Meriana."
+    },
+    {
+      "id": "tiger-raid",
+      "name": "Tiger Raid",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Majestic creatures with stripes roam the small desert at Meriana."
+        },
+        {
+          "at": 300,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Tiger"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Meriana"
+    },
+    {
+      "id": "tortoise-raid",
+      "name": "Tortoise Raid",
+      "area": "Liberty Bay",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Slowly but steadily, the population of tortoises grows on Treasure Island."
+        },
+        {
+          "at": 300,
+          "message": ""
+        },
+        {
+          "at": 540,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Tortoise",
+        "Thornback Tortoise"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Liberty_Bay_Raids",
+      "subarea": "Treasure Island"
+    },
+    {
+      "id": "kongra-raid-south-of-banuta",
+      "name": "Kongra Raid South of Banuta",
+      "area": "Port Hope",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There are some kongras congregating south of Banuta."
+        },
+        {
+          "at": 300,
+          "message": "More furry primates in Banuta."
+        },
+        {
+          "at": 850,
+          "message": "More ape and fur flurry south of Banuta!"
+        }
+      ],
+      "creatures": [
+        "Kongra"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Port_Hope_Raids",
+      "subarea": "Banuta",
+      "description": "During this announced raid, kongras spawn south of Banuta."
+    },
+    {
+      "id": "serpent-spawn-raid-in-deeper-banuta",
+      "name": "Serpent Spawn Raid in Deeper Banuta",
+      "area": "Port Hope",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Something bad is happening deep, deep down under Banuta."
+        },
+        {
+          "at": 540,
+          "message": "Something is sizzling deep under many sheets of soil in Banuta."
+        },
+        {
+          "at": 780,
+          "message": "Hordes of slippery spawns slither in Deeper Banuta!"
+        }
+      ],
+      "creatures": [
+        "Serpent Spawn"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Port_Hope_Raids",
+      "subarea": "Banuta",
+      "description": "Serpent spawns will sometimes raid the last floor of Banuta."
+    },
+    {
+      "id": "lizard-raid-on-port-hope",
+      "name": "Lizard Raid on Port Hope",
+      "area": "Port Hope",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Lizards seem to attack Port Hope from Chor."
+        },
+        {
+          "at": 250,
+          "message": "Lizards are advancing to Port Hope from Chor."
+        },
+        {
+          "at": 600,
+          "message": ""
+        },
+        {
+          "at": 900,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Lizard Sentinel",
+        "Lizard Templar",
+        "Lizard Snakecharmer"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Port_Hope_Raids",
+      "subarea": "Port Hope Surroundings",
+      "description": "40-50 Lizard Sentinels total spawn in two waves (starting at 00:10) along the river bank on the southern side of Port Hope, around this area:"
+    },
+    {
+      "id": "lizard-army-raid-on-port-hope",
+      "name": "Lizard Army Raid on Port Hope",
+      "area": "Port Hope",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The lizards of Chor are amassing an army to take over the southern Jungle!"
+        },
+        {
+          "at": 600,
+          "message": "The army of the lizardmen is growing!"
+        },
+        {
+          "at": 900,
+          "message": "The lizard army is on its march to Port Hope. The southern jungle is no longer safe!"
+        },
+        {
+          "at": 1200,
+          "message": "The lizard army is marching closer and closer to Port Hope! Beware!"
+        },
+        {
+          "at": 1500,
+          "message": "The army of the lizards is dangerously close to Port Hope! Fight them back for the sake of humanity!"
+        },
+        {
+          "at": 1620,
+          "message": "The serpent god may send one of his children to show his wrath!"
+        },
+        {
+          "at": 1800,
+          "message": "Beware of the serpent god's wrath!"
+        }
+      ],
+      "creatures": [
+        "Lizard Sentinel",
+        "Lizard Templar",
+        "Lizard Snakecharmer",
+        "Serpent Spawn",
+        "Hydra"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Port_Hope_Raids",
+      "subarea": "Port Hope Surroundings",
+      "description": "Beware, because any time the serpent gods can invade Port Hope. This is a hard raid for low levels."
+    },
+    {
+      "id": "terror-bird-raid-in-trapwood",
+      "name": "Terror Bird Raid in Trapwood",
+      "area": "Port Hope",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Terrorbirds have been sighted in Trapwood south-east of Port Hope!"
+        }
+      ],
+      "creatures": [
+        "Terror Bird"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Port_Hope_Raids",
+      "subarea": "Port Hope Surroundings",
+      "description": "Terror Birds spawn around this area."
+    },
+    {
+      "id": "grynch-clan-goblin-invasion",
+      "name": "Grynch Clan Goblin Invasion",
+      "area": "Global",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Goblins of the infamous Grynch Clan are invading city to steal all presents, beware!"
+        },
+        {
+          "at": 120,
+          "message": "The Goblins sometimes have stolen presents with them! Confiscate them!"
+        },
+        {
+          "at": 180,
+          "message": "Return the stolen presents to Ruprecht on Vega at Santa's home for a reward."
+        }
+      ],
+      "creatures": [
+        "Grynch Clan Goblin"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Raid",
+      "description": "The Grynch Clan Goblin invasions are special raids that happen between the Server Saves of December 20 and 28 during Christmas Season. They drop a nice amount of cheap loot, therefore not many people look forward to this kind of raid. It can happen on any major city."
+    },
+    {
+      "id": "undead-jester-invasion",
+      "name": "Undead Jester Invasion",
+      "area": "Global",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Oh no! City beware! All bad entertainers are returning from their graves to haunt their audience once again!"
+        }
+      ],
+      "creatures": [
+        "Undead Jester"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Raid",
+      "description": "The Undead Jester raids appear in any city of Tibia as part of the 'April Month of Pranks' event by CipSoft. They first started on April 1, 2008. They happen annually from the server save on April 1 until the server save on April 15. Since 2009, Undead Jester can drop some new items such as parts of the Jester Doll."
+    },
+    {
+      "id": "dryad-invasion",
+      "name": "Dryad Invasion",
+      "area": "Global",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Dryads have returned to protect the forest north of Edron."
+        }
+      ],
+      "creatures": [
+        "Dryad"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Raid",
+      "description": "The Dryad Invasions appeared in June 2008 for the first time. Dryads are female tree-spirits. They only invade during June - the Month of Flowers."
+    },
+    {
+      "id": "gaz-haragoth",
+      "name": "Gaz'haragoth",
+      "area": "Roshamuul",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Gaz'haragoth will shatter your dreams in a barrage of nightmares!"
+        }
+      ],
+      "creatures": [
+        "Minion of Gaz'haragoth",
+        "Gaz'haragoth"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Roshamuul_Raids",
+      "description": "Occurs approximately once a month, under the Roshamuul Prison."
+    },
+    {
+      "id": "rat-plague-in-thais",
+      "name": "Rat Plague in Thais",
+      "area": "Thais",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Rat plague in Thais!"
+        },
+        {
+          "at": 15,
+          "message": ""
+        },
+        {
+          "at": 25,
+          "message": ""
+        },
+        {
+          "at": 90,
+          "message": ""
+        },
+        {
+          "at": 1800,
+          "message": "Rat plague in Thais!"
+        },
+        {
+          "at": 1920,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Rat",
+        "Cave Rat"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thais_Raids",
+      "subarea": "Thais City",
+      "description": "Sometimes the Rat problem in the Thais sewers spills over into the streets. Around 400~ Cave Rats will spawn in each wave."
+    },
+    {
+      "id": "orc-raid-north-of-thais",
+      "name": "Orc Raid North of Thais",
+      "area": "Thais",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Some orcs are assembling north of Thais."
+        }
+      ],
+      "creatures": [
+        "Orc",
+        "Orc Spearman"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thais_Raids",
+      "subarea": "Thais Surroundings",
+      "description": "A small orc raid at the northern coast of the Thais region. About 15 Orc Spearmen and 40 Orcs spawn in this raid. Not to be confused with the rarer warlord raid (see Orc Raid on Thais)."
+    },
+    {
+      "id": "wasp-raid-in-thais",
+      "name": "Wasp Raid in Thais",
+      "area": "Thais",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Buzzing and humming! Wasps south of Thais. Be careful there!"
+        },
+        {
+          "at": 250,
+          "message": "Even more Wasps south of Thais. Be careful there!"
+        }
+      ],
+      "creatures": [
+        "Wasp"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thais_Raids",
+      "subarea": "Thais Surroundings",
+      "description": "Occasionally wasps will swarm the region south of Thais. About 20 wasps spawn during this raid."
+    },
+    {
+      "id": "orc-raid-on-thais",
+      "name": "Orc Raid on Thais",
+      "area": "Thais",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Orc activity near Thais reported! Beware!"
+        },
+        {
+          "at": 240,
+          "message": ""
+        },
+        {
+          "at": 420,
+          "message": "Thais is under attack!"
+        },
+        {
+          "at": 540,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Orc",
+        "Orc Spearman",
+        "Orc Warrior",
+        "War Wolf",
+        "Orc Rider",
+        "Orc Berserker",
+        "Orc Shaman",
+        "Orc Leader",
+        "Orc Warlord"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thais_Raids",
+      "subarea": "Thais Surroundings",
+      "description": "Because of their previous defeats from the army of Thais, the Orcs invade Thais from all directions - <u>each entrance</u> to the city is blocked by massive armies of orcs."
+    },
+    {
+      "id": "cyclops-raid-east-of-thais",
+      "name": "Cyclops Raid east of Thais",
+      "area": "Thais",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Let da mashing begin! Cyclops riot east of Thais."
+        },
+        {
+          "at": 240,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Cyclops",
+        "Cyclops Smith",
+        "Cyclops Drone"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thais_Raids",
+      "subarea": "Mount Sternum",
+      "description": "Location in Mount Sternum on -2 floor."
+    },
+    {
+      "id": "historic-primitive-raid",
+      "name": "Primitive Raid",
+      "area": "Thais",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Primitives are attacking Thais!"
+        }
+      ],
+      "creatures": [
+        "Primitive",
+        "Hacker (Creature)",
+        "Tibia Bug"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thais_Raids",
+      "description": "This raid happened in the tibia 10th anniversary. It may happen again during other events. The three monsters faced in the raid represent problems faced by Tibia in the past. Primitives represent obnoxious players, Hackers represent people who try and hack the game, and Tibia Bugs represent hostile programs created by these hackers.",
+      "historic": true
+    },
+    {
+      "id": "historic-community-manager-and-troll-raid",
+      "name": "Community Manager and Troll Raid",
+      "area": "Thais",
+      "waves": [
+        {
+          "at": 0,
+          "message": "A troll is happily trolling in the plains south of Thais."
+        }
+      ],
+      "creatures": [
+        "Troll",
+        "Mirade (Creature)",
+        "Rejana (Creature)",
+        "Tjured (Creature)"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thais_Raids",
+      "description": "This raid happens during Tibia's 15th Anniversary. First trolls spawn and then the three Community Managers spawn to fight them.",
+      "historic": true
+    },
+    {
+      "id": "elf-raid-at-venore",
+      "name": "Elf Raid at Venore",
+      "area": "Venore",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Elven scouts from Shadowthorn have been spotted near Venore! Beware!"
+        },
+        {
+          "at": 220,
+          "message": "Venore is under attack!"
+        },
+        {
+          "at": 340,
+          "message": ""
+        },
+        {
+          "at": 460,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Elf",
+        "Elf Scout",
+        "Elf Arcanist"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Venore_Raids",
+      "subarea": "Venore City",
+      "description": "The outcast Elves of Shadowthorn will sometimes raid Venore for supplies. They attack from the northern, western and southern entrances of the city, as well as from the shipyard."
+    },
+    {
+      "id": "witches-raid-at-green-claw-swamp",
+      "name": "Witches Raid at Green Claw Swamp",
+      "area": "Venore",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Dark energy is concentrating in the Green Claw Swamp. Something is about to happen there."
+        },
+        {
+          "at": 600,
+          "message": "The wicked witches are invading the Green Claw Swamp! Get out of there! Or help to defeat them!"
+        }
+      ],
+      "creatures": [
+        "Witch"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Venore_Raids",
+      "subarea": "Green Claw Swamp",
+      "description": "Approximately 15 Witches spawn in each wave, for a total of 30+ witches during the entire raid."
+    },
+    {
+      "id": "undead-army-in-plains-of-havoc",
+      "name": "Undead Army in Plains of Havoc",
+      "area": "Venore",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The dead of the plains of havoc are becoming restless!"
+        },
+        {
+          "at": 480,
+          "message": "A veritable army of undead is amassing in the plains of havoc, beware!"
+        },
+        {
+          "at": 600,
+          "message": "The dreaded banshees lead their undead minions to claim the plains of havoc!"
+        }
+      ],
+      "creatures": [
+        "Skeleton",
+        "Ghoul",
+        "Mummy",
+        "Demon Skeleton",
+        "Vampire",
+        "Banshee"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Venore_Raids",
+      "subarea": "Plains of Havoc"
+    },
+    {
+      "id": "giant-spider-raid-on-plains-of-havoc",
+      "name": "Giant Spider Raid on Plains of Havoc",
+      "area": "Venore",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The mating season of the giant spiders is at hand. Leave the plains of havoc as fast as you can."
+        },
+        {
+          "at": 540,
+          "message": "Giant spiders have gathered on the plains of havoc for their mating season. Beware!"
+        }
+      ],
+      "creatures": [
+        "Giant Spider"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Venore_Raids",
+      "subarea": "Plains of Havoc"
+    },
+    {
+      "id": "vampire-raid-in-yalahar",
+      "name": "Vampire Raid in Yalahar",
+      "area": "Yalahar",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Citizens of Yalahar, beware! Harbingers of vampiric blood thirst are appearing in the city. Fight them or take your chance to flee while you still can."
+        },
+        {
+          "at": 120,
+          "message": "The sky over Yalahar is darkened by many little wings. Whoever isn't ready to fight the greater evil approaching, seek refuge inside the houses."
+        },
+        {
+          "at": 300,
+          "message": "Vampires have arrived in Yalahar - looking for humans to feed on and quench their blood thirst."
+        }
+      ],
+      "creatures": [
+        "Bat",
+        "Vampire"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Yalahar_Raids",
+      "subarea": "Yalahar Centre",
+      "description": "Sometimes bloodthirsty vampires terrorize Yalahar and hunt victims there.<br /> It takes place all over the city."
+    },
+    {
+      "id": "lancer-beetle-raid-on-the-steppes",
+      "name": "Lancer Beetle Raid on the Steppes",
+      "area": "Zao",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Lancer beetles troop up in Farmine. Beware!"
+        },
+        {
+          "at": 300,
+          "message": "A pack of lancer beetles heads towards the coast!"
+        },
+        {
+          "at": 850,
+          "message": "The lancer beetles have reached the coast."
+        }
+      ],
+      "creatures": [
+        "Lancer Beetle"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Zao_Raids",
+      "subarea": "Zao Steppe",
+      "description": "Lancer Beetles sometimes raid the Zao Steppes. Approximately 100 Lancer Beetles will spawn in the entire raid. There are a few unannounced raids between the first and last messages. The final message marks the end of the raid."
+    },
+    {
+      "id": "orcs-raid-on-zzaion",
+      "name": "Orcs raid on Zzaion",
+      "area": "Zao",
+      "waves": [
+        {
+          "at": 0,
+          "message": "A massive orc force is gathering at the gates of Zzaion."
+        },
+        {
+          "at": 180,
+          "message": "Orc reinforcements have arrived at the gates of Zzaion! The gates are under heavy attack!"
+        },
+        {
+          "at": 300,
+          "message": ""
+        },
+        {
+          "at": 420,
+          "message": ""
+        },
+        {
+          "at": 600,
+          "message": "More orc reinforcements have arrived at the gates of Zzaion! The gates are under heavy attack!"
+        },
+        {
+          "at": 660,
+          "message": ""
+        },
+        {
+          "at": 780,
+          "message": ""
+        },
+        {
+          "at": 900,
+          "message": ""
+        },
+        {
+          "at": 1020,
+          "message": ""
+        },
+        {
+          "at": 1140,
+          "message": ""
+        },
+        {
+          "at": 1200,
+          "message": "The gates to Zzaion have been breached! Orcs are invading the city!"
+        },
+        {
+          "at": 1800,
+          "message": "More orcs have arrived in Zzaion! The city is under attack! Strong lizard leaders have come to defend the city."
+        }
+      ],
+      "creatures": [
+        "Orc",
+        "Orc Spearman",
+        "Orc Warrior",
+        "Orc Shaman",
+        "Orc Berserker",
+        "Orc Marauder",
+        "Orc Leader",
+        "Orc Warlord",
+        "Cublarc the Plunderer",
+        "Zulazza the Corruptor",
+        "Chizzoron the Distorter"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Zao_Raids",
+      "subarea": "Zao Steppe",
+      "description": "This is the only chance you have to get one of the 12 Tomes of Knowledge."
+    },
+    {
+      "id": "orcs-raid-on-zao-steppe",
+      "name": "Orcs raid on Zao Steppe",
+      "area": "Zao",
+      "waves": [
+        {
+          "at": 0,
+          "message": "An orcish horde, ready for murder and plunder, is amassing to begin its travel through the steppes of Zao. Beware!"
+        },
+        {
+          "at": 300,
+          "message": ""
+        },
+        {
+          "at": 600,
+          "message": "The great march of the orcish horde has begun!"
+        },
+        {
+          "at": 720,
+          "message": ""
+        },
+        {
+          "at": 960,
+          "message": ""
+        },
+        {
+          "at": 1080,
+          "message": ""
+        },
+        {
+          "at": 1800,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Orc Spearman",
+        "Orc Warrior",
+        "Orc Shaman",
+        "Orc Rider",
+        "Orc Marauder",
+        "Cublarc the Plunderer"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Zao_Raids",
+      "subarea": "Zao Steppe",
+      "description": "Sometimes cruel orcs travel through the Zaoan steppes."
+    },
+    {
+      "id": "gnarlhounds-raid-on-zao-steppes",
+      "name": "Gnarlhounds raid on Zao Steppes",
+      "area": "Zao",
+      "waves": [
+        {
+          "at": 0,
+          "message": "There seems to be a big gnarlhound gang in Zao Steppe."
+        },
+        {
+          "at": 300,
+          "message": "The gnarlhounds seem to multiply by the minute."
+        },
+        {
+          "at": 700,
+          "message": "The gnarlhounds roam free in the Zao Steppe. Watch out!"
+        }
+      ],
+      "creatures": [
+        "Gnarlhound"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Zao_Raids",
+      "subarea": "Zao Steppe",
+      "description": "This raid occurs on the western part of the Zao Steppe."
+    },
+    {
+      "id": "lancer-beetles-raid-on-muggy-plains",
+      "name": "Lancer Beetles raid on Muggy Plains",
+      "area": "Zao",
+      "waves": [
+        {
+          "at": 0,
+          "message": "Like a swarm of locusts the dreaded lancer beetles are pouring over the fertile parts of Zao."
+        },
+        {
+          "at": 900,
+          "message": ""
+        },
+        {
+          "at": 1800,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Lancer Beetle",
+        "The Blightfather"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Zao_Raids",
+      "subarea": "Muggy Plains",
+      "description": "Approximately 400 Lancer Beetles will spawn in the entire raid."
+    },
+    {
+      "id": "dragons-raid-on-muggy-plains",
+      "name": "Dragons raid on Muggy Plains",
+      "area": "Zao",
+      "waves": [
+        {
+          "at": 0,
+          "message": "The dragons of the Dragonblaze Mountains have descended to Zao to protect the lizardkin!"
+        },
+        {
+          "at": 900,
+          "message": ""
+        },
+        {
+          "at": 1200,
+          "message": ""
+        },
+        {
+          "at": 1500,
+          "message": ""
+        }
+      ],
+      "creatures": [
+        "Dragon",
+        "Draptor",
+        "Grand Mother Foulscale"
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Zao_Raids",
+      "subarea": "Muggy Plains",
+      "description": "Special items:"
+    }
+  ],
+  "world_changes": [
+    {
+      "id": "awash-world-change",
+      "name": "Awash",
+      "kind": "world",
+      "keywords": [
+        "Awash"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Awash_World_Change",
+      "location": "Kazordoon",
+      "description": "The remains of a sunken dynasty of unknown origin can now be accessed beneath Kazordoon",
+      "dangers": "Deepling Scouts; Possibly Firestarters, Stone Golems, Carrion Worms, Rotworm Queen, Dwarf Guards, or Earth Elementals",
+      "reward": "Until the next server save, for all players on the server: access to Deepling Scout mines; ability to travel from Kazordoon to Thais and Robson's Isle. Possibility to kill Groam and get the Eye of the Deep achievement"
+    },
+    {
+      "id": "bank-robbery-mini-world-change",
+      "name": "Bank Robbery",
+      "kind": "mini",
+      "keywords": [
+        "Bank Robbery"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Stand and deliver! That's what they shout, robbing banks in main's coastal towns and then hide out. Catch the thieves and make us proud, bring back the gold to please the crowd!"
+        },
+        {
+          "text": "Several banks in major coastal towns are being robbed! The thieves are still on the loose!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Bank_Robbery_Mini_World_Change",
+      "location": "Ab'Dendriel (Dwarf Mines), Carlin (Ghostlands), Thais (Ancient Temple) or Venore (Shadowthorn)",
+      "description": "A bank in Tibia is robbed and can't operate unless the stolen money is returned",
+      "dangers": "Thais: Orc, Orc Spearman and Orc Warrior. Ab'Dendriel: Snake, Poison Spider, Wolf, Rotworm, Dwarf, Dwarf Soldier and Dwarf Guard. Carlin: Rat, Cave Rat, Poison Spider, Skeleton, Scorpion and Ghoul. Venore: Snake, Marsh Stalker, Swampling and Elf, Elf Scout or Firestarter",
+      "reward": "Achievements Honest Finder and Goldhunter, 10 Platinum Coins"
+    },
+    {
+      "id": "bored-mini-world-change",
+      "name": "Bored",
+      "kind": "mini",
+      "keywords": [
+        "Bored"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! The witch Wyda seems to be bored. Pay her a visit but sharpen your sword. She might come up with a terrible surprise, are you brave enough to believe your eyes?"
+        },
+        {
+          "text": "Sharpen your sword! The witch Wyda seems to be bored so pay her a visit!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Bored_Mini_World_Change",
+      "location": "Green Claw Swamp",
+      "description": "The witch Wyda is bored",
+      "dangers": "Snake, Rotworm",
+      "reward": "Achievements Torn Treasures and Someone's Bored, Ability to obtain a Torn Teddy"
+    },
+    {
+      "id": "chakoya-iceberg-mini-world-change",
+      "name": "Chakoya Iceberg",
+      "kind": "mini",
+      "keywords": [
+        "Chakoya Iceberg"
+      ],
+      "messages": [
+        {
+          "text": "A floating vessel of ice is not at all nice when it brings unbidden friends to Port Hope's lands."
+        },
+        {
+          "text": "A big iceberg has been washed up at the coast north of Port Hope. It seems to be inhabited by strange white furballs."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Chakoya_Iceberg_Mini_World_Change",
+      "location": "Northern Tiquanda",
+      "description": "Suddenly an iceberg appeared at the north of Tiquanda",
+      "dangers": "Snake, Swamp Troll, Slime, Terror Bird, Chakoya Toolshaper, Chakoya Tribewarden, Chakoya Windcaller"
+    },
+    {
+      "id": "chyllfroest-mini-world-change",
+      "name": "Chyllfroest",
+      "kind": "mini",
+      "keywords": [
+        "Chyllfroest"
+      ],
+      "messages": [
+        {
+          "text": "An icy bridge reaches toward an isle of frost and hidden fire, with cold-hearted monsters grim and dire."
+        },
+        {
+          "text": "An ice bridge now connects Svargrond to a frosty island, where monsters and a strange frozen creature have been sighted."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Chyllfroest_Mini_World_Change",
+      "location": "Chyllfroest",
+      "dangers": "Badger, Winter Wolf, Polar Bear, Mammoth, Wyvern",
+      "reward": "Ability to obtain a Ursagrodon"
+    },
+    {
+      "id": "deeplings-world-change",
+      "name": "Deeplings",
+      "kind": "world",
+      "keywords": [
+        "Deeplings",
+        "Deepling"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Deeplings_World_Change",
+      "location": "Quirefang",
+      "description": "Unknown",
+      "dangers": "All types of Deeplings",
+      "reward": "Access to more areas"
+    },
+    {
+      "id": "demon-wars-world-change",
+      "name": "Demon Wars",
+      "kind": "world",
+      "keywords": [
+        "Demon Wars",
+        "Demon War"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Demon_Wars_World_Change",
+      "location": "Edron (Hero Cave)",
+      "description": "Below Edron, two Demon races, the Shaburak Demons and the Askarak Demons, are waging war against each other since ages and for reasons long forgotten",
+      "dangers": "Wild Warriors, Stalkers, Dark Apprentices, Orc Shamans, Witches, Hunters, Minotaur Mages, Slimes, Minotaur Guards, Bonelords, Elf Arcanists, Dark Magicians, Dragon Hatchlings, Monks, Fire Elementals, Demon Skeletons, Priestesses, Dragons and Heroes",
+      "reward": "Chance to obtain the achievements Shaburak Nemesis and Askarak Nemesis"
+    },
+    {
+      "id": "devovorga-s-essence-mini-world-change",
+      "name": "Devovorga's Essence",
+      "kind": "mini",
+      "keywords": [
+        "Devovorga's Essence"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Use Devovorga's Essence to fight an evil presence! Trade your every tentacle piece, to enter a boss' lair with ease!"
+        },
+        {
+          "text": "In case you have some spare tentacle pieces, you can now use Devovorga's very essence to enter a boss lair!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Devovorga's_Essence_Mini_World_Change",
+      "location": "Vengoth",
+      "dangers": "Haunted Treeling",
+      "reward": "Achievements Slayer of Anmothra, Slayer of Chikhaton, Slayer of Irahsae, Slayer of Phrodomo and Slayer of Teneshpar. Ability to kill Devovorga's incarnations"
+    },
+    {
+      "id": "down-the-drain-mini-world-change",
+      "name": "Down the Drain",
+      "kind": "mini",
+      "keywords": [
+        "Down the Drain"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! A river is flooding, south of the outlaw base. Explore a new isle, an unknown place. Don't be afraid, but ready your blade."
+        },
+        {
+          "text": "The river south of the outlaw camp is flooding. A small island there should now be reachable safely."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Down_the_Drain_Mini_World_Change",
+      "location": "Outlaw Camp/Water Elemental Dungeon (Outlaw Camp)",
+      "dangers": "Tarantula, Wild Warrior, Bandit, Water Elemental",
+      "reward": "Achievement Down the Drain"
+    },
+    {
+      "id": "fire-from-the-earth-mini-world-change",
+      "name": "Fire from the Earth",
+      "kind": "mini",
+      "keywords": [
+        "Fire from the Earth"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! The volcano on Goroma is spitting fire. Creatures are spawning, strong and dire. Lava is heading up the land. Adventurer, be careful or it will be your last stand!"
+        },
+        {
+          "text": "The volcano on Goroma sends its fiery message into the sky. A lot of creatures are flooding the lands together with its lava."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Fire_from_the_Earth_Mini_World_Change",
+      "location": "Goroma",
+      "description": "The Hellgore volcano erupts on Goroma",
+      "dangers": "Crab, Island Troll, Pirate Skeleton, Pirate Ghost",
+      "reward": "Achievement Fire from the Earth, stronger creatures inside Hellgore, opportunity to tame a Dragonling"
+    },
+    {
+      "id": "fury-gates-mini-world-change",
+      "name": "Fury Gates",
+      "kind": "mini",
+      "keywords": [
+        "Fury Gates"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! A fiery gate has opened, threatening a city! Guard the people frightened, their death would be a pity!"
+        },
+        {
+          "text": "A fiery fury gate has opened near one of the major cities somewhere in Tibia."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Fury_Gates_Mini_World_Change",
+      "location": "Fury Dungeon",
+      "dangers": "Massive Fire Elemental, Dragon Lord, Dragonling, Diabolic Imp, Hellfire Fighter, Infernalist, Fury, Hellhound, Furyosa"
+    },
+    {
+      "id": "grimvale-mini-world-change",
+      "name": "Grimvale",
+      "kind": "mini",
+      "keywords": [
+        "Grimvale"
+      ],
+      "messages": [
+        {
+          "text": "The full moon pale has risen over Grimvale. Help lift the curse, you won't be off worse!"
+        },
+        {
+          "text": "The full moon has a strange impact on the island of Grimvale. The small forest there seems darker, filled with nightly howls."
+        },
+        {
+          "text": "Grimvale drowns in werecreatures as the full moon reaches its apex and ancient evil returns."
+        },
+        {
+          "text": "Half of the current full moon is visible now, there are still a lot of clouds in front of it."
+        },
+        {
+          "text": "The full moon is completely exposed: Feroxa awaits!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Grimvale_Mini_World_Change",
+      "location": "Grimvale",
+      "description": "It is full moon on Grimvale, beware!",
+      "dangers": "All kinds of Lycanthropes",
+      "reward": "Able to do the Grimvale Quest"
+    },
+    {
+      "id": "hive-born-world-change",
+      "name": "Hive Born",
+      "kind": "world",
+      "keywords": [
+        "Hive Born",
+        "Hive"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Hive_Born_World_Change",
+      "location": "Quirefang",
+      "description": "A War Against the Hive is being fought. If the Hive is weakened, it may be possible to advance further into it",
+      "dangers": "All Hive Born creatures",
+      "reward": "Access to the inner Hive Born, possibility to complete the Insectoid Outfits Quest and also to tame a Ladybug"
+    },
+    {
+      "id": "hive-outpost-mini-world-change",
+      "name": "Hive Outpost",
+      "kind": "mini",
+      "keywords": [
+        "Hive Outpost"
+      ],
+      "messages": [
+        {
+          "text": "A chitinous Hive outpost has been located on Liberty Bay's coast. Make sure those locusts are toast!"
+        },
+        {
+          "text": "A hive infestation has been sighted south-west of Liberty Bay! An unnerving humming and buzzing is filling the air."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Hive_Outpost_Mini_World_Change",
+      "location": "Hive Outpost (Vandura)",
+      "description": "The Hive Born have established an outpost on Vandura",
+      "dangers": "All kind of Hive Born",
+      "reward": "The ability to do a part of the Cartography 101 Quest, and the chance to meet the rare bosses The Manhunter, The Mean Masher, and the The Hungerer"
+    },
+    {
+      "id": "horse-station-world-change",
+      "name": "Horse Station",
+      "kind": "world",
+      "keywords": [
+        "Horse Station",
+        "Horses"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Horse_Station_World_Change",
+      "location": "East of Thais, West of Venore",
+      "description": "Stable horses can be rented, but sometimes they escape to roam with wild horses and must be rounded up",
+      "dangers": "Snakes, Wolves, Trolls, Poison Spiders",
+      "reward": "Ability to rent Horses (applies to entire server, even free account players). Also during the world change, War Horses may be tamed"
+    },
+    {
+      "id": "insectoid-invasion-world-change",
+      "name": "Insectoid Invasion",
+      "kind": "world",
+      "keywords": [
+        "Insectoid Invasion"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Insectoid_Invasion_World_Change",
+      "location": "Greenshore",
+      "description": "Insectoids invade Greenshore and will destroy the land if not killed",
+      "dangers": "Spiders, Bugs, Wolves, Insectoid Scouts",
+      "reward": "Ability to kill Insectoid Scouts for 15 charm points"
+    },
+    {
+      "id": "jungle-camp-mini-world-change",
+      "name": "Jungle Camp",
+      "kind": "mini",
+      "keywords": [
+        "Jungle Camp"
+      ],
+      "messages": [
+        {
+          "text": "Beware of Tiquanda's dworcs, you all! In their voodoo circle, heads will fall!",
+          "note": "when Dworcs dominate"
+        },
+        {
+          "text": "Hunters in the Tiquanda jungle have made camp, behaving like tramps!",
+          "note": "when Hunters dominate"
+        },
+        {
+          "text": "Strange sounds echo through Trapwood as hunters and dworcs fight over the holy grounds and the game that roams there."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Jungle_Camp_Mini_World_Change",
+      "location": "Hunter Camp / Dworc Camp (Tiquanda)",
+      "description": "Hunters and Dworcs fight over a camp in the jungle of Tiquanda",
+      "dangers": "Either Poachers, Hunters, and perhaps Arthom the Hunter. or Dworc Fleshhunters, Dworc Venomsnipers, Dworc Voodoomasters, and perhaps Oodok Witchmaster"
+    },
+    {
+      "id": "kingsday-mini-world-change",
+      "name": "Kingsday",
+      "kind": "mini",
+      "keywords": [
+        "Kingsday"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! It is Kingsday, people, let us celebrate and sing! Decorate Thais and let the bells ring! Come to the arena to hear the swords cling. Let us rejoice! Hail to the King!"
+        },
+        {
+          "text": "Hail to the King! It's Kingsday in Thais, join the celebration!"
+        },
+        {
+          "text": "The King's mages have summoned some creatures from the tombs in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some goblins in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some creatures from the Tiquanda jungle in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some dragons in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some dragon lords in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some frost dragons in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some lizards in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some minotaurs in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some trolls in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some orcs in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some elementals in the knight's arena for your enjoyment."
+        },
+        {
+          "text": "The King's mages have summoned some dworcs in the knight's arena for your enjoyment."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Kingsday_Mini_World_Change",
+      "location": "Thais",
+      "description": "The capital city of Tibia is completely transformed for the festivities of Kingsday",
+      "dangers": "Various, depending on raids",
+      "reward": "Achievement Loyal Subject, fight against the raids in the Knights Arena"
+    },
+    {
+      "id": "lumberjack-mini-world-change",
+      "name": "Lumberjack",
+      "kind": "mini",
+      "keywords": [
+        "Lumberjack"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! North of the Queen's town, the royal trees are cut down. Will you deal with the suspect or report such kind of disrespect?"
+        },
+        {
+          "text": "Looks like the Queen's own royal trees are being cut down! The lumberjacks responsible shall be put to justice."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Lumberjack_Mini_World_Change",
+      "location": "Fields of Glory",
+      "description": "Somebody is illegally cutting trees in the forests north of Carlin and Queen Eloise is not amused",
+      "dangers": "Wolf",
+      "reward": "Achievement Whistle-Blower, Ability to sell Wood"
+    },
+    {
+      "id": "nightmare-isles-mini-world-change",
+      "name": "Nightmare Isles",
+      "kind": "mini",
+      "keywords": [
+        "Nightmare Isles"
+      ],
+      "messages": [
+        {
+          "text": "Near Drefia's mountains, a storm has revealed the entry to a nightmare that can't be sealed. Horrible creatures there spell instant death to all young adventurers who dare take a breath!",
+          "note": "Drefia's mountains"
+        },
+        {
+          "text": "Near Darashia's coast, a storm has revealed the entry to a nightmare that can't be sealed. Horrible creatures there spell instant death to all young adventurers who dare take a breath!",
+          "note": "Darashia's coast"
+        },
+        {
+          "text": "In Ankrahmun's desert, a storm has revealed the entry to a nightmare that can't be sealed. Horrible creatures there spell instant death to all young adventurers who dare take a breath!",
+          "note": "Ankrahmun's desert"
+        },
+        {
+          "text": "A sandstorm travels through Darama, leading to isles full of deadly creatures inside a nightmare. Avoid the northernmost coast!",
+          "note": "its portal is located at Darama's northernmost coast"
+        },
+        {
+          "text": "A sandstorm travels through Darama, leading to isles full of deadly creatures inside a nightmare. Avoid the river near Drefia!",
+          "note": "its portal is located close to the river near Drefia"
+        },
+        {
+          "text": "A sandstorm travels through Darama, leading to isles full of deadly creatures inside a nightmare. Avoid the Ankrahmun tar pits!",
+          "note": "its portal is located close to Ankhramun tar pits"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Nightmare_Isles_Mini_World_Change",
+      "location": "Nightmare Isles (via Kha'labal or Devourer)",
+      "dangers": "Silencer, Retching Horror, Choking Fear, Terrorsleep",
+      "reward": "Ability to obtain a Nightmare Teddy"
+    },
+    {
+      "id": "nomads-mini-world-change",
+      "name": "Nomads",
+      "kind": "mini",
+      "keywords": [
+        "Nomads"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Ankrahmun's desert is the nomads' land. Find their camp in the golden sand, and a treasure may be close at hand!"
+        },
+        {
+          "text": "Nomads travel the eternal sands of Ankrahmun's desert. There must be a camp somewhere."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Nomads_Mini_World_Change",
+      "location": "Kha'labal (north of Ankrahmun)",
+      "description": "Nomads travel through the desert and set up camp in various places",
+      "dangers": "Sandcrawler, Hyaena, Nomad (Blue), Nomad (Female)",
+      "reward": "Achievement Chest Robber, 10 Ham, 50 Fishes, 3 Small Emeralds, Black Pearl, Small Topaz and Silver Amulet"
+    },
+    {
+      "id": "noodles-is-gone-mini-world-change",
+      "name": "Noodles is Gone",
+      "kind": "mini",
+      "keywords": [
+        "Noodles is Gone"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Noodles is gone, the King in despair! Find the little rascal, look everywhere. Bring him back to get rewarded for your care!"
+        },
+        {
+          "text": "Not again! Noodles has taken some royal freedom and left the castle, after him in the name of the king!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Noodles_is_Gone_Mini_World_Change",
+      "location": "Thais and its surroundings",
+      "description": "The beloved dog of the king is gone, help the king to find him!",
+      "dangers": "Snake, Wolf, Bear",
+      "reward": "Achievement Dog Sitter, 1,000 experience points and 500 gp, Fan Doll of Queen Eloise or a Basket (Puppies)"
+    },
+    {
+      "id": "oriental-trader-mini-world-change",
+      "name": "Oriental Trader",
+      "kind": "mini",
+      "keywords": [
+        "Oriental Trader"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! What a lucky and beautiful day! Visit Carlin, Ankrahmun, or Liberty Bay. Yasir, the oriental trader might be there. Gather your creature products, for this chance is rare."
+        },
+        {
+          "text": "Oriental ships sighted! A trader for exotic creature products may currently be visiting Carlin, Ankrahmun or Liberty Bay."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Oriental_Trader_Mini_World_Change",
+      "location": "Ankrahmun, Carlin or Liberty Bay",
+      "description": "A trader comes to one of the ports to trade",
+      "reward": "Achievement Si, Ariki!, ability to sell many Creature Products"
+    },
+    {
+      "id": "overhunting-world-change",
+      "name": "Overhunting",
+      "kind": "world",
+      "keywords": [
+        "Overhunting"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Overhunting_World_Change",
+      "location": "Forests around Ab'Dendriel and near Carlin and the Orc Fortress",
+      "description": "A fine balance lies between the lives of the White Deer of Ab'Dendriel's forest and the Wolves",
+      "dangers": "Spiders, Wasps, Wolves, Orcs, Poachers, Enraged White Deer, Elf Scouts",
+      "reward": "White Deer can be mounted when they are not overhunted"
+    },
+    {
+      "id": "poacher-caves-mini-world-change",
+      "name": "Poacher Caves",
+      "kind": "mini",
+      "keywords": [
+        "Poacher Caves"
+      ],
+      "messages": [
+        {
+          "text": "Wild animals roam beneath the loam of the Orc Lands. The hunters need some helping hands!",
+          "note": "when game dominates"
+        },
+        {
+          "text": "Poachers roam beneath the loam of the Orc Lands. The animals need vengeful pals!",
+          "note": "when Poachers dominate"
+        },
+        {
+          "text": "Ghostly animals roam beneath the loam of the Orc Lands. Poaching is stunted, hunters are hunted!",
+          "note": "when Ghost Wolves dominate"
+        },
+        {
+          "text": "The wild animals north of the Green Claw Swamp clearly dominate the area. But poachers come here to hunt them.",
+          "note": "game dominates"
+        },
+        {
+          "text": "Poachers are ravaging the wildlife north of the Green Claw Swamp. But the animals seem to fight back!",
+          "note": "Poachers dominate"
+        },
+        {
+          "text": "Poachers have slaughtered nearly all wild animals north of the Green Claw Swamp. But vengeful spirits show up there now!",
+          "note": "Ghost Wolves dominate"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Poacher_Caves_Mini_World_Change",
+      "location": "Poacher Caves (Ferngrims Gate)",
+      "dangers": "One of the following: Game: Wolf, Bear, Boar, War Wolf Poachers: Poacher, Hunter, Wolf Wolves: Gloom Wolf, Ghost Wolf",
+      "reward": "Hunting various creatures"
+    },
+    {
+      "id": "river-runs-deep-mini-world-change",
+      "name": "River Runs Deep",
+      "kind": "mini",
+      "keywords": [
+        "River Runs Deep"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! In Zao Steppe the river runs deep. If you catch a strange fish it is yours to keep."
+        },
+        {
+          "text": "The river in Zao Steppe runs deep, there may be more fish than usual!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/River_Runs_Deep_Mini_World_Change",
+      "location": "Zao Steppe",
+      "description": "In the dry zao steppe, suddenly a river is running, containing fish",
+      "dangers": "Sandcrawler, Gnarlhound, Orc, Orc Spearman, Orc Warrior",
+      "reward": "Achievement Desert Fisher, Sandfishes"
+    },
+    {
+      "id": "spider-nest-mini-world-change",
+      "name": "Spider Nest",
+      "kind": "mini",
+      "keywords": [
+        "Spider Nest"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Mamma Longlegs will not rest while she guards her cosy nest. Exterminate its kin in there to finally get rid of her."
+        },
+        {
+          "text": "A whole nest of spiders needs to be exterminated as Mamma Longlegs is on the loose."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Spider_Nest_Mini_World_Change",
+      "location": "At the Thaian-Venorean Road, close to Venore",
+      "dangers": "Poison Spider, Mamma Longlegs",
+      "reward": "Achievements Nestling, ability to kill Mamma Longlegs"
+    },
+    {
+      "id": "spirit-grounds-mini-world-change",
+      "name": "Spirit Grounds",
+      "kind": "mini",
+      "keywords": [
+        "Spirit Grounds"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! In Darashia, a gate has opened to the spirit ground, where nightmares, banshees and ghouls abound!",
+          "note": "Darama"
+        },
+        {
+          "text": "Hear ye! Hear ye! In the Ghostlands, a gate has opened to the spirit ground, where nightmares, banshees and ghouls abound!",
+          "note": "Ghostlands"
+        },
+        {
+          "text": "Hear ye! Hear ye! In Vengoth, a gate has opened to the spirit ground, where nightmares, banshees and ghouls abound!",
+          "note": "Vengoth"
+        },
+        {
+          "text": "Adventurers have told of a Spirit Gate in the Daramian mountains. Fight the restless undead!",
+          "note": "Darama"
+        },
+        {
+          "text": "Adventurers have told of a Spirit Gate in the Ghostlands. Fight the restless undead!",
+          "note": "Ghostlands"
+        },
+        {
+          "text": "Adventurers have told of a Spirit Gate in Vengoth. Fight the restless undead!",
+          "note": "Vengoth"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Spirit_Grounds_Mini_World_Change",
+      "location": "Spirit Grounds (via Darama, Ghostlands or Vengoth)",
+      "dangers": "Either: Ghost, Ghoul, Bonelord and Mummy Nightstalker, Banshee, Souleater and Braindeath Nightmare, Nightmare Scion, Spectre and Phantasm",
+      "reward": "?"
+    },
+    {
+      "id": "stampede-mini-world-change",
+      "name": "Stampede",
+      "kind": "mini",
+      "keywords": [
+        "Stampede"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Tiquanda's elephants are terrified, the Ape God's footsteps are a scary sight. So hunt for their tusks while they are filled with fright!"
+        },
+        {
+          "text": "Stampede! The Ape God has stirred up Tiquanda's elephants again!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Stampede_Mini_World_Change",
+      "location": "Tiquanda",
+      "description": "Something made a group of Elephants, terrified in the jungle",
+      "dangers": "Wasp, Centipede, Crocodile, Tarantula, Carniphila, Terrified Elephant",
+      "reward": "Achievement Trail of the Ape God, chance to loot Elephant Tusks"
+    },
+    {
+      "id": "steamship-world-change",
+      "name": "Steamship",
+      "kind": "world",
+      "keywords": [
+        "Steamship"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Steamship_World_Change",
+      "location": "Thais",
+      "description": "An old dwarven explorer has discovered a new steamship route between Thais and Kazordoon",
+      "dangers": "Poison Spiders, Spiders on the way",
+      "reward": "Until the next server save: ability to travel from Thais to Kazordoon; access to Robson's Isle"
+    },
+    {
+      "id": "swamp-fever-world-change",
+      "name": "Swamp Fever",
+      "kind": "world",
+      "keywords": [
+        "Swamp Fever"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Swamp_Fever_World_Change",
+      "location": "Venore",
+      "description": "The easily treatable swamp fever afflicts only the poorest of Venore, but the cure can be found nearby",
+      "dangers": "Swamp Trolls, Feverish Citizens. Possibly Rotworms, Bats, Snakes, Slimes, Centipedes and Larvae",
+      "reward": "Potential to obtain Slug Drug and some strange pieces of cloth"
+    },
+    {
+      "id": "thawing-mini-world-change",
+      "name": "Thawing",
+      "kind": "mini",
+      "keywords": [
+        "Thawing"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Mammoths silently watch as the snow melts away. It reveals special flowers which are not meant to stay. Grow their seeds to brighten up your day!"
+        },
+        {
+          "text": "Judging by the unnerved mammoths in Svargrond, enough snow has melted away to reveal some very special flora."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Thawing_Mini_World_Change",
+      "location": "Svargrond",
+      "description": "The snow on the glacier north of Svargrond suddenly starts melting",
+      "dangers": "Winter Wolf, Polar Bear, Mammoth",
+      "reward": "Achievement Ice Harvester, Ice Flower Seeds"
+    },
+    {
+      "id": "fire-feathered-serpent-world-change",
+      "name": "The Fire-Feathered Serpent",
+      "kind": "world",
+      "keywords": [
+        "Fire-Feathered Serpent",
+        "Sea Serpent"
+      ],
+      "messages": [
+        {
+          "text": "Sleeping beneath the Oramond sea, the Fire-Feathered Serpent twitches and dreams of calling its children back."
+        },
+        {
+          "text": "The Fire-Feathered Serpent has awoken! Renegade Quara attack the sunken lands of Oramond!"
+        },
+        {
+          "text": "The Fire-Feathered Serpent goes back to sleep, beseeched by the blood of the Renegade Quara."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/The_Fire-Feathered_Serpent_World_Change",
+      "location": "Seacrest Grounds",
+      "description": "Deep under the Sea, a Fire Feathered Serpent sleeps, but its Guardian needs help protecting their realm",
+      "dangers": "Devourer, Blood Beast, Rot Elemental, Glooth Glob, all types of Quaras, Abyssal Calamary, Blood Crab, Shark, Young Sea Serpent, Sea Serpent and Seacrest Serpent",
+      "reward": "Chance to complete the Twenty Miles Beneath the Sea Quest and get the achievements Mind the Step! and Snake Charmer, ability to fight Renegade Quaras"
+    },
+    {
+      "id": "mage-s-tower-world-change",
+      "name": "The Mage's Tower",
+      "kind": "world",
+      "keywords": [
+        "Mage's Tower",
+        "Mage Tower"
+      ],
+      "messages": [
+        {
+          "text": "You have not proven worthy in the dimensional struggle against the yielothax."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/The_Mage's_Tower_World_Change",
+      "location": "Zao Steppe, another dimension",
+      "description": "A mage in Zao has created a portal to another dimension, which can only remain open while he is alive",
+      "dangers": "Zao: Sandcrawlers, Insect Swarms, Gnarlhounds, Terror Birds and possibly various Orcs, Death Blobs, Energized Raging Mage, Raging Mage; Other dimension: Yielothax",
+      "reward": "Raging Mage, Yielothax loot. Access to Uniwheel (Mount)"
+    },
+    {
+      "id": "mummy-s-curse-world-change",
+      "name": "The Mummy's Curse",
+      "kind": "world",
+      "keywords": [
+        "Mummy's Curse",
+        "Horestis"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/The_Mummy's_Curse_World_Change",
+      "location": "Horestis Tomb near Ankrahmun",
+      "description": "A pharoah resides in his tomb, but can be awakened again",
+      "dangers": "Hyaenas, Nomads, Ghoulish Hyaenas, Tomb Servants, Sacred Spiders, Clay Guardians, Grave Guards, Death Priests, Elder Mummies, Sandstone Scorpion, Horestis",
+      "reward": "Access to Sandstone Scorpion for mounting"
+    },
+    {
+      "id": "their-master-s-voice-world-change",
+      "name": "Their Master's Voice",
+      "kind": "world",
+      "keywords": [
+        "Their Master's Voice",
+        "Master's Voice"
+      ],
+      "messages": [
+        {
+          "text": "You gobbled enough slime to get a good grip on this dungeon's slippery floor."
+        },
+        {
+          "text": "The mage has escaped, better start gobbling to face him again!"
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Their_Master's_Voice_World_Change",
+      "location": "Edrons - Mad Mage Dungeon",
+      "description": "A mad mage built a tower in Edron to conduct experiments",
+      "dangers": "Snakes, Iron Servants, Golden Servants, Diamond Servants, Mad Mage",
+      "reward": "Potential to loot items for Elementalist Outfit, and a Golden Can of Oil"
+    },
+    {
+      "id": "thornfire-world-change",
+      "name": "Thornfire",
+      "kind": "world",
+      "keywords": [
+        "Thornfire"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Thornfire_World_Change",
+      "location": "Shadowthorn",
+      "description": "When the bog god arose in Shadowthorn there was conflict between the god's followers and those who would not follow. These others rebelled by starting fires around the town. Once they were contained the town was safe, but only as long as they cannot get free",
+      "dangers": "Elves, Elf Scouts, Firestarters, Elf Overseers, Toads, and creatures on the way to Shadowthorn (e.g. Snakes, maybe Rotworms, Centipedes, and Slimes",
+      "reward": "Crystal Wolf (Mount), achievement Firefighter, Firestarter loot: Coal, Flintstone"
+    },
+    {
+      "id": "twisted-waters-world-change",
+      "name": "Twisted Waters",
+      "kind": "world",
+      "keywords": [
+        "Twisted Waters"
+      ],
+      "messages": [],
+      "source_url": "https://tibia.fandom.com/wiki/Twisted_Waters_World_Change",
+      "location": "Lake Equivocolao in Tiquanda, north of Port Hope",
+      "description": "Lake Equivocolao is the only known home to the Shimmer Swimmer, but they only appear when the lake is filthy",
+      "dangers": "Slimes, Terror Birds, Filth Toads, Centipedes, Crocodiles, Swamp Trolls, Bugs, Spiders, Snakes",
+      "reward": "Potential to catch Shimmer Swimmer, Biodegradable achievement"
+    },
+    {
+      "id": "warpath-mini-world-change",
+      "name": "Warpath",
+      "kind": "mini",
+      "keywords": [
+        "Warpath"
+      ],
+      "messages": [
+        {
+          "text": "Hear ye! Hear ye! Bibby is back with blood as her track! Wreaking havoc on her path, let her feel your wrath!"
+        },
+        {
+          "text": "Bibby Bloodbath and her crew are roaming the lands, destroying everything in their path."
+        }
+      ],
+      "source_url": "https://tibia.fandom.com/wiki/Warpath_Mini_World_Change",
+      "location": "Jakundaf Desert, Carlin or Femor Hills",
+      "description": "A travelling camp of orcs appears on the mainland of tibia",
+      "dangers": "Orc Warrior, Orc Berserker, Orc Leader, Orc Warlord, Bibby Bloodbath",
+      "reward": "Achievement Bibby's Bloodbath, ability to kill Bibby Bloodbath"
+    }
+  ]
+}

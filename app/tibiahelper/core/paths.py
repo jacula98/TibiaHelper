@@ -76,6 +76,11 @@ def bundled_qol_dir() -> Path:
     return bundled_data_file().with_name("qol")
 
 
+def bundled_raids_file() -> Path:
+    """raids.json (raidy i world change z TibiaWiki) dołączony obok quests.json."""
+    return bundled_data_file().with_name("raids.json")
+
+
 def boosted_file() -> Path:
     """Dzisiejszy boosted potwór i boss (z TibiaWiki), żeby nie pytać wiki przy każdym starcie."""
     return user_data_dir() / "boosted.json"

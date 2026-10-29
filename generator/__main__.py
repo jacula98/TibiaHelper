@@ -12,6 +12,7 @@ Uruchamiaj z katalogu głównego repo:
     python -m generator npcs                     # NPC z pozycjami i obrazkami (pinezki, „komu sprzedać”)
     python -m generator items                    # przedmioty: ceny, kto kupuje/sprzedaje, obrazki
     python -m generator hunts                    # miejsca huntów (Hunt/Bestiary zones)
+    python -m generator raids                    # raidy i world change (pomocnik raidów)
 """
 
 import argparse
@@ -23,7 +24,7 @@ from pathlib import Path
 # przechodziły dokładnie tę samą walidację co w aplikacji.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-from . import bulk, cache, hunts, items, monsters, npcs, quests, quests_file, reports, spawns  # noqa: E402
+from . import bulk, cache, hunts, items, monsters, npcs, quests, quests_file, raids, reports, spawns  # noqa: E402
 from tibiahelper.core import author  # noqa: E402
 from .wiki_api import WikiClient  # noqa: E402
 from .wikitext import infobox_position, mapper_coords  # noqa: E402
@@ -69,6 +70,9 @@ def main(argv: list[str] | None = None) -> int:
 
     hunts_cmd = commands.add_parser("hunts", help="pobierz miejsca huntów (Hunting Places) do data/quests.json")
     hunts_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
+
+    raids_cmd = commands.add_parser("raids", help="pobierz raidy i world change do data/raids.json")
+    raids_cmd.add_argument("--refresh", action="store_true", help="pobierz strony ponownie mimo cache")
 
     args = parser.parse_args(argv)
     client = WikiClient()
@@ -172,10 +176,30 @@ def main(argv: list[str] | None = None) -> int:
             with_monsters = sum(bool(h.get("areas")) for h in data["hunts"])
             print(f"Miejsca huntów: {len(data['hunts'])}, z potworami: {with_monsters}")
 
+        elif args.command == "raids":
+            update_raids(client, args.refresh)
+
     except (LookupError, ValueError, RuntimeError, OSError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)
         return 1
     return 0
+
+
+def update_raids(client: WikiClient, refresh: bool) -> None:
+    # Strony miast z raidami są w kategorii, ale nie wszystkie: część jest tylko podlinkowana ze strony „Raid”.
+    raid_pages = {t for t in client.category_members("Raids") + client.links(raids.RAID_PAGE) if t.endswith("Raids")}
+    pages = bulk.load_pages(client, sorted(raid_pages) + [raids.RAID_PAGE], refresh)
+    mini = set(client.category_members("Mini World Changes"))
+    changes = [t for t in mini | set(client.category_members("World Changes")) if t.endswith("World Change")]
+    titles = [raids.TOWNCRYER, raids.WORLD_BOARD, *changes, *(t + quests.SPOILER_SUFFIX for t in changes)]
+    change_pages = bulk.load_pages(client, titles, refresh)
+    data_raids = raids.build_raids(pages)
+    data_changes = raids.build_world_changes(change_pages, mini)
+    raids.save(data_raids, data_changes)
+    without = [c["name"] for c in data_changes if not c["messages"]]
+    print(f"Raidy z komunikatem: {len(data_raids)}, world change: {len(data_changes)} (data/raids.json)")
+    if without:
+        print("World change bez komunikatu (rozpoznawane po nazwie):", ", ".join(without))
 
 
 def print_coords(client: WikiClient, title: str, refresh: bool) -> None:
