@@ -2,7 +2,7 @@
 
 | Źródło | Co bierzemy | Na jakich zasadach |
 |---|---|---|
-| [TibiaWiki](https://tibia.fandom.com/) | questy, potwory (HP, exp, żywioły, umiejętności, loot, miejsca), przedmioty (ceny, NPC kupujący i sprzedający), NPC z pozycjami, miejsca huntów (poziom, gwiazdki, potwory, wejście), klasa w Bosstiary i cooldown bossów | CC BY-SA 4.0: link do źródła przy danych |
+| [TibiaWiki](https://tibia.fandom.com/) | questy, potwory (HP, exp, żywioły, umiejętności, loot, miejsca), przedmioty (ceny, NPC kupujący i sprzedający), NPC z pozycjami, miejsca huntów (poziom, gwiazdki, potwory, wejście), klasa w Bosstiary i cooldown bossów, raidy (komunikaty, czasy fal) i world change (`data/raids.json`), zasady czaru exiva (Exiva finder, wzory w `core/finder.py`) | CC BY-SA 4.0: link do źródła przy danych |
 | TibiaWiki, szablony „Boosted Creature” i „Boosted Boss” | dzisiejszy boosted potwór i boss (tylko nazwy) | aplikacja pyta API wiki najwyżej raz na dzień Tibii, wynik trzyma w `boosted.json` |
 | TibiaWiki, pliki obrazków | obrazki potworów, przedmiotów i NPC | grafiki © CipSoft GmbH; nie są w repo, aplikacja pobiera je przy pierwszym użyciu |
 | [tibiamaps](https://github.com/tibiamaps/tibia-map-data) | mapy pięter; paczki minimapy wgrywane do klienta (pobierane przez aplikację na żądanie, nie są w repo) | „Feel free to use”, kod MIT |
