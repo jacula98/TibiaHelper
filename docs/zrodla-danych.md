@@ -10,6 +10,7 @@
 | [Yuukiciu](https://www.youtube.com/watch?v=4fIlbgTtXMg) | `data/qol/`: loot filter (pomijane śmieci) i ceny z Marketu dla itemów do delivery tasków i imbu | pliki dostarczył autor projektu; w aplikacji podpis „Źródło: Yuukiciu” z linkiem |
 | [Kick](https://kick.com/jackyykick) | tylko informacja, czy kanał autora nadaje (przycisk „Stream”) | publiczne API bez klucza, sam odczyt; nic nie zapisujemy |
 | [TibiaData](https://tibiadata.com/) (statystyki zabójstw z tibia.com, `api.tibiadata.com/v4/killstatistics/<świat>`) | ile graczy zabił boss i ile razy zginął w ostatniej dobie, na świecie wybranym w ustawieniach | darmowe API bez klucza (kod MIT), dane © CipSoft; aplikacja pyta najwyżej raz na dobę statystyk, wynik trzyma w `boss_watch.json` |
+| TibiaWiki, wykresy „Bosses Spawn Frequency” (dane [GuildStats.eu](https://guildstats.eu/)) | okna respawnu ok. 35 bossów (od–do dni), odczytane z wykresów i wpisane w `generator/boss_spawns.py` | CC BY-SA 4.0 (TibiaWiki); same liczby, bez kopiowania wykresów |
 | Formularz Google autora (arkusz odpowiedzi) | raporty graczy: loot z bossów i Hunt Analyzer | gracze wysyłają je sami; generator autora zapisuje je do `data/reports.json`, gracze dostają je z aktualizacją; teksty niesprawdzone |
 
 Nie korzystamy z Tibiopedii (brak licencji pozwalającej na użycie).

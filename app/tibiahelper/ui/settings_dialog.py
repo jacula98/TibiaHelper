@@ -1,9 +1,10 @@
 """Okno ustawień otwierane trybikiem ⚙ w nagłówku."""
 
 from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QComboBox, QDialog, QHBoxLayout, QLabel, QLineEdit, QPushButton, QSlider, QVBoxLayout
+from PySide6.QtWidgets import QComboBox, QDialog, QHBoxLayout, QLabel, QPushButton, QSlider, QVBoxLayout
 
-from ..core.boss_watch import clean_world
+from ..core.boss_watch import load_worlds
+from ..core.paths import bundled_boss_spawns_file
 from ..core.i18n import LANGUAGES, N_, current_language, load_catalog, tr
 from ..core.settings import MAX_OPACITY, MIN_OPACITY
 from .theme import THEMES, theme_key
@@ -68,10 +69,16 @@ class SettingsDialog(QDialog):
         language_row.addStretch(1)
         language_row.addWidget(self._language)
 
-        # Świat do powiadomień o bossach. Wpis zapisujemy po wyjściu z pola (Enter albo klik obok),
-        # a nie przy każdej literze, bo każda zmiana świata to zapytanie do TibiaData.
-        self._world = QLineEdit(world or "", placeholderText=tr("np. Antica"), clearButtonEnabled=True)
-        self._world.editingFinished.connect(self._on_world)
+        # Świat do powiadomień o bossach: lista z TibiaWiki (w danych programu), pierwsza pozycja wyłącza.
+        self._world = QComboBox()
+        self._world.addItem(tr("— wyłączone —"), None)
+        worlds = load_worlds(bundled_boss_spawns_file())
+        if world and world not in worlds:
+            worlds = sorted([*worlds, world])  # świat spoza listy (np. nowy) nie znika z ustawień
+        for name in worlds:
+            self._world.addItem(name, name)
+        self._world.setCurrentIndex(max(self._world.findData(world), 0) if world else 0)
+        self._world.currentIndexChanged.connect(self._on_world)
         world_row = QHBoxLayout()
         world_row.addWidget(QLabel(tr("Świat (bossy)")))
         world_row.addStretch(1)
@@ -153,20 +160,14 @@ class SettingsDialog(QDialog):
         self.opacity_changed.emit(percent / 100)
 
     def _on_world(self) -> None:
-        text = self._world.text().strip()
-        world = clean_world(text)
-        if text and world is None:
-            self._world_hint.setText(tr("Nazwa świata to same litery, np. Antica."))
-            return
-        if world:
-            self._world.setText(world)
+        world = self._world.currentData()
         self._show_world_hint(world)
         self.world_changed.emit(world)
 
     def _show_world_hint(self, world: str | None) -> None:
         self._world_hint.setText(
             tr("Powiadomienie, gdy boss (np. Tyrn) zabije kogoś na tym świecie albo zginie.") if world
-            else tr("Wpisz świat, żeby dostawać powiadomienia o bossach.")
+            else tr("Wybierz świat, żeby dostawać powiadomienia o bossach.")
         )
 
     def _on_language(self, index: int) -> None:

@@ -43,7 +43,7 @@ from ..core.raids import load_raid_data
 from ..core.reports import Report
 from ..core.settings import load_settings, save_settings
 from .boosted_bar import BoostedBar
-from .boss_alerts import AlertBanner, BossWatcher
+from .boss_alerts import AlertPopup, BossWatcher
 from .boss_pages import BossEditor, BossListPage, BossPage
 from .home_page import HomePage
 from .hunt_pages import HuntEditor, HuntListPage, HuntPage
@@ -150,17 +150,15 @@ class MainWindow(QMainWindow):
         self._watched_bosses = load_watched(bundled_boss_spawns_file())
         self._watcher = BossWatcher(boss_watch_file(), boss_timers_file(), self)
         self._boss_page.set_watcher(self._watcher)
-        self._alert_banner = AlertBanner()
-        self._watcher.alert.connect(self._alert_banner.show_alert)
-        self._alert_banner.open_requested.connect(self._open_boss_by_id)
-        self._watcher.boss_requested.connect(self._open_boss_by_id)
+        self._alert_popup = AlertPopup(self)
+        self._watcher.alert.connect(self._alert_popup.show_alert)
+        self._alert_popup.open_requested.connect(self._open_boss_by_id)
 
         central = QWidget()
         layout = QVBoxLayout(central)
         layout.setContentsMargins(12, 8, 12, 12)
         layout.addLayout(self._build_header())
         layout.addWidget(self._boosted)
-        layout.addWidget(self._alert_banner)
         layout.addWidget(self._release_banner)
         layout.addWidget(self._banner)
         layout.addWidget(self._stack, 1)
