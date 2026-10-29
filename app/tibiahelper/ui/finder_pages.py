@@ -45,13 +45,14 @@ from ..core.i18n import tr
 from ..core.mapdata import floor_label, to_pixel
 from ..core.models import MAP_X_MIN, MAP_Y_MIN, MapPoint, Monster
 from ..core.spawns import SOURCE_NOTE, Spawns
-from . import theme
 from .map_window import BUTTON_ITEM, MapPanel
 from .qol_pages import _top_bar
 
 START = MapPoint(x=32369, y=32241, z=7, label="Thais")  # świątynia w Thais: punkt startowy mapy
 AREA_COLOR = "#69f0ae"  # jasna zieleń: dobrze widać ją i na wodzie, i na trawie
 STAR_COLOR = "#ffd54f"
+CHOSEN_COLOR = "#ff9800"  # pełny pomarańczowy: ostatnio wybrana strzałka, dobrze widać ją przy białych
+HOVER_COLOR = "#fff59d"  # jasnożółty pod myszką, żeby nie mylił się z wybraną strzałką
 DIM = QColor(0, 0, 0, 150)  # przyciemnienie mapy poza możliwym obszarem
 MAX_READINGS_SHOWN = 4
 MAX_CANDIDATES = 8  # więcej nazw nie mieści się w wąskim oknie
@@ -95,7 +96,7 @@ class _MapButton(QGraphicsPathItem):
         self.setZValue(8)
 
     def hoverEnterEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
-        self.setBrush(QColor(theme.ACCENT))
+        self.setBrush(QColor(HOVER_COLOR))
 
     def hoverLeaveEvent(self, event) -> None:  # noqa: N802 (nazwa z Qt)
         self.setBrush(self._color)
@@ -387,18 +388,18 @@ class FinderPage(QWidget):
     def _draw_star(self, scene: QGraphicsScene, x: int, y: int) -> None:
         px, py = to_pixel(x, y)
         center = QPointF(px + 0.5, py + 0.5)
-        # Ostatni wybór z tego miejsca zostaje zielony (jak obszar), żeby było widać, co już kliknięto.
+        # Ostatni wybór z tego miejsca zostaje pomarańczowy, żeby było widać, co już kliknięto.
         last = self._readings[-1] if self._readings else None
         chosen = "none"
         if last is not None and (last.x, last.y, last.z) == self._position:
             chosen = last.direction  # None = gwiazdka („next to you” itd.)
-        star_color = QColor(AREA_COLOR if chosen is None else STAR_COLOR)
+        star_color = QColor(CHOSEN_COLOR if chosen is None else STAR_COLOR)
         star = _MapButton(_star_path(), star_color, lambda pos: self._show_menu(None, pos))
         star.setToolTip("next to you / above you / below you")
         star.setPos(center)
         scene.addItem(star)
         for direction in DIRECTIONS:
-            color = QColor(AREA_COLOR) if direction == chosen else QColor(255, 255, 255, 210)
+            color = QColor(CHOSEN_COLOR) if direction == chosen else QColor(255, 255, 255, 210)
             arrow = _MapButton(_arrow_path(direction), color, lambda pos, d=direction: self._show_menu(d, pos))
             arrow.setPos(center)
             scene.addItem(arrow)
