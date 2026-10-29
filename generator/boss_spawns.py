@@ -141,13 +141,17 @@ def update(data: dict, client: WikiClient, refresh: bool = False, path: Path = B
     # Wykresy i światy zmieniają się częściej niż strony bossów, więc zawsze świeże (refresh=True).
     plots = bulk.load_pages(client, [SPAWN_FREQUENCY_PAGE], True)
     world_pages = bulk.load_pages(client, client.embedded_in("Infobox World"), True)
+    worlds = active_worlds({title: page.wikitext for title, page in world_pages.items()})
+    # Bez wykresów albo światów plik straciłby część bossów albo listę w ustawieniach: lepiej nic nie zapisać.
+    if SPAWN_FREQUENCY_PAGE not in plots or not worlds:
+        raise RuntimeError("Wiki nie zwróciła wykresów albo listy światów; spróbuj później")
     old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
     result = build(
         monsters,
         {title: page.wikitext for title, page in loaded.items()},
         old,
-        plotted_bosses(plots[SPAWN_FREQUENCY_PAGE].wikitext) if SPAWN_FREQUENCY_PAGE in plots else set(),
-        active_worlds({title: page.wikitext for title, page in world_pages.items()}),
+        plotted_bosses(plots[SPAWN_FREQUENCY_PAGE].wikitext),
+        worlds,
     )
     text = json.dumps(result, ensure_ascii=False, indent=1) + "\n"
     write_bytes_atomic(path, text.encode("utf-8"))
