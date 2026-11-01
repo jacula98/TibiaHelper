@@ -3,6 +3,11 @@
 Małe okno obok gry z poradnikami do Tibii. Zawsze jest na wierzchu, więc nie trzeba przełączać się
 do przeglądarki.
 
+> **Projekt nie jest już rozwijany.** Autor skończył nad nim pracę. Program dalej działa, ale nie będzie
+> nowych wersji ani nowych poradników. Możesz go swobodnie **sforkować** (przycisk „Fork” na GitHubie)
+> i rozwijać po swojemu: kod jest na licencji MIT, a dane w `data/` na CC BY-SA 4.0
+> (szczegóły w sekcji [Licencja i forki](#licencja-i-forki)).
+
 ## Co potrafi
 
 - **Questy krok po kroku.** Odhaczasz kroki, a aktualny krok sam przewija się na górę.
@@ -27,7 +32,10 @@ do przeglądarki.
 - **Zakładka „Narzędzia”.** Kalkulatory: „Cena ze Store” (wpisujesz cenę 1 Tibia Coina, a program liczy
   cenę w gp i gp za sztukę dla potionów, kegów, casków, run i exercise weapons oraz porównuje z ceną u NPC), „Podział lootu” (wklejasz Party Hunt Analyzer, program mówi, kto komu ile przelewa,
   i kopiuje komendę `transfer` dla bankiera), „Stamina” (ile być offline do wybranej staminy i o której będzie gotowa)
-  oraz „Skille” (ile exercise weapons i za ile do wybranego poziomu skilla).
+  „Skille” (ile exercise weapons i za ile do wybranego poziomu skilla), „Raidy i world change” (wklejasz
+  komunikat z gry, a program mówi, co to za raid albo world change, i odlicza czas do kolejnych fal)
+  oraz „Exiva finder” (zaznaczasz na mapie, gdzie stoisz i co pokazała exiva, a program zawęża miejsce
+  i podpowiada, jaki to może być fiendish potwór).
 - **Zakładka „Quality of life”.** „TibiaMaps”: zaznaczasz, czy chcesz markery i siatkę (grid overlay),
   i klikasz „Wgraj mapę”. Program sam pobiera pełną minimapę z [tibiamaps.io](https://tibiamaps.io/) i wgrywa ją
   do Tibii (`%LOCALAPPDATA%\Tibia\packages\Tibia\minimap`, stara minimapa trafia raz do `minimap.tibiahelper-backup`).
@@ -45,6 +53,7 @@ do przeglądarki.
   Działa po ponownym uruchomieniu. Tłumaczony jest interfejs; treść poradników questów jest po polsku.
 - **Aktualizacje.** Gdy pojawią się nowe poradniki, program sam to sprawdzi i zapyta, czy je pobrać.
   Gdy na GitHubie pojawi się nowa wersja programu (Release), pokaże pasek z przyciskiem „Pobierz”.
+  Projekt nie jest już rozwijany, więc nowych poradników i wersji raczej nie będzie.
 
 
 ## Jak uruchomić
@@ -90,6 +99,19 @@ mapy pięter i obrazki potworów. Usunięcie tego folderu przywraca program do s
 
 Kod programu jest na licencji MIT, a dane w `data/` na CC BY-SA 4.0 (poza `data/qol/`, których autorem jest Yuukiciu).
 Szczegóły: [docs/zrodla-danych.md](docs/zrodla-danych.md).
+
+## Licencja i forki
+
+Każdy może wziąć ten projekt i rozwijać go dalej, także pod własną nazwą. Wystarczy kliknąć „Fork”
+na GitHubie. Zgoda autora nie jest potrzebna. Warunki są proste:
+
+- **Kod (MIT):** zostaw plik `LICENSE` z informacją o autorze. Poza tym rób z kodem, co chcesz.
+- **Dane w `data/` (CC BY-SA 4.0):** podaj źródło (TibiaWiki) i udostępniaj zmienione dane na tej samej licencji.
+- **Wyjątki:** `data/qol/` jest od Yuukiciu, a dane z TibiaRoute są użyte za zgodą udzieloną temu projektowi.
+  W forku najlepiej zapytaj ich o zgodę sam.
+
+W forku zmień też adresy, które wskazują na ten projekt (sprawdzanie aktualizacji, zgłoszenia błędów,
+formularz raportów, przycisk Stream). Instrukcje dla autora są w [docs/AUTOR.md](docs/AUTOR.md).
 
 ---
 

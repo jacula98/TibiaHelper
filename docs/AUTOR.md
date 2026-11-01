@@ -118,3 +118,13 @@ Ikona .exe to `app/tibiahelper/ui/assets/logo.ico`. Po zmianie `logo.svg` wygene
 ```
 python scripts/check.py
 ```
+
+## Fork: adresy do zmiany
+
+Projekt nie jest już rozwijany przez autora. Jeśli robisz forka, zmień adresy wskazujące na oryginał:
+
+- `app/tibiahelper/core/updater.py`: `DATA_URL`, `SPAWNS_URL`, `REPORTS_URL` (aktualizacje danych).
+- `app/tibiahelper/core/releases.py`: `LATEST_URL` (pasek o nowej wersji).
+- `app/tibiahelper/core/issues.py`: `NEW_ISSUE_URL` (przycisk „Zgłoś błąd”).
+- `app/tibiahelper/core/reports.py`: formularz i arkusz Google (raporty graczy).
+- `app/tibiahelper/core/stream.py`: `CHANNEL` (przycisk Stream) oraz linki w `ui/settings_dialog.py`.
